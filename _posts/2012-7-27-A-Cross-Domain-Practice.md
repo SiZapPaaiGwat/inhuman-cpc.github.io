@@ -40,6 +40,7 @@ tagline: 一次跨域实战
 
 ### test.html
 	
+	```html
 	<!doctype html>
 	<html lang="zh-CN">
 		<head>
@@ -67,9 +68,11 @@ tagline: 一次跨域实战
 					},false)
 				}()
 			</script>
+	```
 
 ### myapp.rb
 
+	```ruby
 	# myapp.rb
 	require 'rubygems'
 	require 'sinatra'
@@ -82,7 +85,8 @@ tagline: 一次跨域实战
 	get '/img' do
 		send_file 'london.jpg'
 	end
-
+	```
+	
 ## 开始工作
 
 启动web server以后就开始我们的测试工作了。打开`chrome`及其`控制台`，输入 http://localhost:4567/，点击页面中的按钮，不出意外你会在chrome控制台看到下面的错误提示。
@@ -106,6 +110,7 @@ google如何实现跨域访问，很快找到了一种方法。在网站根目�
 于是继续google，终于在[这里](http://www.w3.org/TR/cors/)看到了一切关于我们想要的。，可惜`w3c`的文档总是那么地冗长而乏味，令人望而生畏。比如在介绍这个`Access-Control-Allow-Origin`的响应头如何设置时，看着这里的介绍是" origin-list-or-null | "*"，我以为可以一次性设置多个origin，比如
 a.com,b.com,c.com。一番折腾之后发现这样设置和没有设置是一样的效果，如果不设置为星号就只能设置一个站点。那我们就暂时设置为"*"吧，安全问题稍后再考虑！修改我们的后台代码，加入一个全局的`过滤器`设置响应头，下面是修改后的myapp.rb文件：
 
+	```ruby
 	# myapp.rb
 	require 'rubygems'
 	require 'sinatra'
@@ -123,26 +128,27 @@ a.com,b.com,c.com。一番折腾之后发现这样设置和没有设置是一样
 		headers\
 		'Access-Control-Allow-Origin' => '*'
 	end
+	```
 
 现在我们重启web server和浏览器，继续输入http://localhost:4567/，点击页面中的按钮发起跨域请求，查看crhome控制台，没有发现错误，请求顺利完成。那就让我们看看`Network`中的跨域访问请求到底多了些什么：
 
-**Access-Control-Allow-Origin:*
+*Access-Control-Allow-Origin:*
 
-**Connection:Keep-Alive
+*Connection:Keep-Alive
 
-**Content-Length:47714
+*Content-Length:47714
 
-**Content-Type:image/jpeg
+*Content-Type:image/jpeg
 
-**Date:Fri, 27 Jul 2012 07:11:42 GMT
+*Date:Fri, 27 Jul 2012 07:11:42 GMT
 
-**Last-Modified:Fri, 27 Jul 2012 02:52:45 GMT
+*Last-Modified:Fri, 27 Jul 2012 02:52:45 GMT
 
-**Server:WEBrick/1.3.1 (Ruby/1.8.7/2011-12-28)
+*Server:WEBrick/1.3.1 (Ruby/1.8.7/2011-12-28)
 
-**X-Frame-Options:sameorigin
+*X-Frame-Options:sameorigin
 
-**X-Xss-Protection:1; mode=block
+*X-Xss-Protection:1; mode=block
 
 果然我们设置的响应头`Access-Control-Allow-Origin`生效了，太神奇了！通过服务器和浏览器的协作，我们轻松地实现了跨域访问。现在看来W3C搞的这些跨域访问控制的标准还是比较靠谱的啊，如果说有什么缺点，那就是设置多个站点的时候麻烦了点（比如qq.com需要配置跨域访问控制的话），其它的缺点一时我还真说不出来。
 
@@ -150,6 +156,7 @@ a.com,b.com,c.com。一番折腾之后发现这样设置和没有设置是一样
 
 目前为止，我们算是成功地实现了跨域请求，但是离我们的目标还差一点。我们还需要知道这个图片的文件大小，从之前服务器输出的响应头来看，应该就是`Content-Length`这个响应头了。那就修改下我们的页面代码，获取这个响应头吧：
 
+	```html
 	<!doctype html>
 	<html lang="zh-CN">
 		<head>
@@ -178,7 +185,8 @@ a.com,b.com,c.com。一番折腾之后发现这样设置和没有设置是一样
 					},false)
 				}()
 			</script>
-
+	```
+	
 刷新页面，打开控制台，点击按钮，一个红色的错误呈现在我们眼前：
 
 `Refused to get unsafe header "Content-Length"`
