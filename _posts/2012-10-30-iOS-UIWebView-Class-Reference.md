@@ -65,7 +65,6 @@ webview是否还在加载，只读属性
 
 那么默认设置下是不是一定无法自动播放呢？StackOverflow上找到一个[方法](http://stackoverflow.com/questions/4259928/how-can-i-autoplay-media-in-ios-4-2-1-mobile-safari)解决此问题（没有测试）
 
-```javascript
 	var ifr = document.createElement("iframe");
 	ifr.setAttribute('src', "http://mysite.com/myvideo.mp4");
 	ifr.setAttribute('width', '1px');
@@ -73,7 +72,6 @@ webview是否还在加载，只读属性
 	ifr.setAttribute('scrolling', 'no');
 	ifr.style.border="0px";
 	document.body.appendChild(ifr);
-```
 
 ###request
 
