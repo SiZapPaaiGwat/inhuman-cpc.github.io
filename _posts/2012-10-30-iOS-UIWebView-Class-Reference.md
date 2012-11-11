@@ -1,7 +1,7 @@
 ---
 layout: page
 title: iOS UIWebView Class Reference
-category: javascript ruby sinatra
+category: javascript
 tags: [iOS, JavaScript, HTML5]
 tagline: Apple SDK简要翻译
 ---
