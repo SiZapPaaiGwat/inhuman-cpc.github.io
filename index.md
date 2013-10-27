@@ -1,6 +1,6 @@
 ---
 layout: page
-title: 明天会更好吗？
+title: 
 tagline: 
 ---
 {% include JB/setup %}
@@ -51,11 +51,11 @@ tagline:
 
 **跳槽到 `腾讯公司`
 -->
-## 社交工具
+<!-- ## 社交工具
 
 -	[Google Plus](https://plus.google.com/u/0/101228485753010598030/posts)
 -	[新浪微博](http://weibo.com/xugaofan)
 -	[腾讯微博](http://1.t.qq.com/xugaofan)
--	[人人网](http://www.renren.com/230452650)
+-	[人人网](http://www.renren.com/230452650) -->
 
 

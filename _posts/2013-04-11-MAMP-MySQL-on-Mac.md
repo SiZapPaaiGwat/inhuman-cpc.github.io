@@ -1,8 +1,8 @@
 ---
 layout: page
 title: 在Mac上重置MySQL的root帐户的密码
-category: linux
-tags: [mac, linux, mysql]
+category: unix
+tags: [mac, unix, mysql]
 tagline: 
 ---
 
