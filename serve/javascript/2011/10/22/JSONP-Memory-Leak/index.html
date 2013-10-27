@@ -1,0 +1,322 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>JSONP Memory Leak</title>
+	<meta name="author" content="xugaofan">
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="JSONP Memory Leak" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">高凡</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="page"><a href="/pages.html">pages</a></li>
+						<li class="category"><a href="/categories.html">categories</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="forkme"><div><iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user=plusjade&repo=jekyll-bootstrap&type=fork&count=true"
+									allowtransparency="true" frameborder="0" scrolling="0" width="95px" height="20px"></iframe></div></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">JSONP Memory Leak</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<h2 id='jsonp'>什么是JSONP？</h2>
+
+<p><code>JSONP</code> （JSON with Padding）是资料格式 JSON 的一种“使用模式”，可以让网页从别的网域要资料。另一个解决这个问题的新方法是跨来源资源共享。</p>
+
+<p>由于 <code>同源策略</code> ，一般来说位于 server1.example.com 的网页无法与不是 server1.example.com 的服务器沟通，而 HTML 的 <code>script</code> 元素是一个例外。利用 script元素的这个开放策略，网页可以得到从其他来源动态产生的 JSON 资料，而这种使用模式就是所谓的 JSONP。用 JSONP 抓到的资料并不是 JSON，而是任意的 JavaScript，用 JavaScript 直译器执行而不是用 JSON 解析器解析。</p>
+
+<p><em>来源：<a href='http://zh.wikipedia.org/wiki/JSONP'>JSONP@维基百科</a></em></p>
+
+<p>简而言之，JSONP就是WEB前端开发中最常用的一种 <code>跨域请求</code> 数据的方式。</p>
+
+<h2 id='id6'>使用场景</h2>
+
+<p>JSONP是一种常用的跨域请求脚本的方式。如果页面不涉及轮询，那也不是什么大问题。但是当页面中存在 <code>轮询</code> 跨域请求时，问题就被无数倍的放大了。所以需要额外小心由此带来的 <code>内存泄漏</code>！</p>
+
+<p>当然毫无疑问，IE系列始终是最让人纠结的。</p>
+
+<h2 id='id7'>跨域加载脚本</h2>
+
+<p>通常我们使用下面的方式来加载一段脚本：</p>
+
+<pre><code>var script = document.createElement(&#39;script&#39;);
+script.src = &#39;http://www.abc.com/somepage?callback=check&#39;;
+script.id = &#39;JSONP&#39;;
+var head = document.getElementsByTagName(&#39;head&#39;)[0];
+head.appendChild(script);</code></pre>
+
+<p>对于一般的WEB应用程序这并不存在什么问题，但是一旦你的应用程序中使用到了轮询，这样只增加节点而不删除，将导致内存不断增长，增长的比例和加载脚本执行的内容也有很大的关系。读者可以尝试向页面不断载入jquery源代码，设定轮询间隔为2s，可以看到内存的增速达到几十M每秒。</p>
+
+<p>所以十分有必要在脚本执行完成以后删除这些script节点。</p>
+
+<h2 id='script'>删除加载的script节点</h2>
+
+<pre><code>var script = document.createElement(&#39;script&#39;);
+script.src = &#39;http://www.abc.com/somepage?callback=check&#39;;
+script.id = &#39;JSONP&#39;;
+script.type = &#39;text/javascript&#39;;
+script.charset = &#39;utf-8&#39;;
+var head = document.getElementsByTagName(&#39;head&#39;)[0];
+head.appendChild(script);
+head.removeChild(script);</code></pre>
+
+<p>这样的方式可以吗？显然不行！</p>
+
+<p>因为加载的脚本还没来的及执行就被删除了，所以我们需要 <code>让加载的脚本先执行一会儿</code> 。</p>
+
+<h3 id='id8'>曲线救国</h3>
+
+<pre><code>setTimeout(function(){
+	head.removeChild(script);
+},200);</code></pre>
+
+<p>不得不说，这样的解决方式很不优雅，要是脚本200ms内还没有执行完毕，肯定会出问题。所以需要保证脚本执行完之后自动删除。</p>
+
+<h2 id='script'>加载script后自动删除节点</h2>
+
+<pre><code>var script = document.createElement(&#39;script&#39;);
+head.appendChild(script);
+if(script.readyState){
+	script.onreadysctatechange =function(){
+		//注意使用this避免内存泄漏
+		if(this.readyState == &#39;completed&#39; || this.readyState == &#39;&#39;loaded)
+			this.parentNode.removeChild(this);
+	}; 
+}else{
+	script.onload =function(){
+		//注意使用this避免内存泄漏
+		this.onload = null;
+		this.parentNode.removeChild(this);
+	};
+}
+script.src = url;</code></pre>
+
+<p>幸好IE支持 <code>onreadysctatechange</code> 事件，而标准浏览器支持 <code>onload</code> 事件来判断脚本的执行状态。</p>
+
+<h2 id='ie'>IE浏览器下的问题</h2>
+
+<p>那么是不是现在我们的问题就解决了呢？</p>
+
+<p>测试后发现这样的解决方案不能完全避免内存的不断增长，标准浏览器包括Chrome随着轮询的都会有内存增长的现象， 不过增长程度微乎其微（轮询间隔2m，增长速度也只有4k-8k）。但是IE会有十几到几十K的内存增长。</p>
+
+<p>你会看到我们在script加载完成之后已经将script元素删除了，为什么内存还会不断增长呢？</p>
+
+<p>很简单，这就是 <code>内存泄漏</code> 现象。</p>
+
+<h2 id='script'>重用script节点</h2>
+
+<p>标准浏览器对script标签的处理就是每个script标签的地址（src）只能设置一次， 后续的设置能够改变地址，但是对应地址的脚本内容不会执行，不管script标签是页面预留的还是动态插入。</p>
+
+<p>IE下面则很神奇，使用js动态插入的script标签不遵守这一规则。 于是我们只需要动态的插入一个id已知的script标签，然后不断地改变它的src，以此方式加载的脚本都会执行。 而且这个script节点也不必删除，下次请求继续重用即可。</p>
+
+<p>这样IE下面的内存泄漏问题就解决了！</p>
+
+<pre><code>var _ = function(id){return document.getElementById(id);};
+_.ajax = function(){};
+(function(){
+    //存储超时或异常的JSONP请求
+    _.ajax.TIMEOUT_REQUEST = [];
+	//超时设定
+	_.ajax.TIMEOUT = 5000;
+	if(_.isIE){
+		//JSONP重用标签的id
+		_.ajax.SCRIPT_ID = &#39;ie_script_for_jsonp&#39;;
+		//重用标签是否被JSONP请求占用
+		_.ajax.SCRIPT_USED = false;
+		//被占用时JSONP请求等待的时间
+		_.ajax.WAIT_TIME = 100;
+		//上次JSONP请求的时间
+		_.ajax.LAST_USED_TIME = 0;
+		var script = document.createElement(&#39;script&#39;), head = document.head || document.getElementsByTagName(&#39;head&#39;)[0];
+		script.setAttribute(&#39;id&#39;,_.ajax.SCRIPT_ID);
+		script.onreadystatechange = function(){
+			if (this.readyState == &quot;loaded&quot; || this.readyState == &quot;complete&quot;){
+				_.ajax.SCRIPT_USED = false;
+			}
+		};
+		head.appendChild(script);
+	}
+})();
+/**
+ * @description 轮询JSONP请求调用，IE浏览器采用重用Script节点方式。
+ * @param url 手动加上callback参数，自动追加了时间戳
+ **/
+_.ajax.jsonp = function(url){
+	if(!navigator.onLine){
+		_.ajax.TIMEOUT_REQUEST.push(url);
+		return;
+	}
+	var script, now = new Date().getTime(), 
+		requestUrl = url + (url.indexOf(&#39;?&#39;)&gt;-1?&#39;&amp;timestamp=&#39;:&#39;?timestamp=&#39;) + now,
+		head = document.head || document.getElementsByTagName(&#39;head&#39;)[0];
+	if(_.isIE &amp;&amp; _.isIE &lt; 9){
+		script = document.getElementById(_.ajax.SCRIPT_ID);
+		//节点被占用
+		if(_.ajax.SCRIPT_USED){
+			if(_.ajax.LAST_USED_TIME === 0)
+				_.ajax.LAST_USED_TIME = now;
+			//已经超时
+			if((now - _.ajax.LAST_USED_TIME) &gt; _.ajax.TIMEOUT){
+				_.ajax.LAST_USED_TIME = now;
+				if(_.ajax.TIMEOUT_REQUEST.length&gt;=1000)
+					_.ajax.TIMEOUT_REQUEST.length = 0;
+				_.ajax.TIMEOUT_REQUEST.push(script.src.split(&#39;&amp;timestamp=&#39;)[0]);
+				script.src = requestUrl;
+			//没有超时则等待
+			}else{
+				setTimeout(function(){_.ajax.jsonp(url);},_.ajax.WAIT_TIME);
+			}
+		}else{
+			_.ajax.SCRIPT_USED = true;
+			_.ajax.LAST_USED_TIME = now;
+			script.src = requestUrl;
+		}
+	}else{
+		script = document.createElement(&#39;script&#39;);
+		head.appendChild(script);
+		script.onload =	function(){
+			this.onload = null;
+			this.parentNode.removeChild(this);
+		};
+        script.onerror = function(){
+            _.ajax.TIMEOUT_REQUEST.push(this.src);
+        };
+		script.src = requestUrl;
+	}
+};</code></pre>
+
+<h2 id='id9'>测试结果</h2>
+
+<p>对上述代码测试，使用 <code>sieve</code> 结合任务管理器，发现此方法引起的内存泄漏和chrome下面的差不多都在4K左右，测试环境是IE 8。</p>
+
+<pre><code>var i = 0;
+window.onload = function(){
+	setInterval(function(){
+		_.ajax.jsonp(&#39;data.js&#39;);
+	},1000);
+};</code></pre>
+
+<p>data.js 的内容：</p>
+
+<pre><code>i++; </code></pre>
+
+<h2 id='id10'>后续说明</h2>
+
+<p>其实之所以存在内存泄漏，是因为IE的 <code>removeChild</code> 方法存在内存泄漏的问题。对于这一点 <code>jQuery</code> 的 <code>empty</code> 方法已经考虑到。关于removeChild导致内存泄漏的问题，很早就被发现了，具体请看<a href='http://groups.google.com/group/jquery-dev/browse_thread/thread/4a99f6e9b2e33057/45ce657a48afd43a?pli=1'>这里</a>。</p>
+
+<p>一般的框架都有各自的删除节点的方式来避免内存泄漏问题，下面是 <code>EXT</code> 的处理方式：</p>
+
+<pre><code>_.dom = function(){};
+/**
+ * @description 采用ext的处理方式，也可以对删除的元素使用outerHTML=&#39;&#39;，但是此方法不通用，某些元素的outerHTML属性只读
+ * @param n 要删除的HTML节点
+ */
+_.dom.remove = function(n){
+	var d;
+	if(_.isIE){
+        if(n &amp;&amp; n.tagName != &#39;BODY&#39;){
+            d = d || document.createElement(&#39;div&#39;);
+            d.appendChild(n);
+            d.innerHTML = &#39;&#39;;
+        }
+	}else{
+	    if(n &amp;&amp; n.parentNode &amp;&amp; n.tagName != &#39;BODY&#39;){
+	        n.parentNode.removeChild(n);
+	    }
+	}
+};</code></pre>
+
+<p>为什么jQuery的 <code>getJSON</code> 在进行跨域请求时仍然存在比较严重的内存泄漏？或许是script节点不同于普通的html元素吧，无法按照上述方式删除吧。</p>
+				</div><!-- entry-content -->
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">xugaofan</span> - <span class="fn email">xugaofan@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/damngoto/" rel="me">github.com/damngoto</a></li>
+						<li class="twitter"><a href="http://twitter.com/damngoto/" rel="me">twitter.com/damngoto</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://layouts-the.me">the_minimum</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/javascript/2011/10/22/JSONP-Memory-Leak" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+  
+</body>
+</html>
+

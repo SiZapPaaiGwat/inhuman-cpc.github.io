@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Dimensions of Elements</title>
+	<meta name="author" content="xugaofan">
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Dimensions of Elements" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">高凡</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="page"><a href="/pages.html">pages</a></li>
+						<li class="category"><a href="/categories.html">categories</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="forkme"><div><iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user=plusjade&repo=jekyll-bootstrap&type=fork&count=true"
+									allowtransparency="true" frameborder="0" scrolling="0" width="95px" height="20px"></iframe></div></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Dimensions of Elements</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p><strong>在使用JavaScript脚本获取 <code>元素的尺寸</code> 时，有几个属性你需要弄清楚，不然会很棘手。以往我都是对这些属性死记硬背，忘记了就查手册。看完本文我相信这种情况就不会再发生了.</strong></p>
+
+<h2 id='id1'>元素占据的物理空间的尺寸</h2>
+
+<p>如果你需要获得元素占据的物理空间，那么使用 <code>ffsetHeight</code> 和 <code>offsetWidth</code> 。 自然而然此物理空间必然包含的有：<code>padding</code> 、<code>滚动条</code> 、<code>border</code>。这两个属性与 <code>getBoundingClientRect()</code>的height和width属性是一致的。</p>
+
+<p>为了帮助理解请看下图：</p>
+
+<p><img src='https://developer.mozilla.org/@api/deki/files/186/=Dimensions-offset.png' alt='Alt text' /></p>
+
+<h2 id='id2'>元素内部内容的可视区域的尺寸</h2>
+
+<p>可视区域包含padding，但是不包含border、滚动条。此时请使用 <code>clientHeight</code> 和 <code>clientWidth</code> 。</p>
+
+<p>为了帮助理解请看下图：</p>
+
+<p><img src='https://developer.mozilla.org/@api/deki/files/185/=Dimensions-client.png' alt='Alt text' /></p>
+
+<h2 id='id3'>元素内部内容的全部尺寸</h2>
+
+<p>如果你要获取元素内容的真正大小，当然也包含那些不可见的内容，此时你需要使用 <code>scrollHeight</code> / <code>scrollWidth</code> 。</p>
+
+<p>例如一张600<em>400的图片被包含在一个300</em>300的可滚动的容器元素内，那么scrollWidth将返回600，而scrollHeight将返回400</p>
+
+<h2 id='id4'>获取元素的真实尺寸</h2>
+
+<p>大部分场景，我们并不关心元素的全部内容的尺寸（window/document/body元素除外），最常用的恐怕还是获取元素占据的物理空间(offsetHeight/offsetWidth)。</p>
+
+<p>比如对某段文字设置自定义的tooltip，这个时候需要获取目标元素的高度然后对tooltip进行定位。</p>
+
+<p>不论是clientHeight还是offsetHeight它们都包含了padding，假设这段文字包含了100px的padding，这个tooltip的位置显然会极其的不准确。</p>
+
+<p>因此获取元素的高度通常是需要去掉padding。</p>
+
+<p>由于元素的style属性只能获取到内联样式的width/height，所以在IE中需要使用 <code>el.currentStyle.height/width</code>， 而标准浏览器中使用 <code>window.getComputedStyle(el,null).width/height</code>。 下面是我整理的园友Snandy的一个用户获取元素真实高度和宽度的方法 :</p>
+
+<pre><code>function getStyle(el) {
+    if(window.getComputedStyle) {
+        return window.getComputedStyle(el, null);
+    }else{
+        return el.currentStyle;
+    }
+}
+function getWH(el, name) {
+    var val = name === &quot;width&quot; ? el.offsetWidth : el.offsetHeight,
+        which = name === &quot;width&quot; ? [&#39;Left&#39;, &#39;Right&#39;] : [&#39;Top&#39;, &#39;Bottom&#39;];
+    // display is none
+    if(val === 0) {
+        return 0;
+    }
+    var style = getStyle(el);
+    for(var i = 0, a; a = which[i++];) {
+        val -= parseFloat( style[&quot;border&quot; + a + &quot;Width&quot;]) || 0;
+        val -= parseFloat( style[&quot;padding&quot; + a ] ) || 0;
+    }
+    return val;
+ } </code></pre>
+<hr />
+<h2 id='jquery'>jQuery与元素尺寸相关的方法</h2>
+
+<h3 id='jqueryheightjquerywidth'>jQuery.height()/jQuery.width()</h3>
+
+<p>返回一个整数，为匹配的jQuery对象集合中第一个元素的高度值。 注意此结果不关心盒式模型，不包含元素的padding。此方法等价于getWH(el,&#8217;height/width&#8217;) 这个方法同样能计算出window和document的高度。</p>
+
+<h3 id='jqueryinnerheightjqueryinnerwidth'>jQuery.innerHeight()/jQuery.innerWidth()</h3>
+
+<p>对比jQuery.height() /jQuery.width() 此结果包含padding，但是不包含border。 当元素el未设置border时，此方法等价于el.offsetHeight/offsetWidth</p>
+
+<h3 id='jqueryouterheightjqueryouterwidth'>jQuery.outerHeight()/jQuery.outerWidth()</h3>
+
+<p>对比jQuery.height() /jQuery.width() 此结果包含padding和border，默认不包含margin。 当元素未指定margin时，此方法等价于el.offsetHeight/offsetWidth 可以传入一个bool变量来指定是否包含margin。</p>
+
+<p>注意： 由于获取普通元素的全部内容的尺寸意义不大（某些元素除外如window、document、iframe等）， 所以jQuery的这三个方法都未包含不可见区域。</p>
+<hr />
+<h3 id='id5'>参考阅读</h3>
+
+<ul>
+<li><a href='http://www.cnblogs.com/snandy/archive/2011/09/06/2167440.html'>各情景下元素宽高的获取 by Snandy</a></li>
+
+<li><a href='https://developer.mozilla.org/en/Determining_the_dimensions_of_elements'>Determining the dimensions of elements</a></li>
+
+<li><a href='http://msdn.microsoft.com/en-us/library/ms530302(VS.85'>Measuring Element Dimension and Location with CSSOM in Internet Explorer 9</a>.aspx)</li>
+</ul>
+				</div><!-- entry-content -->
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">xugaofan</span> - <span class="fn email">xugaofan@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/damngoto/" rel="me">github.com/damngoto</a></li>
+						<li class="twitter"><a href="http://twitter.com/damngoto/" rel="me">twitter.com/damngoto</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://layouts-the.me">the_minimum</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/javascript/2011/09/26/Dimensions-of-Elements" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+  
+</body>
+</html>
+

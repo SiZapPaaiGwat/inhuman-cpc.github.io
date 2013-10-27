@@ -1,0 +1,369 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>A Cross Domain Practice</title>
+	<meta name="author" content="xugaofan">
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="A Cross Domain Practice" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">高凡</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="page"><a href="/pages.html">pages</a></li>
+						<li class="category"><a href="/categories.html">categories</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="forkme"><div><iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user=plusjade&repo=jekyll-bootstrap&type=fork&count=true"
+									allowtransparency="true" frameborder="0" scrolling="0" width="95px" height="20px"></iframe></div></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">A Cross Domain Practice</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<h2 id='id30'>项目需求</h2>
+
+<p>对一个照片列表页面的每张图片在前端进行下载耗时统计，并定期上报。</p>
+
+<h2 id='id31'>基本思路</h2>
+
+<p>使用<code>XMLHttpRequest</code>下载图片，实现下载耗时统计。上报功能则一次上报<code>localStorage</code>存储的多张图片的统计信息，这里不做讨论</p>
+
+<h2 id='id32'>问题难点</h2>
+
+<p>使用<code>XMLHttpRequest</code>需要跨域访问图片服务器</p>
+
+<h2 id='id33'>其它说明</h2>
+
+<p><strong>项目只服务于移动终端，本文的一切测试原则上只涉及<code>Webkit</code>系列的浏览器</strong></p>
+
+<p><strong>为了方便快捷地看到效果，后台使用<code>Ruby</code>语言的轻量级框架<code>Sinatra</code></strong></p>
+
+<p><strong>使用<code>127.0.0.1</code>访问<code>localhost</code>模拟跨域图片请求</strong></p>
+
+<h2 id='id34'>项目文件</h2>
+
+<p><strong>前端测试主页面 <code>test.html</code></strong></p>
+
+<p><strong>后台请求处理文件 <code>myapp.rb</code></strong></p>
+
+<p><strong>一张测试图片 <code>london.jpg</code>，大小47714B</strong></p>
+
+<h2 id='id35'>代码预览</h2>
+
+<h3 id='testhtml'>test.html</h3>
+
+<pre><code>```html
+&lt;!doctype html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+	&lt;head&gt;
+		&lt;meta charset=&quot;utf-8&quot; /&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;h1&gt;跨域获取图片的文件大小&lt;/h1&gt;
+		&lt;button id=&quot;send&quot;&gt;Send Ajax Request&lt;/button&gt;
+		&lt;script&gt;
+			+function(){
+				var xhr = new XMLHttpRequest(),
+					host = location.href.indexOf(&#39;localhost&#39;)&gt;-1?&#39;127.0.0.1&#39;:&#39;localhost&#39;,
+					url = &#39;http://&#39; + host + &#39;:4567/img&#39;
+				xhr.onload  = function(e){
+					console.log(e)
+				}
+				xhr.onerror = function(a){
+					console.log(a)
+				}
+				var send = document.getElementById(&#39;send&#39;)
+				send.addEventListener(&#39;click&#39;,function(){
+					xhr.abort()
+					xhr.open(&#39;GET&#39;, url, true)
+					xhr.send(null)
+				},false)
+			}()
+		&lt;/script&gt;
+```</code></pre>
+
+<h3 id='myapprb'>myapp.rb</h3>
+
+<pre><code>```ruby
+# myapp.rb
+require &#39;rubygems&#39;
+require &#39;sinatra&#39;
+
+get &#39;/&#39; do
+	send_file &#39;test.html&#39;
+end
+
+#跨域请求
+get &#39;/img&#39; do
+	send_file &#39;london.jpg&#39;
+end
+```</code></pre>
+
+<h2 id='id36'>开始工作</h2>
+
+<p>启动web server以后就开始我们的测试工作了。打开<code>chrome</code>及其<code>控制台</code>，输入 http://localhost:4567/，点击页面中的按钮，不出意外你会在chrome控制台看到下面的错误提示。</p>
+
+<p><code>XMLHttpRequest cannot load http://127.0.0.1:4567/img. Origin http://localhost:4567 is not allowed by Access-Control-Allow-Origin.</code></p>
+
+<p>因为我们对跨域访问没有进行任何设置，所以自然无法通过浏览器内在的<code>同源安全机制</code>。</p>
+
+<h2 id='id37'>实现跨域访问</h2>
+
+<p>google如何实现跨域访问，很快找到了一种方法。在网站根目录放置<code>crossdomain.xml</code>的配置文件，就可以完美地实现跨域访问。难怪qq.com和taobao.com都不约而同的配置了这个文件，该文件的格式一般如下：</p>
+
+<pre><code>&lt;cross-domain-policy&gt;
+	&lt;allow-access-from domain=&quot;*.site.com&quot;/&gt;
+	&lt;allow-access-from domain=&quot;*.site.net&quot;/&gt;
+	&lt;allow-access-from domain=&quot;*.sitecdn.com&quot;/&gt;
+&lt;/cross-domain-policy&gt;</code></pre>
+
+<p>经过一番测试，发现这样还是无法实现跨域访问。后来终于知道crossdomain.xml文件是flash跨域专用，而且据说已经被Adobe公司申请为专利。看来这条路是走不通了。</p>
+
+<p>于是继续google，终于在<a href='http://www.w3.org/TR/cors/'>这里</a>看到了一切关于我们想要的。，可惜<code>w3c</code>的文档总是那么地冗长而乏味，令人望而生畏。比如在介绍这个<code>Access-Control-Allow-Origin</code>的响应头如何设置时，看着这里的介绍是&#8221; origin-list-or-null | &#8221;<em>&#8220;，我以为可以一次性设置多个origin，比如 a.com,b.com,c.com。一番折腾之后发现这样设置和没有设置是一样的效果，如果不设置为星号就只能设置一个站点。那我们就暂时设置为&#8221;</em>&#8220;吧，安全问题稍后再考虑！修改我们的后台代码，加入一个全局的<code>过滤器</code>设置响应头，下面是修改后的myapp.rb文件：</p>
+
+<pre><code>```ruby
+# myapp.rb
+require &#39;rubygems&#39;
+require &#39;sinatra&#39;
+
+get &#39;/&#39; do
+	send_file &#39;test.html&#39;
+end
+
+#跨域请求
+get &#39;/img&#39; do
+	send_file &#39;london.jpg&#39;
+end
+
+after do
+	headers\
+	&#39;Access-Control-Allow-Origin&#39; =&gt; &#39;*&#39;
+end
+```</code></pre>
+
+<p>现在我们重启web server和浏览器，继续输入http://localhost:4567/，点击页面中的按钮发起跨域请求，查看crhome控制台，没有发现错误，请求顺利完成。那就让我们看看<code>Network</code>中的跨域访问请求到底多了些什么：</p>
+
+<p><em>Access-Control-Allow-Origin:</em></p>
+
+<p><em>Connection:Keep-Alive</em></p>
+
+<p><em>Content-Length:47714</em></p>
+
+<p><em>Content-Type:image/jpeg</em></p>
+
+<p><em>Date:Fri, 27 Jul 2012 07:11:42 GMT</em></p>
+
+<p><em>Last-Modified:Fri, 27 Jul 2012 02:52:45 GMT</em></p>
+
+<p><em>Server:WEBrick/1.3.1 (Ruby/1.8.7/2011-12-28)</em></p>
+
+<p><em>X-Frame-Options:sameorigin</em></p>
+
+<p><em>X-Xss-Protection:1; mode=block</em></p>
+
+<p>果然我们设置的响应头<code>Access-Control-Allow-Origin</code>生效了，太神奇了！通过服务器和浏览器的协作，我们轻松地实现了跨域访问。现在看来W3C搞的这些跨域访问控制的标准还是比较靠谱的啊，如果说有什么缺点，那就是设置多个站点的时候麻烦了点（比如qq.com需要配置跨域访问控制的话），其它的缺点一时我还真说不出来。</p>
+
+<h2 id='id38'>读取图片的文件大小</h2>
+
+<p>目前为止，我们算是成功地实现了跨域请求，但是离我们的目标还差一点。我们还需要知道这个图片的文件大小，从之前服务器输出的响应头来看，应该就是<code>Content-Length</code>这个响应头了。那就修改下我们的页面代码，获取这个响应头吧：</p>
+
+<pre><code>```html
+&lt;!doctype html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+	&lt;head&gt;
+		&lt;meta charset=&quot;utf-8&quot; /&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;h1&gt;跨域获取图片的文件大小&lt;/h1&gt;
+		&lt;button id=&quot;send&quot;&gt;Send Ajax Request&lt;/button&gt;
+		&lt;script&gt;
+			+function(){
+				var xhr = new XMLHttpRequest(),
+					host = location.href.indexOf(&#39;localhost&#39;)&gt;-1?&#39;127.0.0.1&#39;:&#39;localhost&#39;,
+					url = &#39;http://&#39; + host + &#39;:4567/img&#39;
+				xhr.onload  = function(e){
+					console.log(this.getResponseHeader(&#39;Content-Length&#39;))
+					console.log(this.responseText.length)
+				}
+				xhr.onerror = function(a){
+					console.log(a)
+				}
+				var send = document.getElementById(&#39;send&#39;)
+				send.addEventListener(&#39;click&#39;,function(){
+					xhr.abort()
+					xhr.open(&#39;GET&#39;, url, true)
+					xhr.send(null)
+				},false)
+			}()
+		&lt;/script&gt;
+```</code></pre>
+
+<p>刷新页面，打开控制台，点击按钮，一个红色的错误呈现在我们眼前：</p>
+
+<p><code>Refused to get unsafe header &quot;Content-Length&quot;</code></p>
+
+<p>怎么样让浏览器服软允许脚本获取这个响应头呢？还是继续去w3c的文档找找吧。很幸运，这个<code>Access-Control-Expose-Headers</code>似乎和我们的需求很匹配啊，不妨在过滤器中加入输出这个响应头来试一试：</p>
+
+<pre><code># myapp.rb
+require &#39;rubygems&#39;
+require &#39;sinatra&#39;
+
+get &#39;/&#39; do
+	send_file &#39;test.html&#39;
+end
+
+#跨域请求
+get &#39;/img&#39; do
+	send_file &#39;london.jpg&#39;
+end
+
+after do
+	headers\
+	&#39;Access-Control-Allow-Origin&#39; =&gt; &#39;*&#39;,
+	&#39;Access-Control-Expose-Headers&#39; =&gt; &#39;Content-Length&#39;
+end</code></pre>
+
+<p>重启web server，刷新页面，打开chrome控制台，点击按钮。没有任何错误，顺利输出两个数值：47714，45926。看来已经能够顺利的获取到Content-Length响应头，而且数值也很准确，和文件大小一致。但是这个<code>responseText</code>为什么少了接近2KB呢？还请高人解答。</p>
+
+<p>一切都很顺利，不过虽然只针对webkit系浏览器，至少也得测试下safari吧。打开safari及其控制台，输入url，点击按钮，居然抛出了和之前未设置<code>Access-Control-Expose-Headers</code>时一样的错误：</p>
+
+<p><code>Refused to get unsafe header &quot;Content-Length&quot;</code></p>
+
+<p>是不是浏览器缓存的问题呢？重启浏览器再测试，问题依旧。看来这应该就是safari的bug了。既然safari不支持，那就意味着我们前端脚本无法使用<code>getResponseHeader</code>了，那问题该如何解决呢？让我们再看看w3c上关于<code>XMLHttpRequest Level 2</code>的实现还有属性和函数我们可能用得上，继续找啊&#8230;终于发现XMLHttpRequest Level 2有一个<a href='http://www.w3.org/TR/XMLHttpRequest2/#handler-xhr-onprogress'>onprogress</a>事件和<a href='http://dvcs.w3.org/hg/progress/raw-file/tip/Overview.html#progressevent'>ProgressEvent</a>对象，于是修改我们的页面代码如下：</p>
+
+<pre><code>&lt;!doctype html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+	&lt;head&gt;
+		&lt;meta charset=&quot;utf-8&quot; /&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;h1&gt;跨域获取图片的文件大小&lt;/h1&gt;
+		&lt;button id=&quot;send&quot;&gt;Send Ajax Request&lt;/button&gt;
+		&lt;script&gt;
+			+function(){
+				var xhr = new XMLHttpRequest(),
+					host = location.href.indexOf(&#39;localhost&#39;)&gt;-1?&#39;127.0.0.1&#39;:&#39;localhost&#39;,
+					url = &#39;http://&#39; + host + &#39;:4567/img&#39;
+				xhr.onprogress  = function(e){
+					if(e.lengthComputable){
+						if(e.loaded/e.total == 1){
+							//invoke onload
+							console.log(e.total)
+						}
+					}
+				}
+				xhr.onerror = function(a){
+					console.log(a)
+				}
+				var send = document.getElementById(&#39;send&#39;)
+				send.addEventListener(&#39;click&#39;,function(){
+					xhr.abort()
+					xhr.open(&#39;GET&#39;, url, true)
+					xhr.send(null)
+				},false)
+			}()
+		&lt;/script&gt;</code></pre>
+
+<p>细心的同学可能会问为什么不在<code>onload</code>中执行相关操作，其实经我测试发现onload之后<code>e.total</code>和<code>e.loaded</code>已经被设置为0，虽然<code>responseText</code>依然可读，但是这与真实的文件大小有一点的误差。</p>
+
+<h2 id='id39'>最后的完善</h2>
+
+<p>虽然我们的目标已经完成，但是我们的工作还没有结束。因为服务端存在一个严重的<code>安全隐患</code>。我们草率地将<code>Access-Control-Allow-Origin</code>设置为”＊“，不可避免地为一些黑客攻击创造了便利条件。</p>
+
+<p>其实，既然我们的跨域访问只开放给部分信任的站点，那么我们只需要在后台的过滤器中判断请求来源是否属于白名单之中，如果存在则输出Access-Control-Allow-Origin响应头，内容为该站点域名。至于这个白名单的设计，可以参考<code>Apache</code>（之前一直误以为Apache的做法是业界的标准）。</p>
+
+<p>另外跨域访问控制一般针对的是Ajax请求，所以我们还可以在过滤器中加入一个是否是Ajax请求的判断(服务端判断请求头中是否包含<code>X-Requested-With</code>:<code>XMLHttpRequest</code>)，避免为普通的请求也加入<code>Access-Control-Allow-Origin</code>这个响应头。</p>
+
+<p>最后由于各浏览器对<code>Access-Control-Expose-Headers</code>的实现并不完善，所以这个响应头就显得异常鸡肋。</p>
+				</div><!-- entry-content -->
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">xugaofan</span> - <span class="fn email">xugaofan@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/damngoto/" rel="me">github.com/damngoto</a></li>
+						<li class="twitter"><a href="http://twitter.com/damngoto/" rel="me">twitter.com/damngoto</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://layouts-the.me">the_minimum</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/javascript ruby sinatra/2012/07/27/A-Cross-Domain-Practice" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+  
+</body>
+</html>
+
