@@ -1,0 +1,10 @@
+---
+name : the-program
+website :  http://layouts-the.me.s3-website-us-east-1.amazonaws.com/themes/the-program/
+description :  "A minimumlist theme for Jekyll + Jekyll-Bootstrap."
+git_url : git://github.com/jekyllbootstrap/theme-the-program.git
+source_url : https://github.com/jekyllbootstrap/theme-the-program
+author:
+  name : Yuya Saito
+  email : cssradar@gmail.com
+  website : http://css.studiomohawk.com/
