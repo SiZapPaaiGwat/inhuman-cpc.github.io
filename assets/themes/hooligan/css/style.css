@@ -1,0 +1,411 @@
+@import url(http://fonts.googleapis.com/css?family=Advent+Pro);
+@import url(http://fonts.googleapis.com/css?family=Oxygen);
+/* Partials */
+/* Theme Vars */
+/* Compass Vars */
+/* Override some defaults */
+/* line 13, ../_sass/_base.scss */
+html, body {
+  background-color: #2a2a2a;
+  background: url(../images/bgs/body.png) repeat;
+}
+
+/* line 18, ../_sass/_base.scss */
+body {
+  color: #bbb;
+  text-shadow: 1px 1px 1px #000;
+  height: 100%;
+  font-family: 'Oxygen', sans-serif;
+  font-size: 14px;
+}
+
+/* line 26, ../_sass/_base.scss */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: normal;
+  color: #999;
+  text-rendering: optimizelegibility;
+  font-family: 'Advent Pro', sans-serif;
+  /*font-family: 'Pontano Sans', sans-serif;*/
+}
+
+/* line 35, ../_sass/_base.scss */
+a {
+  color: #4cb4e8;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+/* line 37, ../_sass/_base.scss */
+a:hover {
+  color: #d4edf9;
+  text-decoration: none;
+}
+
+/* line 44, ../_sass/_base.scss */
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
+  font-weight: normal;
+  color: #999999;
+}
+
+/* line 49, ../_sass/_base.scss */
+h1, h2 {
+  margin: 0 0 15px;
+}
+
+/* line 53, ../_sass/_base.scss */
+h1 {
+  font-size: 40px;
+}
+
+/* line 57, ../_sass/_base.scss */
+h2 {
+  font-size: 30px;
+}
+
+/* line 61, ../_sass/_base.scss */
+pre, code {
+  color: #ccc;
+}
+
+/* line 65, ../_sass/_base.scss */
+pre > code {
+  /* Reset box-shadow for pygments */
+  background: none;
+  box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
+}
+
+/* line 74, ../_sass/_base.scss */
+hr {
+  border: none;
+  background: rgba(0, 0, 0, 0.7);
+  height: 1px;
+}
+
+/* Layout */
+/* line 81, ../_sass/_base.scss */
+.navbar {
+  margin-bottom: 0;
+}
+/* line 83, ../_sass/_base.scss */
+.navbar div.navbar-inner {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+}
+/* line 85, ../_sass/_base.scss */
+.navbar div.navbar-inner a.brand {
+  padding: 10px 20px;
+}
+/* line 90, ../_sass/_base.scss */
+.navbar div.navbar-inner ul.nav:first-child li a {
+  padding: 12px 10px 8px;
+}
+
+/* line 99, ../_sass/_base.scss */
+.container > footer {
+  margin-top: 20px;
+  clear: both;
+}
+
+/* line 103, ../_sass/_base.scss */
+.container > footer p {
+  text-align: center;
+  /* center align it with the container */
+}
+
+/* Content */
+/* line 110, ../_sass/_base.scss */
+.content {
+  /* when there's no page-header */
+  /* Wide column content */
+}
+/* line 111, ../_sass/_base.scss */
+.content img {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+/* line 115, ../_sass/_base.scss */
+.content.no-header {
+  padding-top: 40px;
+}
+/* line 122, ../_sass/_base.scss */
+.content div.row div.span8 > img {
+  display: block;
+  margin: 10px auto;
+}
+/* line 128, ../_sass/_base.scss */
+.content div.row div.span4 h4 {
+  margin-top: 10px;
+}
+/* line 130, ../_sass/_base.scss */
+.content div.row div.span4 h4:first {
+  margin-top: 0;
+}
+/* line 134, ../_sass/_base.scss */
+.content p {
+  padding-bottom: 15px;
+  line-height: 25px;
+  margin: 0;
+}
+
+/* Page header tweaks */
+/* line 142, ../_sass/_base.scss */
+.page-header {
+  -webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  -moz-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  background: #202020;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: none;
+  padding: 20px 20px 10px;
+  margin: 0px -20px 20px;
+  z-index: 0;
+  -moz-border-radius-bottomleft: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -ms-border-bottom-left-radius: 5px;
+  -o-border-bottom-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -ms-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+/* line 155, ../_sass/_base.scss */
+.page-header h1 {
+  color: #eee;
+  margin-bottom: 0;
+}
+
+/* line 161, ../_sass/_base.scss */
+.topbar .btn {
+  border: 0;
+}
+
+/* Pagination */
+/* line 168, ../_sass/_base.scss */
+div.pagination li a {
+  -webkit-box-shadow: 0px 1px 1px black;
+  -moz-box-shadow: 0px 1px 1px black;
+  box-shadow: 0px 1px 1px black;
+}
+
+/* Buttons */
+/* line 176, ../_sass/_base.scss */
+a.btn, a.btn.disabled {
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 1px 1px 2px #000;
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  -moz-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.8) 0 1px 0, rgba(255, 255, 255, 0.5) 0 1px 1px 0px inset;
+  -o-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+}
+/* line 187, ../_sass/_base.scss */
+a.btn:hover, a.btn.disabled:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+/* line 190, ../_sass/_base.scss */
+a.btn.disabled, a.btn.disabled.disabled {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Tags */
+/* line 196, ../_sass/_base.scss */
+.tag_box {
+  list-style: none;
+  margin: 0;
+  padding: 5px 0;
+  overflow: hidden;
+}
+/* line 202, ../_sass/_base.scss */
+.tag_box.inline li {
+  float: left;
+}
+/* line 206, ../_sass/_base.scss */
+.tag_box li {
+  line-height: 28px;
+}
+/* line 210, ../_sass/_base.scss */
+.tag_box a.active {
+  background: #57A957;
+  border: 1px solid #4C964D;
+  color: #FFF;
+}
+/* line 215, ../_sass/_base.scss */
+.tag_box a span {
+  vertical-align: super;
+  font-size: 0.8em;
+}
+
+/* line 223, ../_sass/_base.scss */
+.tag_box.inline a,
+.tag_box a {
+  padding: 3px 6px;
+  margin: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 3px;
+  text-decoration: none;
+  -moz-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.8) 0 1px 0, rgba(255, 255, 255, 0.5) 0 1px 1px 0px inset;
+  -o-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+}
+/* line 235, ../_sass/_base.scss */
+.tag_box.inline a:hover,
+.tag_box a:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Page-specific */
+/* line 242, ../_sass/_base.scss */
+div.content div#page-index {
+  padding-top: 30px !important;
+}
+
+/* Zocial Overrides */
+/* line 248, ../_sass/_base.scss */
+.navbar a.zocial {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* line 254, ../_sass/_base.scss */
+.zocial.googleplus:focus,
+.zocial.googleplus:hover {
+  color: #e01d30 !important;
+}
+
+/* line 259, ../_sass/_base.scss */
+.zocial.twitter:focus,
+.zocial.twitter:hover {
+  color: #46c0fb !important;
+}
+
+/* line 264, ../_sass/_base.scss */
+.zocial.linkedin:focus,
+.zocial.linkedin:hover {
+  color: #50a1cb !important;
+}
+
+/* line 269, ../_sass/_base.scss */
+.zocial.rss:focus,
+.zocial.rss:hover {
+  color:#fb9d3a !important;
+}  
+
+/* Layout */
+/* line 2, ../_sass/_responsive.scss */
+.navbar {
+  margin-bottom: 0;
+}
+/* line 4, ../_sass/_responsive.scss */
+.navbar div.navbar-inner {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+}
+/* line 7, ../_sass/_responsive.scss */
+.navbar ul.social {
+  /* Hide social menu on low-res screens */
+}
+@media (min-width: 240px) and (max-width: 979px) {
+  /* line 7, ../_sass/_responsive.scss */
+  .navbar ul.social {
+    display: none !important;
+  }
+}
+
+/* Responsive Overrides */
+@media (max-width: 767px) {
+  /* line 18, ../_sass/_responsive.scss */
+  body {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+
+  /* line 23, ../_sass/_responsive.scss */
+  div.container {
+    padding: 0px 20px;
+  }
+  /* line 25, ../_sass/_responsive.scss */
+  div.container div.page-header {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+  }
+}
+/* Posts */
+/* line 3, ../_sass/_post.scss */
+article.post header {
+  margin-bottom: 10px;
+}
+/* line 5, ../_sass/_post.scss */
+article.post header h1, article.post header h2 {
+  margin: 0;
+}
+/* line 8, ../_sass/_post.scss */
+article.post header .category {
+  display: inline-block;
+  color: white;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-left: 6px;
+  margin-left: 3px;
+}
+
+/* line 25, ../_sass/_post.scss */
+div.posts article div.date {
+  font-size: 10px;
+  padding: 10px 0;
+}
+/* line 28, ../_sass/_post.scss */
+div.posts article div.date time {
+  -webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  -moz-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  background: #202020;
+  background-color: rgba(0, 0, 0, 0.3);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+/* This is for your site's custom styling */
+/* line 3, ../_sass/_custom.scss */
+div.sidebar section {
+  background: #202020;
+  background-color: rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  -moz-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  padding: 15px;
+}
+/* line 12, ../_sass/_custom.scss */
+div.sidebar section img.icon {
+  float: left;
+  margin: 7px 15px 0 0;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
