@@ -1,12 +1,3 @@
----
-layout: page
-title: AOP in JavaScript
-category: javascript
-tags: [AOP, JavaScript]
-tagline: 快速地在js中使用AOP编程
----
-
-{% include JB/setup %}
 
 ## 基本概念
 

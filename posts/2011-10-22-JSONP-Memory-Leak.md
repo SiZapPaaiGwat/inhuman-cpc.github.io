@@ -1,12 +1,4 @@
----
-layout: page
-title: JSONP Memory Leak
-category: javascript
-tags: [Memory-Leak, JavaScript, JSONP, jQuery, EXT]
-tagline: jsonp跨域请求的内存泄漏
----
 
-{% include JB/setup %}
 
 ## 什么是JSONP？
 

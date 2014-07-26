@@ -1,10 +1,3 @@
----
-layout: page
-title: 在Mac上重置MySQL的root帐户的密码
-category: unix
-tags: [mac, unix, mysql]
-tagline: 
----
 
 **最近需要用node操作mysql，但是今天忘记mysql的密码了，需要重置。但是一直不清楚MAMP里面的mysql怎么操作，
 今天就花了点时间研究了一下。顺便做一点记录，因为不是经常用，很容易遗忘。

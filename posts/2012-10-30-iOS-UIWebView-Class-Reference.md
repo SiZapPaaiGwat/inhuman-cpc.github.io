@@ -1,12 +1,3 @@
----
-layout: page
-title: iOS UIWebView Class Reference
-category: javascript
-tags: [iOS, JavaScript, HTML5]
-tagline: Apple SDK简要翻译
----
-
-{% include JB/setup %}
 
 [原文地址](https://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIWebView_Class/Reference/Reference.html)
 

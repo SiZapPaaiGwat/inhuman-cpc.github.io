@@ -1,11 +1,3 @@
----
-layout: page
-title: Mac and Unix 学习笔记
-category: linux
-tags: [mac, unix]
-tagline:
----
-
 ## export
 
 export用来设置查看和设置环境变量，直接输入export查看当前系统的环境变量。修改的用法如下:

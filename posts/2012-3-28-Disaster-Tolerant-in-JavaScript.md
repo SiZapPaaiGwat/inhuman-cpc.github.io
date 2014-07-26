@@ -1,12 +1,3 @@
----
-layout: page
-title: Disaster Tolerant in JavaScript
-category: javascript
-tags: [JavaScript, AOP]
-tagline: 前端容灾方案
----
-
-{% include JB/setup %}
 
 ## 应用场景
 

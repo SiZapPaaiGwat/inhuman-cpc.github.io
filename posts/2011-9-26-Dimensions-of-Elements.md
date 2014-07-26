@@ -1,10 +1,3 @@
----
-layout: page
-title: Dimensions of Elements
-category: javascript
-tags: [dimension, JavaScript, jQuery]
-tagline: 元素的各种尺寸
----
 
 **在使用JavaScript脚本获取 `元素的尺寸` 时，有几个属性你需要弄清楚，不然会很棘手。以往我都是对这些属性死记硬背，忘记了就查手册。看完本文我相信这种情况就不会再发生了.
 

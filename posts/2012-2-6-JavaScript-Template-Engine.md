@@ -1,12 +1,4 @@
----
-layout: page
-title: An Easy Template Engine in JavaScript
-category: javascript
-tags: [Template, JavaScript]
-tagline: 一个简单的JS模版
----
 
-{% include JB/setup %}
 
 ## 设计目的
 

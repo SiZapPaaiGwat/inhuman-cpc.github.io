@@ -1,12 +1,3 @@
----
-layout: page
-title: Ajax Encoding
-category: javascript
-tags: [javascript, encoding, ajax]
-tagline: Ajax中的编码问题
----
-
-{% include JB/setup %}
 
 前些天看到一个关于Ajax编码的问题，当时被提问者的描述绕的都想不清楚，今天闲来没事就整理下。原文地址在[这里](http://segmentfault.com/q/1010000000130593)。
 

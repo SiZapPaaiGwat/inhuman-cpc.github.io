@@ -1,12 +1,3 @@
----
-layout: page
-title: A Cross Domain Practice
-category: javascript ruby sinatra
-tags: [JavaScript, Ruby, Sinatra]
-tagline: 一次跨域实战
----
-
-{% include JB/setup %}
 
 ## 项目需求
 
