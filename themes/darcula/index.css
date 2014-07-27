@@ -1,0 +1,246 @@
+* {
+    -webkit-print-color-adjust: exact;
+    font-size: 14px;
+}
+body {
+  font-family:Monaco, Consolas, "Lucida Console", monospace, STHeiti, STKaiti;
+  line-height: 1.6;
+  padding:10px 30px;
+  background: rgb(39, 40, 34);
+  color: rgb(195, 180, 95);
+}
+strong{
+  color: rgb(131, 183, 42);
+}
+a{
+  color: rgb(215, 138, 39);
+}
+a.absent {
+  color: rgb(215, 138, 39);
+}
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative;
+  color: rgb(80, 157, 162);
+}
+h1 tt, h1 code {
+  font-size: inherit;
+}
+h2 tt, h2 code {
+  font-size: inherit;
+}
+h3 tt, h3 code {
+  font-size: inherit;
+}
+h4 tt, h4 code {
+  font-size: inherit;
+}
+h5 tt, h5 code {
+  font-size: inherit;
+}
+h6 tt, h6 code {
+  font-size: inherit;
+}
+h1 {
+  font-size: 2em;
+}
+h2 {
+  font-size: 1.6em;
+}
+h3 {
+  font-size: 1.4em;
+}
+h4 {
+  font-size: 1.2em;
+}
+h5 {
+  font-size: 1em;
+}
+h6 {
+  font-size: 1em;
+}
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0;
+}
+hr {
+  border: 1px dashed rgb(147, 36, 71);
+  padding: 0;
+}
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0;
+}
+li p.first {
+  display: inline-block;
+}
+li {
+  margin: 0;
+}
+ul, ol {
+  padding-left: 30px;
+}
+ul :first-child, ol :first-child {
+  margin-top: 0;
+}
+dl {
+  padding: 0;
+}
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+blockquote {
+  border-left: 4px solid #888;
+  padding: 0 15px;
+  color: #777;
+}
+table {
+  padding: 0;
+  border-collapse: collapse;
+}
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+}
+table tr th {
+  font-weight: bold;
+  border: 1px solid #ccc;
+  margin: 0;
+  padding: 6px 13px;
+}
+table tr td {
+  border: 1px solid #ccc;
+  margin: 0;
+  padding: 6px 13px;
+}
+img {
+  max-width: 100%;
+}
+span.frame {
+    display: block;
+    overflow: hidden;
+}
+span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto;
+}
+span.frame span img {
+    display: block;
+    float: left;
+}
+span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0;
+}
+span.align-center {
+    display: block;
+    overflow: hidden;
+    clear: both;
+}
+span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center;
+}
+span.align-center span img {
+    margin: 0 auto;
+    text-align: center;
+}
+span.align-right {
+    display: block;
+    overflow: hidden;
+    clear: both;
+}
+span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right;
+}
+span.align-right span img {
+    margin: 0;
+    text-align: right;
+}
+span.float-left {
+    display: block;
+    margin-right: 13px;
+    overflow: hidden;
+    float: left;
+}
+span.float-left span {
+    margin: 13px 0 0;
+}
+span.float-right {
+    display: block;
+    margin-left: 13px;
+    overflow: hidden;
+    float: right;
+}
+span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right;
+}
+/* code style */
+pre{
+    font-size: 0.8em;
+    overflow: auto;
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+code, tt {
+    margin: 0 2px;
+    padding: 0 5px;
+    white-space: nowrap;
+    border: 1px solid #eaeaea;
+}
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+}

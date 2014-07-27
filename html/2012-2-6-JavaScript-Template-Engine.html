@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>JavaScript Template Engine.md @ 2012-2-6</title>
+	<link rel="stylesheet" href="../lib/prism/prism.css"/>
+	<link rel="stylesheet" href="../themes/darcula/index.css"/>
+</head>
+<body>
+	<h2 id="-">设计目的</h2>
+<p>减少现有代码中的字符串拼接操作，增强代码的可维护性。</p>
+<h2 id="-">实现代码</h2>
+<pre><code>/*
+ * @description An Easy Template in JavaScript, it is designed to reduce the string concatention work,
+ * to make the gigantic code more readable and maintainable.
+ */
+function Template(tmpl,source){
+    //add all template tasks to this array
+    this.task = [];
+    if(tmpl)
+        this.task.push([tmpl,source]);
+}
+/*
+ * @description core function,hanlde two cases: typeof dataSource is either object or array
+ *  when the type of dataSource is array,you&#39;d better confirm that the fields in every object is the same.
+ */
+Template.format = function(template,dataSource){
+    //default variable flags
+    var start = &#39;{&#39;, end = &#39;}&#39;;
+    if(dataSource &amp;&amp; dataSource.slice &amp;&amp; dataSource.length){
+        var retStr = [], formatted, len = dataSource.length, regMap = {};
+        //restore the RegExp,avoid to construct them repeatedly.
+        for(var regKey in dataSource[0]){
+            regMap[regKey] = new RegExp(start + regKey + end,&#39;g&#39;);
+        }
+        for(var index in dataSource){
+            formatted = template;
+            for(var key in dataSource[index]){
+                formatted = formatted.replace(regMap[key],String(dataSource[index][key]));
+            }
+            retStr.push(formatted);
+        }
+        return retStr.join(&#39;&#39;);
+    }else{
+        for(var key in dataSource){
+            template = template.replace(new RegExp(start + key + end,&#39;g&#39;),String(dataSource[index][key]));
+        }
+        return template;
+    }
+};
+Template.prototype.add = function(tmpl,source){
+    //add one template task
+    this.task.push([tmpl,source]);
+};
+/*
+ * @description handle all tasks,and return the final string.
+ *  when this method is invoked,you can reuse the instance.
+ */
+Template.prototype.end = function(){
+    var retStr = [];
+    for(var index in this.task){
+        retStr.push(Template.format(this.task[index][0],this.task[index][1]));    
+    }
+    this.task.length = 0;
+    return retStr.join(&#39;&#39;);
+}; 
+</code></pre><h2 id="-">使用方法</h2>
+<pre><code>&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;script src=&quot;jTemp.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+        &lt;ul id=&quot;MenuItems&quot;&gt;
+            &lt;li class=&quot;nav&quot;&gt;&lt;a href=&quot;{href}&quot;&gt;{text}&lt;/a&gt;&lt;/li&gt;                
+        &lt;/ul&gt;
+        &lt;script&gt;
+            var ul = document.getElementById(&#39;MenuItems&#39;);
+            var dataSource = [
+                {text:&#39;首页&#39;,href:&#39;http://www.oschina.net/&#39;},
+                {text:&#39;开源软件&#39;,href:&#39;http://www.oschina.net/&#39;},
+                {text:&#39;讨论区&#39;,href:&#39;http://www.oschina.net/&#39;},
+                {text:&#39;代码分享&#39;,href:&#39;http://www.oschina.net/&#39;},
+                {text:&#39;资讯&#39;,href:&#39;http://www.oschina.net/&#39;},
+                {text:&#39;博客&#39;,href:&#39;http://www.oschina.net/&#39;},
+                {text:&#39;Android&#39;,href:&#39;http://www.oschina.net/&#39;}
+            ];
+            var tmpl = new Template(ul.innerHTML,dataSource);
+            ul.innerHTML = tmpl.end();
+        &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h2 id="-">额外说明</h2>
+<p>上面的例子更加偏向于一个简单的HTML的 <code>模板引擎</code> ，如果这是你需要的，不妨看看 <code>jQuery</code> 的作者John Resig在几年前的一个 <a href="http://ejohn.org/blog/javascript-micro-templating/">例子</a></p>
+
+	<script src="../lib/prism/prism.js"></script>
+</body>
+</html>

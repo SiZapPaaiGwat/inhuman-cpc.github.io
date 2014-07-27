@@ -1,0 +1,14 @@
+{
+	"name": "simongfxu.github.io",
+	"description": "simongfxu's blog",
+	"author": "simonxu",
+	"version": "0.0.1",
+	"license": "MIT",
+	"keywords": ["markdown", "blog"],
+	"tags": ["markdown", "blog"],
+	"devDependencies": {
+		"bluebird": "*",
+		"async": "*",
+		"marked": "*"
+	}
+}

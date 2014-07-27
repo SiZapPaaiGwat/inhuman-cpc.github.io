@@ -35,7 +35,7 @@
 
 ### 主页面 index.php，文本编码gbk
 
-	<!docytype html>
+	<!doctype html>
 	<html>
 		<head>
 			<meta charset="gbk"/>
