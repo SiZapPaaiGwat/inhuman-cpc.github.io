@@ -48,11 +48,12 @@ convert2HTML = (filename, next) ->
 		next()
 
 # 生成index页面
+# TODO 根据日期倒叙排列
 generateIndexPage = (files) ->
 	mustache.render indexTemplate,
 		title: "Simon Xu's Blog"
-		items: files.map parseFile
-		stylesheets: ["../themes/darcula/index.css"]
+		items: files.map(parseFile).reverse()
+		stylesheets: ["./themes/darcula/index.css"]
 		scripts: []
 
 fs.readdirAsync(postsPath).then (files) ->

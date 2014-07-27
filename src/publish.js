@@ -71,8 +71,8 @@
   generateIndexPage = function(files) {
     return mustache.render(indexTemplate, {
       title: "Simon Xu's Blog",
-      items: files.map(parseFile),
-      stylesheets: ["../themes/darcula/index.css"],
+      items: files.map(parseFile).reverse(),
+      stylesheets: ["./themes/darcula/index.css"],
       scripts: []
     });
   };
