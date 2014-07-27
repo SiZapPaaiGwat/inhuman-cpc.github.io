@@ -6,9 +6,10 @@
 	"license": "MIT",
 	"keywords": ["markdown", "blog"],
 	"tags": ["markdown", "blog"],
-	"devDependencies": {
+	"dependencies": {
 		"bluebird": "*",
 		"async": "*",
-		"marked": "*"
+		"marked": "*",
+		"mustache": "*"
 	}
 }
