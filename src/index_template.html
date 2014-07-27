@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>{{title}}</title>
+	{{#stylesheets}}
+	<link rel="stylesheet" href="{{{.}}}"/>
+	{{/stylesheets}}
+</head>
+<body>
+<h1>{{title}}</h1>
+{{#items}}
+<h2>
+	<span>{{time}}</span>
+	<a href="./html/{{filename}}">
+		<strong>{{title}}</strong>
+	</a>
+
+</h2>
+{{/items}}
+{{#scripts}}
+<script src="{{{.}}}"></script>
+{{/scripts}}
+</body>
+</html>

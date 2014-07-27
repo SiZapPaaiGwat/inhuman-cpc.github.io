@@ -9,25 +9,34 @@ Promise.promisifyAll fs
 
 postsPath = "#{__dirname}/../posts"
 htmlPath = "#{__dirname}/../html"
+indexPath = "#{__dirname}/../index.html"
 concurrency = 5
 
 pageTemplate = fs.readFileSync "#{__dirname}/template.html", "utf8"
+indexTemplate = fs.readFileSync "#{__dirname}/index_template.html", "utf8"
 
 # 新文件命名
 renameFile = (filename) ->
 	path.basename(filename, '.md') + ".html"
 
+parseFile = (filename) ->
+	pieces = filename.split("-")
+	title: pieces.slice(3).join(' ')
+	time: pieces.slice(0, 3).join('-')
+	filename: renameFile filename
+
 # 正文初始化
 initHTML = (filename, mdOutput) ->
-	pieces = filename.split("-")
-	title =  pieces.slice(3).join(' ') + " @ " + pieces.slice(0, 3).join('-')
+	fileInfo = parseFile filename
 	mustache.render pageTemplate,
-		title: title
+		title: fileInfo.title + " @ " + fileInfo.time
 		body: mdOutput
 		stylesheets: ["../themes/darcula/index.css"]
 		scripts: []
 
+# 将markdown文件转换为html
 convert2HTML = (filename, next) ->
+	console.log "converting #{filename} ..."
 	filePath = postsPath + "/#{filename}"
 	fs.readFileAsync(filePath, 'utf8').then (content) ->
 		newPath = htmlPath + "/" + renameFile filename
@@ -38,10 +47,25 @@ convert2HTML = (filename, next) ->
 		console.error err
 		next()
 
+# 生成index页面
+generateIndexPage = (files) ->
+	mustache.render indexTemplate,
+		title: "Simon Xu's Blog"
+		items: files.map parseFile
+		stylesheets: ["../themes/darcula/index.css"]
+		scripts: []
+
 fs.readdirAsync(postsPath).then (files) ->
 	console.log "you have wrote #{files.length} articles via markdown."
-	async.eachLimit files, concurrency, convert2HTML, (err) ->
-		console.log "task finished."
+
+	new Promise (resolve, reject) ->
+		async.eachLimit files, concurrency, convert2HTML, (err) ->
+			if err then return reject err
+			resolve files
+.then (files)->
+	fs.writeFileAsync indexPath, generateIndexPage(files)
+
+	console.log "congrats, your blog has been updated."
 .catch (err) ->
 	console.log "oops, some error happened."
-	throw err
+	console.log err
