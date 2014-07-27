@@ -4,42 +4,45 @@ marked = require 'marked'
 mustache = require 'mustache'
 fs = require 'fs'
 path = require 'path'
+config = require '../config'
 
 Promise.promisifyAll fs
 
-postsPath = "#{__dirname}/../posts"
-htmlPath = "#{__dirname}/../html"
-indexPath = "#{__dirname}/../index.html"
-concurrency = 5
+basePath = "#{__dirname}/../"
+postsPath = basePath + config.posts_path
+htmlPath = basePath + config.html_output_path
+indexPath = basePath + config.index_page_path
+pageTemplate = fs.readFileSync basePath + config.post_template, "utf8"
+indexTemplate = fs.readFileSync basePath + config.index_page_template, "utf8"
+theme = config.default_theme
+concurrency = config.concurrency or 5
 
-pageTemplate = fs.readFileSync "#{__dirname}/template.html", "utf8"
-indexTemplate = fs.readFileSync "#{__dirname}/index_template.html", "utf8"
-
-# 新文件命名
-renameFile = (filename) ->
+# rename output html files from markdown files
+renameHTMLFile = (filename) ->
 	path.basename(filename, '.md') + ".html"
 
-parseFile = (filename) ->
+# parse information from markdown files
+parseMarkdownFile = (filename) ->
 	pieces = filename.split("-")
 	title: pieces.slice(3).join(' ')
 	time: pieces.slice(0, 3).join('-')
-	filename: renameFile filename
+	filename: renameHTMLFile filename
 
-# 正文初始化
+# init html content from markdown content
 initHTML = (filename, mdOutput) ->
-	fileInfo = parseFile filename
+	fileInfo = parseMarkdownFile filename
 	mustache.render pageTemplate,
 		title: fileInfo.title + " @ " + fileInfo.time
 		body: mdOutput
-		stylesheets: ["../themes/darcula/index.css"]
+		stylesheets: ["../themes/#{theme}/index.css"]
 		scripts: []
 
-# 将markdown文件转换为html
+# convert markdown files to html files
 convert2HTML = (filename, next) ->
 	console.log "converting #{filename} ..."
 	filePath = postsPath + "/#{filename}"
 	fs.readFileAsync(filePath, 'utf8').then (content) ->
-		newPath = htmlPath + "/" + renameFile filename
+		newPath = htmlPath + "/" + renameHTMLFile filename
 		fs.writeFileAsync newPath, initHTML(filename, marked(content))
 	.then next
 	.catch (err) ->
@@ -47,15 +50,15 @@ convert2HTML = (filename, next) ->
 		console.error err
 		next()
 
-# 生成index页面
-# TODO 根据日期倒叙排列
+# build blog home page
 generateIndexPage = (files) ->
 	mustache.render indexTemplate,
-		title: "Simon Xu's Blog"
-		items: files.map(parseFile).reverse()
-		stylesheets: ["./themes/darcula/index.css"]
-		scripts: []
+		title: config.site_name
+		items: files.map(parseMarkdownFile).reverse()
+		stylesheets: ["./themes/#{theme}/index.css"].concat config.stylesheets
+		scripts: [].concat config.scripts
 
+# start building blog
 fs.readdirAsync(postsPath).then (files) ->
 	console.log "you have wrote #{files.length} articles via markdown."
 

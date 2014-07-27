@@ -14,6 +14,7 @@ strong{
 }
 a{
   color: rgb(215, 138, 39);
+    text-decoration: none;
 }
 a.absent {
   color: rgb(215, 138, 39);
