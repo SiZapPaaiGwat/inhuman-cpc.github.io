@@ -7,7 +7,8 @@
 	<link rel="stylesheet" href="../themes/darcula/index.css"/>
 </head>
 <body>
-	<p><a href="https://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIWebView_Class/Reference/Reference.html">原文地址</a></p>
+	<h1 id="ios-webview-class-">iOS WebView Class简介</h1>
+<p><a href="https://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIWebView_Class/Reference/Reference.html">原文地址</a></p>
 <h2 id="-">属性</h2>
 <h3 id="allowsinlinemediaplayback">allowsInlineMediaPlayback</h3>
 <p><strong style="color:red;">前端重点关注</strong></p>
@@ -35,14 +36,15 @@
 <p><strong style="color:red;">前端重点关注</strong></p>
 <p>媒体播放是否需要用户动作主动触发，默认值为YES。也就是说默认情况无法自动播放音频和视频。</p>
 <p>那么默认设置下是不是一定无法自动播放呢？StackOverflow上找到一个<a href="http://stackoverflow.com/questions/4259928/how-can-i-autoplay-media-in-ios-4-2-1-mobile-safari">方法</a>解决此问题（没有测试）</p>
-<pre><code>var ifr = document.createElement(&quot;iframe&quot;);
-ifr.setAttribute(&#39;src&#39;, &quot;http://mysite.com/myvideo.mp4&quot;);
-ifr.setAttribute(&#39;width&#39;, &#39;1px&#39;);
-ifr.setAttribute(&#39;height&#39;, &#39;1px&#39;);
-ifr.setAttribute(&#39;scrolling&#39;, &#39;no&#39;);
-ifr.style.border=&quot;0px&quot;;
-document.body.appendChild(ifr);
-</code></pre><h3 id="request">request</h3>
+<pre><code class="lang-javascript">    var ifr = document.createElement(&quot;iframe&quot;);
+    ifr.setAttribute(&#39;src&#39;, &quot;http://mysite.com/myvideo.mp4&quot;);
+    ifr.setAttribute(&#39;width&#39;, &#39;1px&#39;);
+    ifr.setAttribute(&#39;height&#39;, &#39;1px&#39;);
+    ifr.setAttribute(&#39;scrolling&#39;, &#39;no&#39;);
+    ifr.style.border=&quot;0px&quot;;
+    document.body.appendChild(ifr);
+</code></pre>
+<h3 id="request">request</h3>
 <p>webview当前请求的URL，只读属性</p>
 <h3 id="scalespagetofit">scalesPageToFit</h3>
 <p>指定页面是否按比例缩放适应webview，并且用户可以更改缩放比例。默认值为NO，用户不能更改缩放比例。</p>
@@ -67,7 +69,7 @@ document.body.appendChild(ifr);
 <h3 id="stoploading">stopLoading</h3>
 <p>取消当前页的加载</p>
 <h3 id="stringbyevaluatingjavascriptfromstring">stringByEvaluatingJavaScriptFromString</h3>
-<p><strong style="color:red;">前端重点关注</strong></p>
+<p><strong>前端重点关注</strong></p>
 <p>在页面加载完成以后运行JavaScript脚本，运行脚本有如下注意事项：</p>
 <ul>
 <li>脚本运行不得超过10秒</li>

@@ -7,9 +7,12 @@
 	<link rel="stylesheet" href="../themes/darcula/index.css"/>
 </head>
 <body>
-	<p>**在使用JavaScript脚本获取 <code>元素的尺寸</code> 时，有几个属性你需要弄清楚，不然会很棘手。以往我都是对这些属性死记硬背，忘记了就查手册。看完本文我相信这种情况就不会再发生了.</p>
+	<h1 id="javascript-">JavaScript获取元素的尺寸</h1>
+<hr>
+<p>在使用JavaScript获取 <code>元素的尺寸</code> 时，有几个属性你需要弄清楚，以前我也是凭记忆，忘了就google。
+看完本文我相信这种情况就不会再发生了。</p>
 <h2 id="-">元素占据的物理空间的尺寸</h2>
-<p>如果你需要获得元素占据的物理空间，那么使用 <code>ffsetHeight</code> 和 <code>offsetWidth</code> 。
+<p>如果你需要获得元素占据的物理空间，那么使用 <code>offsetHeight</code> 和 <code>offsetWidth</code> 。
 自然而然此物理空间必然包含的有：<code>padding</code> 、<code>滚动条</code> 、<code>border</code>。这两个属性与 <code>getBoundingClientRect()</code>的height和width属性是一致的。</p>
 <p>为了帮助理解请看下图：</p>
 <p><img src="https://developer.mozilla.org/@api/deki/files/186/=Dimensions-offset.png" alt="Alt text"></p>
@@ -28,28 +31,28 @@
 <p>由于元素的style属性只能获取到内联样式的width/height，所以在IE中需要使用 <code>el.currentStyle.height/width</code>，
 而标准浏览器中使用 <code>window.getComputedStyle(el,null).width/height</code>。
 下面是我整理的园友Snandy的一个用户获取元素真实高度和宽度的方法 :</p>
-<pre><code>function getStyle(el) {
-    if(window.getComputedStyle) {
-        return window.getComputedStyle(el, null);
-    }else{
-        return el.currentStyle;
+<pre><code class="lang-javascript">    function getStyle(el) {
+        if(window.getComputedStyle) {
+            return window.getComputedStyle(el, null);
+        }else{
+            return el.currentStyle;
+        }
     }
-}
-function getWH(el, name) {
-    var val = name === &quot;width&quot; ? el.offsetWidth : el.offsetHeight,
-        which = name === &quot;width&quot; ? [&#39;Left&#39;, &#39;Right&#39;] : [&#39;Top&#39;, &#39;Bottom&#39;];
-    // display is none
-    if(val === 0) {
-        return 0;
-    }
-    var style = getStyle(el);
-    for(var i = 0, a; a = which[i++];) {
-        val -= parseFloat( style[&quot;border&quot; + a + &quot;Width&quot;]) || 0;
-        val -= parseFloat( style[&quot;padding&quot; + a ] ) || 0;
-    }
-    return val;
- } 
-</code></pre><hr>
+    function getWH(el, name) {
+        var val = name === &quot;width&quot; ? el.offsetWidth : el.offsetHeight,
+            which = name === &quot;width&quot; ? [&#39;Left&#39;, &#39;Right&#39;] : [&#39;Top&#39;, &#39;Bottom&#39;];
+        // display is none
+        if(val === 0) {
+            return 0;
+        }
+        var style = getStyle(el);
+        for(var i = 0, a; a = which[i++];) {
+            val -= parseFloat( style[&quot;border&quot; + a + &quot;Width&quot;]) || 0;
+            val -= parseFloat( style[&quot;padding&quot; + a ] ) || 0;
+        }
+        return val;
+     }
+</code></pre>
 <h2 id="jquery-">jQuery与元素尺寸相关的方法</h2>
 <h3 id="jquery-height-jquery-width-">jQuery.height()/jQuery.width()</h3>
 <p>返回一个整数，为匹配的jQuery对象集合中第一个元素的高度值。

@@ -23,50 +23,53 @@
 加之func1和func2已经相对复杂，若直接修改函数内部代码将导致代码复杂度加倍而且难于维护。</p>
 <p>于是乎，AOP就派上用场了！</p>
 <h2 id="-">实现代码</h2>
-<pre><code>var _ = function(id){return document.getElementById(id);};
-var GFRAME = {};
-GFRAME.name = &#39;GFRAME&#39;;
-GFRAME.func1 = function(x){
-    console.log(this.name,x);
-}
-/**
- * @description AOP in JavaScript，不直接修改原函数而增强函数功能。未考虑前置操作的函数返回值的情况
- * @param {Object} args {context:执行环境，name:函数名称，start:前置操作，end:后置操作}
- **/
-_.inject = function(args){
-    var origin = args.name,
-        context = args.context || window,
-        start = args.start || (function(){}),
-        end = args.end || (function(){});
-    var temp = context[origin];
-    if(typeof temp != &#39;function&#39;)
-        throw Error(origin + &#39; is not a function in the given context.&#39;);
-    if(typeof start != &#39;function&#39; || typeof end != &#39;function&#39; )
-        throw Error(&#39;start and end is not a function in the given context.&#39;);
-    context[origin] = function(){
-        start.apply(this,arguments);
-        var ret = temp.apply(this,arguments);
-        end.apply(this,arguments);
-        return ret;
-    };
-};
-</code></pre><h2 id="-">使用方法</h2>
-<pre><code>_.inject({
-    name:&#39;func1&#39;,
-    context:GFRAME,
-    start:function(x){
-        console.log(&#39;start&#39;,this.name,x);
-    },
-    end:function(x){
-        console.log(&#39;end&#39;,this.name,x);
+<pre><code class="lang-javascript">    var _ = function(id){return document.getElementById(id);};
+    var GFRAME = {};
+    GFRAME.name = &#39;GFRAME&#39;;
+    GFRAME.func1 = function(x){
+        console.log(this.name,x);
     }
-});
-GFRAME.func1(&#39;test&#39;);
-</code></pre><h2 id="-">输出结果</h2>
-<pre><code>start GFRAME test
-GFRAME test
-end GFRAME test 
-</code></pre><h2 id="-">扩展阅读</h2>
+    /**
+     * @description AOP in JavaScript，不直接修改原函数而增强函数功能。未考虑前置操作的函数返回值的情况
+     * @param {Object} args {context:执行环境，name:函数名称，start:前置操作，end:后置操作}
+     **/
+    _.inject = function(args){
+        var origin = args.name,
+            context = args.context || window,
+            start = args.start || (function(){}),
+            end = args.end || (function(){});
+        var temp = context[origin];
+        if(typeof temp != &#39;function&#39;)
+            throw Error(origin + &#39; is not a function in the given context.&#39;);
+        if(typeof start != &#39;function&#39; || typeof end != &#39;function&#39; )
+            throw Error(&#39;start and end is not a function in the given context.&#39;);
+        context[origin] = function(){
+            start.apply(this,arguments);
+            var ret = temp.apply(this,arguments);
+            end.apply(this,arguments);
+            return ret;
+        };
+    };
+</code></pre>
+<h2 id="-">使用方法</h2>
+<pre><code class="lang-javascript">    _.inject({
+        name:&#39;func1&#39;,
+        context:GFRAME,
+        start:function(x){
+            console.log(&#39;start&#39;,this.name,x);
+        },
+        end:function(x){
+            console.log(&#39;end&#39;,this.name,x);
+        }
+    });
+    GFRAME.func1(&#39;test&#39;);
+</code></pre>
+<h2 id="-">输出结果</h2>
+<pre><code class="lang-html">    start GFRAME test
+    GFRAME test
+    end GFRAME test
+</code></pre>
+<h2 id="-">扩展阅读</h2>
 <ul>
 <li><a href="http://zh.wikipedia.org/wiki/AOP">AOP@维基百科</a></li>
 <li><a href="http://www.cnblogs.com/riceball/archive/2007/09/02/jsInject.html">你相信么，只需一个函数5行JS代码即可在Javascript中实现完整的AOP功能</a></li>
