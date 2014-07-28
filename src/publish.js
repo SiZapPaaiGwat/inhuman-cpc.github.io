@@ -54,8 +54,8 @@
     return mustache.render(pageTemplate, {
       title: fileInfo.title + " @ " + fileInfo.time,
       body: mdOutput,
-      stylesheets: ["../themes/" + theme + "/index.css"],
-      scripts: []
+      stylesheets: ["../themes/" + theme + "/index.css"].concat(config.stylesheets),
+      scripts: [].concat(config.scripts)
     });
   };
 
@@ -78,8 +78,8 @@
     return mustache.render(indexTemplate, {
       title: config.site_name,
       items: files.map(parseMarkdownFile).reverse(),
-      stylesheets: ["./themes/" + theme + "/index.css"].concat(config.stylesheets),
-      scripts: [].concat(config.scripts)
+      stylesheets: ["./themes/" + theme + "/index.css"],
+      scripts: []
     });
   };
 

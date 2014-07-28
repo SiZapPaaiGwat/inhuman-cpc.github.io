@@ -34,8 +34,8 @@ initHTML = (filename, mdOutput) ->
 	mustache.render pageTemplate,
 		title: fileInfo.title + " @ " + fileInfo.time
 		body: mdOutput
-		stylesheets: ["../themes/#{theme}/index.css"]
-		scripts: []
+		stylesheets: ["../themes/#{theme}/index.css"].concat config.stylesheets
+		scripts: [].concat config.scripts
 
 # convert markdown files to html files
 convert2HTML = (filename, next) ->
@@ -55,8 +55,8 @@ generateIndexPage = (files) ->
 	mustache.render indexTemplate,
 		title: config.site_name
 		items: files.map(parseMarkdownFile).reverse()
-		stylesheets: ["./themes/#{theme}/index.css"].concat config.stylesheets
-		scripts: [].concat config.scripts
+		stylesheets: ["./themes/#{theme}/index.css"]
+		scripts: []
 
 # start building blog
 fs.readdirAsync(postsPath).then (files) ->
