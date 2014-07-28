@@ -29,6 +29,7 @@ func1的执行频率是10秒一次，而客户端与服务器之间的网络并�
 
 ## 实现代码
 
+```javascript
 	var _ = function(id){return document.getElementById(id);};
 	var GFRAME = {};
 	GFRAME.name = 'GFRAME';
@@ -56,10 +57,11 @@ func1的执行频率是10秒一次，而客户端与服务器之间的网络并�
 	        return ret;
 	    };
 	};
-
+```
 
 ## 使用方法
 
+```javascript
 	_.inject({
 	    name:'func1',
 	    context:GFRAME,
@@ -71,12 +73,15 @@ func1的执行频率是10秒一次，而客户端与服务器之间的网络并�
 	    }
 	});
 	GFRAME.func1('test');
+```
 
 ## 输出结果
 
+```html
 	start GFRAME test
 	GFRAME test
 	end GFRAME test 
+```
 
 ## 扩展阅读
 *	[AOP@维基百科](http://zh.wikipedia.org/wiki/AOP)

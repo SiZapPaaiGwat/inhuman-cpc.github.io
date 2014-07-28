@@ -1,9 +1,13 @@
+# JavaScript获取元素的尺寸
 
-**在使用JavaScript脚本获取 `元素的尺寸` 时，有几个属性你需要弄清楚，不然会很棘手。以往我都是对这些属性死记硬背，忘记了就查手册。看完本文我相信这种情况就不会再发生了.
+--------
+
+在使用JavaScript获取 `元素的尺寸` 时，有几个属性你需要弄清楚，以前我也是凭记忆，忘了就google。
+看完本文我相信这种情况就不会再发生了。
 
 ## 元素占据的物理空间的尺寸
 
-如果你需要获得元素占据的物理空间，那么使用 `ffsetHeight` 和 `offsetWidth` 。
+如果你需要获得元素占据的物理空间，那么使用 `offsetHeight` 和 `offsetWidth` 。
 自然而然此物理空间必然包含的有：`padding` 、`滚动条` 、`border`。这两个属性与 `getBoundingClientRect()`的height和width属性是一致的。
 
 为了帮助理解请看下图：
@@ -38,6 +42,7 @@
 而标准浏览器中使用 `window.getComputedStyle(el,null).width/height`。
 下面是我整理的园友Snandy的一个用户获取元素真实高度和宽度的方法 :
 
+```javascript
     function getStyle(el) {
         if(window.getComputedStyle) {
             return window.getComputedStyle(el, null);
@@ -59,8 +64,7 @@
         }
         return val;
      } 
-
-*** 
+```
 
 ## jQuery与元素尺寸相关的方法
 
@@ -85,7 +89,7 @@
 由于获取普通元素的全部内容的尺寸意义不大（某些元素除外如window、document、iframe等），
 所以jQuery的这三个方法都未包含不可见区域。
 
-***
+--------
 
 ### 参考阅读
 

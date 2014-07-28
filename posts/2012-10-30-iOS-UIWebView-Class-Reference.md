@@ -1,3 +1,4 @@
+# iOS WebView Class简介
 
 [原文地址](https://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIWebView_Class/Reference/Reference.html)
 
@@ -56,6 +57,7 @@ webview是否还在加载，只读属性
 
 那么默认设置下是不是一定无法自动播放呢？StackOverflow上找到一个[方法](http://stackoverflow.com/questions/4259928/how-can-i-autoplay-media-in-ios-4-2-1-mobile-safari)解决此问题（没有测试）
 
+```javascript
 	var ifr = document.createElement("iframe");
 	ifr.setAttribute('src', "http://mysite.com/myvideo.mp4");
 	ifr.setAttribute('width', '1px');
@@ -63,6 +65,7 @@ webview是否还在加载，只读属性
 	ifr.setAttribute('scrolling', 'no');
 	ifr.style.border="0px";
 	document.body.appendChild(ifr);
+```
 
 ###request
 
@@ -114,7 +117,7 @@ iOS 6.0版本支持
 
 ###stringByEvaluatingJavaScriptFromString
 
-<strong style="color:red;">前端重点关注</strong>
+**前端重点关注**
 
 在页面加载完成以后运行JavaScript脚本，运行脚本有如下注意事项：
 

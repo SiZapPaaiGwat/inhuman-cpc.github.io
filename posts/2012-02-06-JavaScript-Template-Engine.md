@@ -6,6 +6,7 @@
 
 ## 实现代码
 
+```javascript
 	/*
 	 * @description An Easy Template in JavaScript, it is designed to reduce the string concatention work,
 	 * to make the gigantic code more readable and maintainable.
@@ -60,10 +61,11 @@
 	    this.task.length = 0;
 	    return retStr.join('');
 	}; 
-
+```
 
 ##使用方法
 
+```html
 	<!doctype html>
 	<html>
 	<head>
@@ -89,7 +91,16 @@
 	        </script>
 	</body>
 	</html>
+```
 
 ## 额外说明
 
-上面的例子更加偏向于一个简单的HTML的 `模板引擎` ，如果这是你需要的，不妨看看 `jQuery` 的作者John Resig在几年前的一个 [例子](http://ejohn.org/blog/javascript-micro-templating/)
+上面的例子更加偏向于一个穷人版的**模板引擎**（变量替换），如果这是你需要更加强大的例子，不妨看看 `jQuery` 的作者John Resig在几年前的 [作品](http://ejohn.org/blog/javascript-micro-templating/)。
+
+不过模板引擎的发展在JavaScript圈子里面可谓日新月异，比较出名的有：
+
+> * mustache
+> * handlerbars
+> * ejs
+> * artTemplate (国产)
+
