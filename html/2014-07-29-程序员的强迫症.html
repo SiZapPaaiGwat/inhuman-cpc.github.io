@@ -1,0 +1,453 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>程序员的强迫症.md @ 2014-07-29</title>
+	<link rel="stylesheet" href="../lib/prism/prism.css"/>
+	<link rel="stylesheet" href="../themes/darcula/index.css"/>
+</head>
+<body>
+	<h1 id="-">程序员的强迫症</h1>
+<hr>
+<p>编程追求效率，却也讲究习惯。习惯改变之难，还真不能说<code>那就不是个事儿</code>，在技术圈子尤甚。</p>
+<p>当然，JavaScript这个圈子也不例外，比如这些：</p>
+<ul>
+<li><a href="http://www.zhihu.com/question/20298345">JavaScript语句后面应该加分号吗？</a></li>
+<li><a href="http://www.nczonline.net/blog/2013/06/25/eval-isnt-evil-just-misunderstood/">eval is evil?</a></li>
+<li><a href="http://javascriptweblog.wordpress.com/2011/02/07/truth-equality-and-javascript/">== or ===?</a></li>
+<li>...</li>
+</ul>
+<p>上面的话题，个个是G点，分分钟引发高潮。就犹如<code>Vim和Emacs</code>、<code>Windows和Linux</code>等话题，一旦开篇随之而来的就是引经据典、长篇大论、你死我活、百态尽出。</p>
+<p>作为有格调的程序员，我们应追求效率。而非沉浸于无谓的争论，无端的争论往往因为恪守习惯，不善变通。</p>
+<p>就上面的话题进行争论，或许还有些&quot;技术主义情怀&quot;。但是下面的这些纯感性的<strong>习惯</strong>呢？不妨先看看：</p>
+<ul>
+<li>缩进用tab还是用空格，你喜欢哪一种?</li>
+<li>tab等于两个还是四个空格，你喜欢哪一种？</li>
+<li>对象的键值是紧凑连接，还是在冒号后加一个空格，你喜欢哪一种？</li>
+<li>变量声明，单行还是多行，你又喜欢哪一种？</li>
+<li>单行代码块的花括号，加还是不加？</li>
+<li>...</li>
+</ul>
+<p>这种<strong>习惯</strong>多如牛毛，以至“知音”着实难寻，因为实在是众口难调、各有所爱。也难怪<strong>Web Storm</strong>等编辑器在Code Style上花尽心思。</p>
+<p>一味地拘泥于习惯，在团队协作时就会患上<strong>强迫症</strong>。比如在别人的代码后面加个分号、补个空格，多加个空白行等等诸如此类。如果赶上心情好、情绪佳，或许会再花上一两小时，与他人舌战一番，定要分个胜负。</p>
+<p>此种行为既“无伤大雅”，也非“罪恶滔天”，情不自禁而已。不然“看着心里难受”，这种难受之于程序员，比1px的像素差之于产品经理可来的猛烈多了。于是乎加分号、补空格、按换行、删注释、调整顺序，忙得不亦乐乎。待大功告成，仿佛看见了光，解救了天解救了地也解救了自己，心情倍儿爽。</p>
+<p>如果你还在做这种“解救众生”的活，不妨试试JSHint来换个活法儿吧。</p>
+<h2 id="-jshint">什么是JSHint</h2>
+<p><a href="http://www.jshint.com/about/">JSHint</a>是一个用于检查JavaScript代码错误和潜在问题的工具。通过简单的配置，它可以强制约束团队保持一致的编码风格。</p>
+<h2 id="jshint-">JSHint配置文件的格式</h2>
+<p>在项目根目录新加一个名称为<strong>.jshintrc</strong>的文件，加入相关配置即可，典型的配置如下：</p>
+<pre><code class="lang-json">{
+    &quot;node&quot;: true,
+    &quot;eqeqeq&quot;: true,
+    &quot;forin&quot;: false,
+    &quot;plusplus&quot;: false,
+    &quot;undef&quot;: true,
+    &quot;unused&quot;: true,
+    &quot;strict&quot;: false
+}
+</code></pre>
+<p>json文件中的每一项都对应着一条规则。如果代码违反了规则，编辑器会给出错误提示。这方面Web Storm非常不错。JSHint详细配置文档，请看<a href="http://www.jshint.com/docs/options/">这里</a></p>
+<p>每个文件夹可以有单独的.jshintrc，作用范围就是其下JavaScript代码。还可以使用<strong>.jshintignore</strong>来排除将规则应用到当前目录指定的文件和文件夹。</p>
+<h2 id="-web-storm-jshint">如何在Web Storm中使用JSHint</h2>
+<blockquote>
+<ul>
+<li><code>CMD + ,</code> 打开偏好设置，输入JSHint搜索习惯配置项</li>
+<li>选中Inspections&gt;JavaScript&gt;Code quality tools&gt;JSHint</li>
+<li>点击JavaScript&gt;Code quality tools&gt;JSHint，勾选enable和use config file(default)即可</li>
+</ul>
+</blockquote>
+<h2 id="-">配置详解</h2>
+<h3 id="-enforcing-options-">强制选项(enforcing options)</h3>
+<p>设置为true时，应用规则，对代码约束更严格。</p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>释义</th>
+<th>好处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> bitwise</td>
+<td>禁止按位操作</td>
+<td>避免&amp;和&amp;&amp;手误</td>
+</tr>
+<tr>
+<td>camelcase</td>
+<td>变量名只允许驼峰camelCase和UPPER_CASE风格</td>
+<td></td>
+</tr>
+<tr>
+<td>curly</td>
+<td>单行代码块必须使用分号</td>
+<td>防止潜在bug</td>
+</tr>
+<tr>
+<td>eqeqeq</td>
+<td>禁止使用==,!=</td>
+<td>避免类型转换</td>
+</tr>
+<tr>
+<td>es3</td>
+<td>兼容IE 6/7/8/9</td>
+<td></td>
+</tr>
+<tr>
+<td>forin</td>
+<td>内部必须使用hasOwnProperty</td>
+<td>防止遍历原型链上的其它属性</td>
+</tr>
+<tr>
+<td>freeze</td>
+<td>禁止覆写原生对象</td>
+<td></td>
+</tr>
+<tr>
+<td>immend</td>
+<td>(function(){}())</td>
+<td></td>
+</tr>
+<tr>
+<td>indent</td>
+<td>2/4</td>
+<td></td>
+</tr>
+<tr>
+<td>latedef</td>
+<td>禁止未定义而使用</td>
+<td>防止潜在bug</td>
+</tr>
+<tr>
+<td>newcap</td>
+<td>类名首字母大写</td>
+<td></td>
+</tr>
+<tr>
+<td>noarg</td>
+<td>禁止使用arguments.caller和arguments.callee</td>
+<td>难以优化，且已经被废除</td>
+</tr>
+<tr>
+<td>noempty</td>
+<td>禁止出现空代码块</td>
+<td></td>
+</tr>
+<tr>
+<td>nonew</td>
+<td>禁止调用构造函数而不赋值</td>
+<td></td>
+</tr>
+<tr>
+<td>plusplus</td>
+<td>禁止使用++, --</td>
+<td>不同语言含义不一致</td>
+</tr>
+<tr>
+<td>quotmark</td>
+<td>true/single/double</td>
+<td></td>
+</tr>
+<tr>
+<td>undef</td>
+<td>禁止使用未定义的遍历</td>
+<td></td>
+</tr>
+<tr>
+<td>unused</td>
+<td>禁止出现未使用的变量</td>
+<td>设置为vars不检查函数参数 </td>
+</tr>
+<tr>
+<td>strict</td>
+<td>所有的<strong>函数</strong>都会使用es5的严格模式</td>
+<td></td>
+</tr>
+<tr>
+<td>maxparams</td>
+<td>最多的形参</td>
+<td>5</td>
+</tr>
+<tr>
+<td>maxdepth</td>
+<td>嵌套深度</td>
+<td></td>
+</tr>
+<tr>
+<td>maxstatements</td>
+<td>最多声明</td>
+<td></td>
+</tr>
+<tr>
+<td>maxcomplexity</td>
+<td>cyclomatic complexity</td>
+<td></td>
+</tr>
+<tr>
+<td>maxlen</td>
+<td>设置一行最大的长度</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-relaxing-options-">宽松选项(relaxing options)</h3>
+<p>设置为true时，应用规则，对代码约束更宽松。</p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>解释</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>asi</td>
+<td>忽略句尾分号警告</td>
+<td>扩展阅读：<a href="http://blog.izs.me/post/2353458699/an-open-letter-to-javascript-leaders-regarding">1</a> , <a href="http://inimino.org/~inimino/blog/javascript_semicolons">2</a></td>
+</tr>
+<tr>
+<td>boss</td>
+<td>会允许在if，for，while里面编写赋值语句</td>
+<td>不检查判断条件中得赋值</td>
+</tr>
+<tr>
+<td>debug</td>
+<td>忽略debug语句</td>
+<td></td>
+</tr>
+<tr>
+<td>eqnull</td>
+<td>允许 == null</td>
+<td></td>
+</tr>
+<tr>
+<td>esnext</td>
+<td>允许ES6语法</td>
+<td><a href="http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts">ES6草案</a></td>
+</tr>
+<tr>
+<td>evil</td>
+<td>忽略evil警告</td>
+<td></td>
+</tr>
+<tr>
+<td>expr</td>
+<td>在赋值或者函数调用的地方允许出现表达式</td>
+<td>大部分情况是手误</td>
+</tr>
+<tr>
+<td>funcscope</td>
+<td>允许在控制流程if等中定义变量</td>
+<td>默认为false</td>
+</tr>
+<tr>
+<td>globalstrict</td>
+<td>忽略全局使用strict的警告</td>
+<td></td>
+</tr>
+<tr>
+<td>iterator</td>
+<td>忽略使用<strong>iterator</strong>属性警告</td>
+<td>并非所有浏览器支持</td>
+</tr>
+<tr>
+<td>lastsemic</td>
+<td>仅允许单行代码块不使用分号</td>
+<td></td>
+</tr>
+<tr>
+<td>laxbreak</td>
+<td>忽略不安全的换行告警</td>
+<td></td>
+</tr>
+<tr>
+<td>laxcomma</td>
+<td>忽略逗号风格告警</td>
+<td></td>
+</tr>
+<tr>
+<td>loopfunc</td>
+<td>忽略在循环中定义函数告警</td>
+<td>建议设置为false</td>
+</tr>
+<tr>
+<td>maxerr</td>
+<td>设置JSHint最多警告数目</td>
+<td>默认50</td>
+</tr>
+<tr>
+<td>moz</td>
+<td>表明这是Mozilla扩展</td>
+<td><a href="https://developer.mozilla.org/en-US/docs/JavaScript/New_in_JavaScript/1.7">New in JavaScript 1.7</a></td>
+</tr>
+<tr>
+<td>multistr</td>
+<td>忽略多行字符串告警</td>
+<td></td>
+</tr>
+<tr>
+<td>notypeof</td>
+<td>忽略不正确的typeof比较</td>
+<td>默认为false，不用管</td>
+</tr>
+<tr>
+<td>proto</td>
+<td>忽略使用<strong>proto</strong> 属性</td>
+<td></td>
+</tr>
+<tr>
+<td>scripturl</td>
+<td>忽略使用&quot;javascript:...&quot;告警</td>
+<td></td>
+</tr>
+<tr>
+<td>shadow</td>
+<td>忽略重复声明变量产生的告警</td>
+<td></td>
+</tr>
+<tr>
+<td>sub</td>
+<td>忽略使用[]而不是.访问属性的告警</td>
+<td></td>
+</tr>
+<tr>
+<td>supernew</td>
+<td>忽略使用诡异的构造函数告警</td>
+<td><a href="http://www.jshint.com/docs/options/#supernew">示例</a></td>
+</tr>
+<tr>
+<td>validthis</td>
+<td>忽略严格模式在非构造函数中使用this</td>
+<td>函数内部使用</td>
+</tr>
+<tr>
+<td>noyield</td>
+<td>允许没有使用yield的generator function</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-environments-">环境配置(Environments)</h3>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>browser</td>
+<td>可以使用HTML5的新特性如FileReader等</td>
+</tr>
+<tr>
+<td>couch</td>
+<td>CouchDB</td>
+</tr>
+<tr>
+<td>devel</td>
+<td>可以使用穷人版的debug工具，比如console、alert</td>
+</tr>
+<tr>
+<td>dojo</td>
+<td>Dojo Toolkit</td>
+</tr>
+<tr>
+<td>jquery</td>
+<td>jquery</td>
+</tr>
+<tr>
+<td>node</td>
+<td>Node.js</td>
+</tr>
+<tr>
+<td>nonstandard</td>
+<td>允许流行而不标准的全局变量，比如escape和unescape</td>
+</tr>
+<tr>
+<td>phantom</td>
+<td><a href="http://phantomjs.org/">PhantomJS</a></td>
+</tr>
+<tr>
+<td> protypejs</td>
+<td>protypejs</td>
+</tr>
+<tr>
+<td>rhino</td>
+<td><a href="http://www.mozilla.org/rhino/">Rhino</a></td>
+</tr>
+<tr>
+<td>worker</td>
+<td>表明你的脚本运行在<a href="https://developer.mozilla.org/en/Using_web_workers">Web Worker</a>中</td>
+</tr>
+<tr>
+<td>wsh</td>
+<td><a href="http://en.wikipedia.org/wiki/Windows_Script_Host">Windows_Script_Host</a></td>
+</tr>
+<tr>
+<td>yui</td>
+<td><a href="http://yuilibrary.com/">YUI</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="-jshint">币须网的JSHint</h2>
+<p><a href="http://www.coinxu.com">币须网</a>作为国内第一家应用<strong>比特币多重签名</strong>技术的电子商务平台，后台全部使用Node.js搭建，在团队协作上也需要JSHint这样的工具来进行检查和约束。我们正在使用如下的配置：</p>
+<pre><code class="lang-json">{
+    &quot;bitwise&quot;: true,
+    &quot;camelcase&quot;: false,
+    &quot;curly&quot;: true,
+    &quot;eqeqeq&quot;: true,
+    &quot;es3&quot;: false,
+    &quot;forin&quot;: true,
+    &quot;freeze&quot;: false,
+    &quot;immed&quot;: false,
+    &quot;indent&quot;: 2,
+    &quot;latedef&quot;: true,
+    &quot;newcap&quot;: true,
+    &quot;noarg&quot;: true,
+    &quot;noempty&quot;: true,
+    &quot;nonbsp&quot;: true,
+    &quot;nonew&quot;: true,
+    &quot;plusplus&quot;: true,
+    &quot;quotmark&quot;: true,
+    &quot;undef&quot;: true,
+    &quot;unused&quot;: true,
+    &quot;strict&quot;: false,
+    &quot;maxparams&quot;: 5,
+    &quot;maxdepth&quot;: 8,
+    &quot;maxstatements&quot;: 50,
+    &quot;maxcomplexity&quot;:false,
+
+    &quot;asi&quot;: true,
+    &quot;boss&quot;: false,
+    &quot;debug&quot;: false,
+    &quot;eqnull&quot;: true,
+    &quot;esnext&quot;: true,
+    &quot;evil&quot;: true,
+    &quot;expr&quot;: false,
+    &quot;funcscope&quot;: false,
+    &quot;globalstrict&quot;: true,
+    &quot;iterator&quot;: true,
+    &quot;lastsemic&quot;: true,
+    &quot;laxbreak&quot;: false,
+    &quot;laxcomma&quot;: false,
+    &quot;loopfunc&quot;: false,
+    &quot;maxerr&quot;: 50,
+    &quot;multistr&quot;: false,
+    &quot;notypeof&quot;: false,
+    &quot;proto&quot;:true,
+    &quot;shadow&quot;: false,
+    &quot;supernew&quot;: false,
+    &quot;validthis&quot;: false,
+    &quot;noyield&quot;: false,
+
+    &quot;node&quot;: true
+}
+</code></pre>
+<h2 id="-">结语</h2>
+<p><strong>强迫症</strong>每个人或多或少都有一点，沉溺于习惯求稳而不求变也是人之本性。但如果要突破自我，不求变通怕是成不了气候。再则善于运用标准化的工具也算得上一大进步，程序员尤其如此，如果偶然之间随手解救了团队和自己也算得上造福一方吧。</p>
+
+	<script src="../lib/prism/prism.js"></script>
+</body>
+</html>
