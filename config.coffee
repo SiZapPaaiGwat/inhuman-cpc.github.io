@@ -1,6 +1,7 @@
 module.exports =
 	# your blog home page title
-	site_name: "simon'xu blog"
+	site_name: "Simon@coinxu.com"
+	about_me: "比特币相关项目创业者"
 	# folder for markdown files
 	posts_path: "posts"
 	# folder for html files

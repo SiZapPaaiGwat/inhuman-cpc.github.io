@@ -24,7 +24,7 @@ renameHTMLFile = (filename) ->
 # parse information from markdown files
 parseMarkdownFile = (filename) ->
 	pieces = filename.split("-")
-	title: pieces.slice(3).join(' ')
+	title: pieces.slice(3).join(' ').replace '.md', ''
 	time: pieces.slice(0, 3).join('-')
 	filename: renameHTMLFile filename
 
@@ -54,6 +54,7 @@ convert2HTML = (filename, next) ->
 generateIndexPage = (files) ->
 	mustache.render indexTemplate,
 		title: config.site_name
+		about_me: config.about_me
 		items: files.map(parseMarkdownFile).reverse()
 		stylesheets: ["./themes/#{theme}/index.css"]
 		scripts: []
