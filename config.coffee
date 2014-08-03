@@ -2,6 +2,7 @@ module.exports =
 	# your blog home page title
 	site_name: "Simon@coinxu.com"
 	about_me: "比特币相关项目创业者"
+	favicon: "https://cdn1.iconfinder.com/data/icons/bitcoin-casino-coins/32/CoinSphere-Bitcoin-Green-Casino-Chip-32.png"
 	# folder for markdown files
 	posts_path: "posts"
 	# folder for html files

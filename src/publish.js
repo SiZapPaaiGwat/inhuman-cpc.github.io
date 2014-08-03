@@ -54,6 +54,7 @@
     return mustache.render(pageTemplate, {
       title: fileInfo.title + " @ " + fileInfo.time,
       body: mdOutput,
+      favicon: config.favicon,
       stylesheets: ["../themes/" + theme + "/index.css"].concat(config.stylesheets),
       scripts: [].concat(config.scripts)
     });
@@ -78,6 +79,7 @@
     return mustache.render(indexTemplate, {
       title: config.site_name,
       about_me: config.about_me,
+      favicon: config.favicon,
       items: files.map(parseMarkdownFile).reverse(),
       stylesheets: ["./themes/" + theme + "/index.css"],
       scripts: []
