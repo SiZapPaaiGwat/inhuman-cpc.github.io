@@ -244,6 +244,7 @@ pre[class*="language-"] {
 }
 
 pre[class*="language-"] code {
+    font-size: 14px;
 }
 
 sup {

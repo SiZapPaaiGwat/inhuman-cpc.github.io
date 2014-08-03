@@ -8,7 +8,6 @@
  人性的、理想的也正如很多编程语言中已经实现的错误处理方式应该是这样：
  
 ```javascript
-
 try {
     var val = JSON.parse(fs.readFileSync("file.json"));
 }catch(SyntaxError e) {//json语法错误
@@ -22,7 +21,6 @@ try {
 很遗憾，JavaScript并不支持上述方式，于是“聪明的猴子”很可能写出下面的代码：
 
 ```javascript
-
 try {
     //code
 }catch(e) {
@@ -40,7 +38,6 @@ try {
 上面的代码是同步模式，异步模式中的错误处理又是如何呢？
 
 ```javascript
-
 fs.readFile('file.json', 'utf8', function(err, data){
 	if(err){
 		console.error("无法读取文件")
@@ -71,7 +68,6 @@ fs.readFile('file.json', 'utf8', function(err, data){
 返回Promise对象意味着，执行fs.readFileAsync并不会立即执行异步操作，而是通过调用其then方法来执行，then方法接受的回调函数用于处理正确返回结果。所以使用fs.readFileAsync的使用方式如下：
 
 ```javascript
-
 //Promise版本
 fs.readFileAsync('file.json', 'utf8').then(function(data){
 	console.log(data)
@@ -82,7 +78,6 @@ fs.readFileAsync('file.json', 'utf8').then(function(data){
 OK，让我们继续错误处理这个话题。由于[Promises/A+](http://promisesaplus.com/)标准对Promise对象只规定了唯一的then方法，没有专门针对catch或者error的方法，我们将继续使用[bluebird](https://github.com/petkaantonov/bluebird)。
 
 ```javascript
-
 // 带错误处理的Promise版本
 fs.readFileAsync('file.json', 'utf8').then(function(data){
 	console.log(data)
@@ -102,7 +97,6 @@ fs.readFileAsync('file.json', 'utf8').then(function(data){
 下面我们看如何对fs.readFileAsync方法进行promisify，依然是使用bluebird。
 
 ```javascript
-
 var Promise = require('bluebird')
 fs.readFileAsync = Promise.promisify(fs.readFie, fs)
 
@@ -111,7 +105,6 @@ fs.readFileAsync = Promise.promisify(fs.readFie, fs)
 怎么样，就是如此简单！对于bluebird它还有一个更强大的方法，那就是promisify的高级版本 `promisifyAll`，比如：
 
 ```javascript
-
 var Promise = require('bluebird')
 Promise.promisifyAll(fs)
 
@@ -124,7 +117,6 @@ Promise.promisifyAll(fs)
 对fs的`promisification`还不能令我满足，我需要更神奇的魔法：
 
 ```javascript
-
 // redis
 var Promise = require("bluebird");
 Promise.promisifyAll(require("redis"));

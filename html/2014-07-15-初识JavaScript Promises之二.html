@@ -14,8 +14,7 @@
 <p>上一篇我们初步学习了JavaScript Promises，本篇将介绍Promise如何优雅地进行错误处理以及提升操作<strong>node.js风格</strong>[^1]的异步方法的逼格，没错就是使用<strong>promisify</strong>[^2]。</p>
 <h2 id="-">异步编程中的错误处理</h2>
 <p> 人性的、理想的也正如很多编程语言中已经实现的错误处理方式应该是这样：</p>
-<pre><code class="lang-javascript">
-try {
+<pre><code class="lang-javascript">try {
     var val = JSON.parse(fs.readFileSync(&quot;file.json&quot;));
 }catch(SyntaxError e) {//json语法错误
     console.error(&quot;不符合json格式&quot;);
@@ -24,8 +23,7 @@ try {
 }
 </code></pre>
 <p>很遗憾，JavaScript并不支持上述方式，于是“聪明的猴子”很可能写出下面的代码：</p>
-<pre><code class="lang-javascript">
-try {
+<pre><code class="lang-javascript">try {
     //code
 }catch(e) {
     if( e instanceof SyntaxError) {
@@ -37,8 +35,7 @@ try {
 </code></pre>
 <p>相信没人会喜欢第二段代码，不过传统的JavaScript也只能帮你到这里了。</p>
 <p>上面的代码是同步模式，异步模式中的错误处理又是如何呢？</p>
-<pre><code class="lang-javascript">
-fs.readFile(&#39;file.json&#39;, &#39;utf8&#39;, function(err, data){
+<pre><code class="lang-javascript">fs.readFile(&#39;file.json&#39;, &#39;utf8&#39;, function(err, data){
     if(err){
         console.error(&quot;无法读取文件&quot;)
     }else{
@@ -63,15 +60,13 @@ fs.readFile(&#39;file.json&#39;, &#39;utf8&#39;, function(err, data){
 </ul>
 </blockquote>
 <p>返回Promise对象意味着，执行fs.readFileAsync并不会立即执行异步操作，而是通过调用其then方法来执行，then方法接受的回调函数用于处理正确返回结果。所以使用fs.readFileAsync的使用方式如下：</p>
-<pre><code class="lang-javascript">
-//Promise版本
+<pre><code class="lang-javascript">//Promise版本
 fs.readFileAsync(&#39;file.json&#39;, &#39;utf8&#39;).then(function(data){
     console.log(data)
 })
 </code></pre>
 <p>OK，让我们继续错误处理这个话题。由于<a href="http://promisesaplus.com/">Promises/A+</a>标准对Promise对象只规定了唯一的then方法，没有专门针对catch或者error的方法，我们将继续使用<a href="https://github.com/petkaantonov/bluebird">bluebird</a>。</p>
-<pre><code class="lang-javascript">
-// 带错误处理的Promise版本
+<pre><code class="lang-javascript">// 带错误处理的Promise版本
 fs.readFileAsync(&#39;file.json&#39;, &#39;utf8&#39;).then(function(data){
     console.log(data)
 }).catch(SyntaxError, function(e){
@@ -84,20 +79,17 @@ fs.readFileAsync(&#39;file.json&#39;, &#39;utf8&#39;).then(function(data){
 <h2 id="-promisify">神奇的Promisify</h2>
 <p>注：</p>
 <p>下面我们看如何对fs.readFileAsync方法进行promisify，依然是使用bluebird。</p>
-<pre><code class="lang-javascript">
-var Promise = require(&#39;bluebird&#39;)
+<pre><code class="lang-javascript">var Promise = require(&#39;bluebird&#39;)
 fs.readFileAsync = Promise.promisify(fs.readFie, fs)
 </code></pre>
 <p>怎么样，就是如此简单！对于bluebird它还有一个更强大的方法，那就是promisify的高级版本 <code>promisifyAll</code>，比如：</p>
-<pre><code class="lang-javascript">
-var Promise = require(&#39;bluebird&#39;)
+<pre><code class="lang-javascript">var Promise = require(&#39;bluebird&#39;)
 Promise.promisifyAll(fs)
 </code></pre>
 <p>执行完上面的代码之后，fs对象下所有的异步方法都会对应的生成一个Promise版本方法，比如fs.readFile对应fs.readFileAsync，fs.mkdir对应fs.mkdirAsync，以此类推。</p>
 <p>另外要注意的就是，Promise版本的函数除了最后一个参数（回调函数），其它参数与原函数均一一对应，调用的时候别忘了传递原有的参数。</p>
 <p>对fs的<code>promisification</code>还不能令我满足，我需要更神奇的魔法：</p>
-<pre><code class="lang-javascript">
-// redis
+<pre><code class="lang-javascript">// redis
 var Promise = require(&quot;bluebird&quot;);
 Promise.promisifyAll(require(&quot;redis&quot;));
 
