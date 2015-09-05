@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="description" content="RactiveJS文档说明 @ 2015-07-26"/>
+	<title>RactiveJS文档说明 @ 2015-07-26</title>
+	<link rel="shortcut icon" href="https://cdn1.iconfinder.com/data/icons/bitcoin-casino-coins/32/CoinSphere-Bitcoin-Green-Casino-Chip-32.png" />
+	<link rel="stylesheet" href="../lib/prism/prism.css"/>
+	<link rel="stylesheet" href="../themes/darcula/index.css"/>
+</head>
+<body>
+	<h1 id="ractivejs-">RactiveJS文档说明</h1>
+<p><code>RactiveJS</code>是一款优秀的MVVM框架，也是DataEye前端技术使用到的核心框架之一。
+关于其使用说明可以参考<a href="http://docs.ractivejs.org/latest/get-started">官方文档</a>。
+不过由于官方文档太大太全，而且没有中文版，所以本文会摘选最常用的部分依次介绍。</p>
+<h2 id="-">构造函数配置属性</h2>
+<p>下面几项是平常项目中经常会使用到得配置项目：</p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>isolated</td>
+<td>是否隔离组件，防止其访问上级组件内部数据</td>
+</tr>
+<tr>
+<td>partials</td>
+<td>局部模板，一个很重要的用途是在组件内动态地引用。{{&gt;partialName}}</td>
+</tr>
+<tr>
+<td>el</td>
+<td>组件渲染的节点</td>
+</tr>
+<tr>
+<td>data</td>
+<td>组件初始化时的模板数据</td>
+</tr>
+<tr>
+<td>computed</td>
+<td>计算属性，封装某些复杂的模板输出指令</td>
+</tr>
+<tr>
+<td>magic</td>
+<td>设置为true，直接修改数据后视图自动更新</td>
+</tr>
+<tr>
+<td>modifyArrays</td>
+<td>默认为true，使用push/splice等数组常用的修改方法操作data里的数组自动更新视图</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-">默认数据</h2>
+<p>有些时候我们需要为配置属性提供默认值：</p>
+<pre><code class="lang-js">// 使用[[]]替换模板的开始和结束标签{{}}
+Ractive.defaults.delimiters = [ &#39;[[&#39;, &#39;]]&#39; ]
+
+// 现在模板中的isOpen就是true了
+Ractive.defaults.data.isOpen = true
+</code></pre>
+<h2 id="-">模板</h2>
+<p>RactiveJS内部模板基于<code>Mustache</code>改造，大部分使用方法都极其简单：</p>
+<p>输出普通变量(转义与不转义)：</p>
+<pre><code class="lang-html">&lt;div&gt;{{userName}}&lt;/div&gt;
+&lt;div&gt;{{{userInput}}}&lt;/div&gt;
+</code></pre>
+<p>输出列表：</p>
+<pre><code class="lang-html">&lt;ul&gt;
+    {{#list}}
+        &lt;li&gt;{{.label}} - {{.value}}&lt;/li&gt;
+    {{/list}}
+&lt;/ul&gt;
+</code></pre>
+<p>输出列表时获取索引：</p>
+<pre><code class="lang-html">&lt;ul&gt;
+    {{#list:i}}
+        &lt;li&gt;{{i}}: {{.label}} - {{.value}}&lt;/li&gt;
+    {{/list}}
+&lt;/ul&gt;
+</code></pre>
+<p>if/else:</p>
+<pre><code class="lang-html">{{#if isOpen}}
+    &lt;div&gt;isOpen非空时显示这里&lt;/div&gt;
+{{elseif isSelected}}
+    &lt;p&gt;isSelected非空时显示这里&lt;/p&gt;
+{{else}}
+    &lt;p&gt;其它情况显示这里&lt;/p&gt;    
+{{/if}}
+
+{{^isOpen}}
+    &lt;div&gt;等价于 if not isOpen。不过建议始终使用#if来代替&lt;/div&gt;
+{{/isOpen}}
+</code></pre>
+<p>因为RactiveJS的模板每个版本都会加入一些新的特性，建议不定期阅读 <a href="http://docs.ractivejs.org/latest/mustaches">http://docs.ractivejs.org/latest/mustaches</a></p>
+
+	<script src="../lib/prism/prism.js"></script>
+</body>
+</html>
