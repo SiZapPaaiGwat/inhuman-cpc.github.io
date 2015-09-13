@@ -5,12 +5,14 @@ fetch('README.md').then(function (res) {
 }).then(parseContent).then(createSlides).then(startPresentation);
 
 function parseContent(text) {
+	console.log(text)
 	return text.split(/\n{2,}/).map(function (slideText) {
 		return slideText.split(/\n/);
 	});
 }
 
 function createSlides(slides) {
+	console.log(slides)
 	slides.map(function (slide) {
 		var slideDiv = document.createElement('div');
 		slideDiv.className = 'slide';
