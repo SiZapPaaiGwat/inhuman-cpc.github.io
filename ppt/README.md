@@ -1,16 +1,24 @@
-# JavaScript 
-  标准参考教程
-    学习笔记
-      第一篇
+高桥流
+简报法
 
-## 为什么学习
-  JavaScript?
+第一篇
+
+为什么学习
+JavaScript?
 
 操控浏览器,
 Node.js,
 数据库,
 跨移动平台,
 桌面软件
+
+基本语法
+
+语句,
+变量,
+标识符,
+注释,
+循环
 
 语句,
 按行执行,
@@ -94,8 +102,7 @@ null == undefined,
 历史原因,
 语言设计者的失误
 
-if (!a)
-  // ...
+if (!a) { // ... },
 a = ?
 
 falsy,
@@ -104,10 +111,12 @@ false, undefined, null, 0, '', NaN
 结尾分号,
 ASI,
 自动添加分号
+auto semicolon insertion
 
 不要使用分号,
 除了行首字符为,
 +-/([
 
 结束
+2015-09-19
 http://javascript.ruanyifeng.com/grammar/basic.html
