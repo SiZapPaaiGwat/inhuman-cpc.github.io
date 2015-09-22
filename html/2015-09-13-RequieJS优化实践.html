@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="description" content="RequieJS优化实践 @ 2015-09-13"/>
+	<title>RequieJS优化实践 @ 2015-09-13</title>
+	<link rel="shortcut icon" href="https://cdn1.iconfinder.com/data/icons/bitcoin-casino-coins/32/CoinSphere-Bitcoin-Green-Casino-Chip-32.png" />
+	<link rel="stylesheet" href="../lib/prism/prism.css"/>
+	<link rel="stylesheet" href="../themes/darcula/index.css"/>
+</head>
+<body>
+	<h1 id="requiejs-">RequieJS开发实践</h1>
+<p>DataEye的前端项目基于AMD模块规范，使用RequieJS作为模块加载器。
+在发布线上生产环境时都有一个构建过程：包含合并、压缩、打包、国际化等过程，实现这个过程方案很多。</p>
+<p>早期对gulp不太熟悉，都是基于Node.js自己写的构建脚本。
+时间长了发现，弊大于利。
+主要的原因有两点：</p>
+<blockquote>
+<ul>
+<li>1）脚本无法复用，不具备通用性，难封装成独立维护的组件</li>
+<li>2）如果某个构建过程过于复杂，代码难以持续维护，而且又会进入1）的怪圈</li>
+</ul>
+</blockquote>
+<p>不过当我看到<code>gulp</code>的<a href="https://github.com/gulpjs/gulp/blob/master/docs/writing-a-plugin/guidelines.md">guidelines</a>的时候，就义不容辞的将构建脚本全部基于gulp重构了。(推荐阅读)</p>
+<p>在重构过程中，我不仅学习了一些基础的gulp开发插件的知识，也顺利的解决了之前使用RequieJS的一些困惑。</p>
+<h2 id="r-js">r.js</h2>
+<p><a href="https://github.com/jrburke/r.js">r.js</a> 是RequieJS的优化器，用于Node和Rhino环境。
+所谓优化器，就是将前端项目的各种资源文件从开发环境构建为适合生产环境的新资源。</p>
+<p>这里我只会讲解r.js基于gulp构建的一些知识，基本安装和基于命令行的使用方式请前往其GitHub主页。</p>
+<p>我们的Java Web项目的r.js配置参数如下：</p>
+<pre><code class="lang-js">/**
+ * r.js资源优化配置文件
+ * 参考 https://github.com/simongfxu/requirejs-example-gulpfile/blob/master/gulpfile.js
+ */
+var config = {
+  // 资源文件开发目录
+  appDir: &#39;assets&#39;,
+
+  // 资源文件打包输出目录
+  dir: &#39;assets-build&#39;,
+
+  // 开发脚本目录
+  baseUrl: &#39;js&#39;,
+
+  // 是否优化css，standard/none
+  optimizeCss: &quot;standard&quot;,
+
+  // 是否生成source map
+  // see http://requirejs.org/docs/optimization.html#sourcemaps
+  generateSourceMaps: false,
+
+  // 是否保留开源协议声明
+  preserveLicenseComments: false,
+
+  // 是否优化JS，uglify2/none
+  optimize: &#39;none&#39;,
+
+  // 合并后是否移除单个子文件
+  removeCombined: true,
+
+  findNestedDependencies: false,
+
+  // build预处理，暂未使用
+  onBuildRead: function (moduleName, path, contents) {
+    return contents
+  },
+
+  // build预处理，暂未使用
+  onBuildWrite: function (moduleName, path, contents) {
+    console.log(`正处理:${path}`)
+    return contents
+  },
+
+  // 两种常用情况：
+  // 1) 和requirejs前端使用一样，路径别名功能
+  // 2) 指定modules配置里面新生成文件({create: true})的输出路径
+  paths: {
+    &#39;app&#39;: &#39;./app&#39;,
+    &#39;app-base&#39;: &#39;./app-base&#39;,
+    &#39;core-base&#39;: &#39;./core-base&#39;,
+    // 这个是别名，上面几个对应modules里面的模块输出
+    &#39;tpl&#39;: &#39;../../tpl&#39;
+  },
+
+  // 兼容非AMD规范的模块定义
+  shim: {
+    &#39;highcharts&#39;: {
+      exports: &#39;Highcharts&#39;
+    },
+    &#39;highcharts-3d&#39;: {
+      deps: [&#39;highcharts&#39;]
+    }
+  },
+
+  // build阶段需要忽略的插件，常用于统一开发和生产阶段的开发模式
+  // 比如require([&#39;text!a.html&#39;])，开发阶段直接使用请求加载a.html
+  // 生产环境r.js会定义a.html这个模块，输出为a.html文件内容的字符串
+  stubModules: [&#39;text&#39;],
+
+  // 模块合并打包配置
+  modules: [
+    {
+      // 基础库
+      name: &#39;core-base&#39;,
+      create: true,
+      include: [
+        &#39;raf&#39;,
+        &#39;ractive&#39;,
+        &#39;rvc&#39;,
+        &#39;router&#39;,
+        &#39;jquery&#39;,
+        &#39;jquery.cookie&#39;,
+        &#39;jquery.amaran&#39;,
+        &#39;jquery-scrolltofixed&#39;,
+        &#39;query-string&#39;,
+        &#39;store&#39;,
+        &#39;lodash&#39;, // lodash compat
+        &#39;moment&#39;,
+        &#39;mustache&#39;,
+        &#39;numeral&#39;,
+        &#39;tween&#39;,
+        &#39;md5&#39;
+      ]
+    },
+    {
+      // 业务辅助类
+      name: &#39;app-base&#39;,
+      create: true,
+      include: [
+        &#39;spa&#39;,
+        &#39;utils&#39;,
+        &#39;oss&#39;
+      ].concat(jsComponentsModules),
+      exclude: [
+        &#39;core-base&#39;
+      ]
+    },
+    {
+      // 业务图表库
+      name: &#39;charts&#39;,
+      include: [
+        &#39;highcharts&#39;,
+        &#39;highcharts-3d&#39;
+      ],
+      exclude: [
+        &#39;core-base&#39;,
+        &#39;app-base&#39;
+      ]
+    },
+    {
+      // 业务类
+      name: &#39;app&#39;,
+      create: true,
+      include: jsAppModules,
+      exclude: [
+        &#39;core-base&#39;,
+        &#39;app-base&#39;
+      ]
+    }
+  ]
+}
+</code></pre>
+<p>r.js的配置项目还是蛮多的，网上靠谱的资料也比较少。实际使用中出问题的几率也很大，主要还是要不断的理解。</p>
+<p>上面的配置参数，一般简单很容易理解。重点是下面这几个：</p>
+<h3 id="paths">paths</h3>
+<p>paths在前端也经常使用到，有时候利用这个配置对资源的引用可以在生产阶段和开发阶段做出区分。
+另外在构建时它还可以用于指定新的合并文件的路径。</p>
+<h3 id="shim">shim</h3>
+<p>兼容非AMD规范模块常用配置，构建时r.js自动为你生成相关代码。
+比如shim配置如下：</p>
+<pre><code class="lang-js">shim: {
+    &#39;highcharts&#39;: {
+      exports: &#39;Highcharts&#39;
+    },
+    &#39;highcharts-3d&#39;: {
+      deps: [&#39;highcharts&#39;]
+    }
+}
+</code></pre>
+<p>r.js构建后为你的highcharts脚本附加相关代码：</p>
+<pre><code class="lang-js">define(&quot;highcharts&quot;, (function (global) {
+    return function () {
+        var ret, fn;
+        return ret || global.Highcharts;
+    };
+}(this)));
+</code></pre>
+<h3 id="stubmodules">stubModules</h3>
+<p>这个配置非常重要，之前因为对它理解不深，走了很多弯路。
+这个参数的直接作用就是移除（忽略）指定的插件模块。
+以text插件为例：</p>
+<pre><code class="lang-js">define([&#39;text!tpl/sample.html&#39;], function(tpl) {
+    console.log(tpl)
+})
+</code></pre>
+<p>上面的代码在开发阶段，requirejs会使用text插件异步加载模板内容。
+构建时r.js会在将模板内容内联到脚本里面，避免异步请求。
+配置<code>stubModules: [&#39;text&#39;]</code>构建后的代码类似如下：</p>
+<pre><code class="lang-js">
+define(&#39;text&#39;,{load: function(id){throw new Error(&quot;Dynamic load not allowed: &quot; + id);}});
+
+define(&#39;text!tpl/sample.html&#39;,[],function () { return &#39;模板内容&#39;;});
+</code></pre>
+<p>通过这种方式业务脚本引用模板的方式在生产和开发阶段一致，不用修改任何代码。</p>
+<h3 id="modules">modules</h3>
+<p>这里是最核心的配置，用于定义新生成的模块的依赖。
+特别需要注意如果<code>create:true</code>，需要在paths里面指定新模块的路径。</p>
+<pre><code class="lang-js">{
+     name: &#39;app&#39;,
+      create: true,
+      include: jsAppModules,
+      exclude: [
+        &#39;core-base&#39;,
+        &#39;app-base&#39;
+      ]
+  }
+</code></pre>
+<p>  对其它配置参数有疑问，可以查看RequieJS作者的<a href="https://github.com/jrburke/r.js/blob/master/build/example.build.js">示例配置</a></p>
+<h2 id="gulp">gulp</h2>
+<p>  因为gulp是基于流的，而r.js不是。再加上r.js功能强大，代码洋洋洒洒两三万行，想要封装成gulp插件实在困难。
+   后来我google了一番试图找一些amd-optimiz的gulp插件，不过大多不满足需求。
+  如果你也在做同样的事情，我建议你放弃，原因如下：</p>
+<blockquote>
+<ul>
+<li>插件大多功能简单，无法实现类似r.js诸多功能</li>
+<li>插件配置和r.js配置不尽一致，令人困惑</li>
+<li>你可以使用r.js同时使用gulp</li>
+</ul>
+</blockquote>
+<p>之前一直以为gulp.task的回调只能返回流做处理，实际上异步和promise都可以轻松支持，<a href="https://github.com/gulpjs/gulp/blob/master/docs/API.md#gulptaskname-deps-fn">这里</a>。</p>
+<pre><code class="lang-js">gulp.task(&#39;optimize:r.js&#39;, function(callback) {
+  requirejs.optimize(config, function(res) {
+    callback()
+  })
+})
+</code></pre>
+<p>我们的<a href="https://github.com/DataEye/WebRoot/blob/master/gulpfile.js">gulpfile</a>，有兴趣可以看看。</p>
+
+	<script src="../lib/prism/prism.js"></script>
+</body>
+</html>

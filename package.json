@@ -11,5 +11,8 @@
 		"async": "*",
 		"marked": "*",
 		"mustache": "*"
+	},
+  	"scripts": {
+	  "start": "node src/publish"
 	}
 }
