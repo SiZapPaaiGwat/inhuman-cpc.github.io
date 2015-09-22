@@ -1,6 +1,8 @@
 'use strict';
 
-fetch('README.md').then(function (res) {
+var path = location.search.slice(1)
+
+fetch('md/' + path + '.md').then(function (res) {
 	return res.text();
 }).then(parseContent).then(createSlides).then(startPresentation);
 
