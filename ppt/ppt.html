@@ -20,5 +20,13 @@
       visibility: hidden;
     }
   </style>
-  <script src="index.js"></script>
 </head>
+<body>
+<script>
+  if (window.fetch) {
+    document.write('<script src="index.js"><' + '/script>')
+  } else {
+    document.write('<h1>浏览器不支持window.fetch，无法播放PPT</h1>')
+  }
+</script>
+</body>
