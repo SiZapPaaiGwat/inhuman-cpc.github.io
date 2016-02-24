@@ -74,6 +74,12 @@ eslint assets/js/my-ecmascript6-file.js
 Atom / Web Storm / Sublime Text
 
 完整依赖
-babel-core / babel-eslint / babel-preset-es2015 / babel-preset-react
+babel-core / eslint / babel-eslint / babel-preset-es2015 / babel-preset-react
+
+推荐阅读
+Babel用户手册
+https://github.com/thejameskyle/babel-handbook/blob/master/translations/zh-Hans/user-handbook.md
+兼容列表
+http://kangax.github.io/compat-table/es5/
 
 End
