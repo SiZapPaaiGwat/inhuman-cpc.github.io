@@ -26,17 +26,22 @@ Babel
 一个转译(transpiling)工具,把用最新标准编写的
 JavaScript代码向下编译成可以在当下可用(ES5)的版本
 
-栗子
-const square = n => n * n ;
-const square = function(n){
-  return n * n
-}                         ;
+尝鲜
+https://babeljs.io/repl/
 
 如何使用?
-babel-cli         命令行工具,转换生成新文件
-babel-register 注册到node,require直接运行
-babel-node              使用命令行直接运行
-babel-core                编程方式转换代码
+
+babel-cli         
+命令行工具,转换生成新文件
+
+babel-register  
+注册到node,require直接运行
+
+babel-node              
+使用命令行直接运行
+
+babel-core                
+编程方式转换代码
 
 .babelrc
 babel的配置文件,用于配置预设和插件,
