@@ -41,3 +41,6 @@ DataEye前端开发,目前专注于React/Redux等Web开发技术
 > * [2014-07-19 - 初始JavaScript Promises之二](https://github.com/simongfxu/simongfxu.github.com/issues/1)
 
 <!--giab:issue_list_end-->
+
+--------
+使用[**Giab**](https://github.com/simongfxu/giab)自动获取Issues生成博文列表
