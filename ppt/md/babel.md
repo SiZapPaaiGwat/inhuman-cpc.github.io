@@ -13,9 +13,15 @@ Object[keys/create/seal/defineProperty/getOwnPropertyNames...],
 Array[isArray/indexOf/forEach/every/some/map/reduce/filter...],
 Function.bind /Date.now/String.trim/JSON/Object(getter/setter)
 
+兼容列表
+http://kangax.github.io/compat-table/es5/
+
 ECMAScript 6
 箭头函数/class/模板字符串/参数默认值
 解构/模块/对象展开/Promise/......
+
+兼容列表
+http://kangax.github.io/compat-table/e6/
 
 ECMAScript 201X
 
@@ -25,6 +31,9 @@ ECMAScript 201X
 Babel
 一个转译(transpiling)工具,把用最新标准编写的
 JavaScript代码向下编译成可以在当下可用(ES5)的版本
+
+示例
+https://github.com/Naixor/ECMAScript-6-features
 
 尝鲜
 https://babeljs.io/repl/
@@ -79,7 +88,7 @@ babel-core / eslint / babel-eslint / babel-preset-es2015 / babel-preset-react
 推荐阅读
 Babel用户手册
 https://github.com/thejameskyle/babel-handbook/blob/master/translations/zh-Hans/user-handbook.md
-兼容列表
-http://kangax.github.io/compat-table/es5/
+ECMAScript 6入门
+http://es6.ruanyifeng.com/
 
 End
