@@ -1,6 +1,4 @@
 .DS_Store
 node_modules
-tmp
-debug.log
+*.log
 .idea
-.idea/workspace.xml
