@@ -8,7 +8,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "update": "node node_modules/giab",
+    "start": "node node_modules/giab && git commit -a -m \"update\" && git push"
   },
   "repository": {
     "type": "git",
