@@ -14,6 +14,7 @@ DataEye前端开发,目前专注于React/Redux等Web开发技术
 
 <!--giab:issue_list_start-->
 
+> * [2016-03-12  Better React (2)](https://github.com/simongfxu/simongfxu.github.com/issues/31)
 > * [2016-03-01  数据可视化之路](https://github.com/simongfxu/simongfxu.github.com/issues/30)
 > * [2016-02-21  Redux三分钟入门](https://github.com/simongfxu/simongfxu.github.com/issues/29)
 > * [2016-02-04  Better React](https://github.com/simongfxu/simongfxu.github.com/issues/28)
