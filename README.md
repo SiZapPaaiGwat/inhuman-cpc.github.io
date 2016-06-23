@@ -4,16 +4,24 @@ DataEye前端开发,目前专注于React/Redux等Web开发技术
 
 ## 社交网络
 
-> * [知乎主页](https://www.zhihu.com/people/reduxis)
 > * [知乎专栏](http://zhuanlan.zhihu.com/reduixs)
-> * [GitHub](https://github.com/simongfxu)
-> * [GitHub Issue](https://github.com/simongfxu/simongfxu.github.com/issues)
 > * [微博](http://www.weibo.com/xugaofan/)
+> * [简书](http://www.jianshu.com/users/3a1021e6c75f/latest_articles)
+> * [GitHub](https://github.com/simongfxu)
+> * [Medium](https://medium.com/@damngoto)
+
+## 开源作品
+
+[Violet](https://github.com/simongfxu/violet)
+
+> 将你的作品同步到各大写作平台（支持知乎，简书，GitHub，Medium等）。一次编写，处处发布！
 
 ## 博文汇总
 
 <!--giab:issue_list_start-->
 
+> * [2016-06-18  violet - 值得一试的写作同步小助手](https://github.com/simongfxu/simongfxu.github.com/issues/101)
+> * [2016-05-27  CSS Modules in Webpack](https://github.com/simongfxu/simongfxu.github.com/issues/35)
 > * [2016-03-12  Better React (2)](https://github.com/simongfxu/simongfxu.github.com/issues/31)
 > * [2016-03-01  数据可视化之路](https://github.com/simongfxu/simongfxu.github.com/issues/30)
 > * [2016-02-21  Redux三分钟入门](https://github.com/simongfxu/simongfxu.github.com/issues/29)
@@ -21,7 +29,7 @@ DataEye前端开发,目前专注于React/Redux等Web开发技术
 > * [2015-12-30  Browserify笔记](https://github.com/simongfxu/simongfxu.github.com/issues/27)
 > * [2015-12-17  【读书笔记】持续集成（软件质量改进和风险降低之道）之二](https://github.com/simongfxu/simongfxu.github.com/issues/26)
 > * [2015-12-10  【读书笔记】持续集成（软件质量改进和风险降低之道）之一](https://github.com/simongfxu/simongfxu.github.com/issues/25)
-> * [2015-11-10  React学习资源](https://github.com/simongfxu/simongfxu.github.com/issues/21)
+> * [2015-11-10 :fire: React学习资源](https://github.com/simongfxu/simongfxu.github.com/issues/21)
 > * [2015-11-03  经常使用的ATOM packages](https://github.com/simongfxu/simongfxu.github.com/issues/20)
 > * [2015-09-19  【转载】七个对我最重要的职业建议 - Nicholas C. Zakas ](https://github.com/simongfxu/simongfxu.github.com/issues/19)
 > * [2015-09-13  RequieJS构建实践](https://github.com/simongfxu/simongfxu.github.com/issues/18)

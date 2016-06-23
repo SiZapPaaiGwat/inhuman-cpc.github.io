@@ -1,0 +1,34 @@
+"*":
+  "atom-beautify":
+    _analyticsUserId: "3d0ec31a-e136-447a-b463-5c99a49c1ad6"
+    general:
+      _analyticsUserId: "1ae8b62c-3d6b-4096-bce5-bd99c01412fc"
+  core:
+    disabledPackages: [
+      "linter-csslint"
+    ]
+    openEmptyEditorOnStart: false
+    packagesWithKeymapsDisabled: [
+      "pen-paper-coffee-syntax"
+    ]
+    themes: [
+      "nucleus-dark-ui"
+      "one-dark-syntax"
+    ]
+  editor:
+    backUpBeforeSaving: true
+    confirmCheckoutHeadRevision: false
+    fontFamily: "DROID SANS MONO"
+    fontSize: 16
+    invisibles: {}
+    showIndentGuide: true
+    showInvisibles: true
+    tabType: "soft"
+  "exception-reporting":
+    userId: "585a9315-0954-228f-f603-90cbfce84385"
+  "linter-eslint": {}
+  welcome:
+    showOnStartup: false
+".ini.source":
+  editor:
+    softWrap: false
