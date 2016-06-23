@@ -1,6 +1,6 @@
-# simonxu
+# Simon Xu
 
-DataEye前端开发,目前专注于React/Redux等Web开发技术
+A web developer from Tencent to DataEye focusing on Web tech.
 
 ## 社交网络
 
