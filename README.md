@@ -51,5 +51,9 @@ DataEye前端开发,目前专注于React/Redux等Web开发技术
 
 <!--giab:issue_list_end-->
 
+## 开发工具
+
+- [Atom配置](https://github.com/simongfxu/simongfxu.github.com/tree/master/atom)
+
 --------
 使用[**Giab**](https://github.com/simongfxu/giab)自动获取Issues生成博文列表
