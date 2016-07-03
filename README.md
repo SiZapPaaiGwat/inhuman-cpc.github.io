@@ -20,6 +20,8 @@ A web developer from Tencent to DataEye focusing on Web tech.
 
 <!--giab:issue_list_start-->
 
+> * [2016-06-29  使用SlimerJS将网页输出为PDF](https://github.com/simongfxu/simongfxu.github.com/issues/103)
+> * [2016-06-26  代码管理](https://github.com/simongfxu/simongfxu.github.com/issues/102)
 > * [2016-06-18  violet - 值得一试的写作同步小助手](https://github.com/simongfxu/simongfxu.github.com/issues/101)
 > * [2016-05-27  CSS Modules in Webpack](https://github.com/simongfxu/simongfxu.github.com/issues/35)
 > * [2016-03-12  Better React (2)](https://github.com/simongfxu/simongfxu.github.com/issues/31)
