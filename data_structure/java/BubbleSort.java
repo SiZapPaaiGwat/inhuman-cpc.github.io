@@ -31,6 +31,6 @@ public class BubbleSort {
   public static void main(String[] args) {
     int[] items = {5,4,3,2,1};
     sort(items);
-    System.out.println(items);
+    System.out.println(Arrays.toString(items));
   }
 }

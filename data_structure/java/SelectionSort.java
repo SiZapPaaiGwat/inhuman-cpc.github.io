@@ -35,6 +35,6 @@ public class SelectionSort {
   public static void main(String[] args) {
     int[] items = {5,3,7,4,2,1};
     sort(items);
-    System.out.println(items);
+    System.out.println(Arrays.toString(items));
   }
 }
