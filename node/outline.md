@@ -88,8 +88,9 @@ https://github.com/electron/electron/blob/master/docs-translations/zh-CN/tutoria
 - 监控告警
 - 必备工具
 
-## 引入持续集成(CI)
+## 从游击队走向正规军
 
+- 持续集成
 - 编码规范
 - 单元测试
 - 代码覆盖率
