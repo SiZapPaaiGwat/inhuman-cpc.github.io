@@ -50,6 +50,7 @@
 [白帽子讲Web安全](https://book.douban.com/subject/10546925/)
 [从“黑掉Github”学Web安全开发](http://coolshell.cn/articles/11021.html)
 [你会做Web上的用户登录功能吗](http://coolshell.cn/articles/5353.html)
+[Production Best Practices: Security](http://expressjs.com/en/advanced/best-practice-security.html)
 
 ## Web缓存
 

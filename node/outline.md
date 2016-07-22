@@ -51,6 +51,7 @@ http://www.ruanyifeng.com/blog/2016/01/npm-install.html
 
 https://docs.nodejitsu.com/articles/advanced/streams/
 https://github.com/maxogden/bytewiser/blob/master/README.md
+[Node.js Stream - 实战篇](https://zhuanlan.zhihu.com/p/21681134)
 
 ## 使用Node开发RESTFUL API
 
@@ -96,3 +97,6 @@ https://github.com/electron/electron/blob/master/docs-translations/zh-CN/tutoria
 - 代码覆盖率
 - 自动化测试
 - 代码审查
+
+[Production Best Practices: Security](http://expressjs.com/en/advanced/best-practice-security.html)
+[Process managers for Express apps](http://expressjs.com/en/advanced/pm.html)
