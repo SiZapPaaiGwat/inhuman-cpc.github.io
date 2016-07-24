@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    svg {
+      border: 1px solid #d5926c;
+      background-color: #fcedec;
+    }
+    path {
+      transform: translate(200px, 200px);
+      fill: #fc4483;
+    }
+    rect {
+      fill: #dec4ba;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <svg width="400" height="400">
+    <rect x="100" y="100" width="200" height="200" />
+    <path />
+  </svg>
+  <script src="http://d3js.org/d3.v4.0.0-alpha.4.min.js"></script>
+  <script>
+    var arc = d3.arc()
+      .innerRadius(0)
+      .outerRadius(100)
+      .startAngle(0)
+      .endAngle(Math.PI / 2)
+
+    var path = document.querySelector('svg>path')
+    path.setAttribute('d', arc())
+  </script>
