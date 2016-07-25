@@ -87,6 +87,58 @@ SVG支持矢量图形、栅格图像（JPG、PNG等）以及文本，提供的�
 
 > 默认情况，svg元素使用display: inline的展示方式，当然你可以使用CSS来更改svg的各种样式属性。
 
+## 坐标定位
+
+SVG使用的坐标系统和Canvas一样，以页面的左上角为(0,0)坐标点，坐标以像素为单位，x轴正方向是向右，y轴正方向是向下。
+
+**Viewport**
+
+svg根元素的width和height属性决定了整个svg画布的大小，**如果不指定单位默认实现像素px(svg子元素也是如此)**。当然你还可以指定如下的单位：
+
+- em 相对大小,1em表示当前字体尺寸
+- ex x的字体尺寸，通常是普通字体的一半
+- pt Points 1磅，等于1/72英寸
+- pc Picas 12活字，等于1/6英寸
+- cm 厘米
+- mm 毫米
+- in 英寸
+
+**viewBox**
+
+viewBox指定画布上可以显示的区域，通过与svg元素自身的的width/height属性，能达使svg具有图形伸缩的能力。
+它接受四个数值由空格或者逗号分隔，分别表示能够显示的最小的X轴的值以及最小的Y轴值、宽度、高度。
+
+```html
+<svg width="200" height="200" viewBox="0 0 100 100">
+</svg>
+```
+
+上面的代码在一个宽200px高200px的画布上指定呈现区域为(0,0)到(100,100)，因此等同于与将元素放大2倍。
+
+支持此属性的标签元素如下：
+
+- marker
+- pattern
+- view
+
+**preserveAspectRatio**
+
+有些时候viewBox的宽高比并不总是和画布的宽高比一致，这个时候就需要有一种策略来建立一个新的viewport。使用参数如下：
+
+```html
+preserveAspectRatio="[defer] <align> [<meetOrSlice>]"
+```
+
+`defer`是给image元素专用，其它元素会被忽略。
+`align`由none或者x[Min|Mid|Max]Y[Min|Mid|Max]组成，
+`meetOrSlice`由meet或者slice组成，默认为meet。
+
+![](https://www.w3.org/TR/SVG11/images/coords/PreserveAspectRatio.svg)
+
+[演示实例](http://oreillymedia.github.io/svg-essentials-examples/ch03/meet_slice_specifier.html)
+
+[详细介绍见W3C](https://www.w3.org/TR/SVG11/coords.html#PreserveAspectRatioAttribute)
+
 ## 参考资源
 
 - [可縮放向量圖形 - 维基百科](https://zh.wikipedia.org/wiki/%E5%8F%AF%E7%B8%AE%E6%94%BE%E5%90%91%E9%87%8F%E5%9C%96%E5%BD%A2)
