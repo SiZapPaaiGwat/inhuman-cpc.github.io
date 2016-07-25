@@ -15,7 +15,7 @@ SVG2003年成为W3C推荐标准，最接近的完整版本是SVG1.1。SVG1.1在2
 SVG2.0正在[起草制定](https://svgwg.org/svg2-draft/)当中。
 
 SVG还有其他子集实现，比如`SVG Basic`和`SVG Tiny`，前者是基本版主要支持掌上电脑等高端移动设备，
-后者为简化版主要支持手机登低端移动设备。
+后者为简化版主要支持手机等低端移动设备。
 
 ## 特点
 
@@ -34,6 +34,52 @@ SVG支持矢量图形、栅格图像（JPG、PNG等）以及文本，提供的�
 
 - 依赖于浏览器的实现程度
 - 遵循XML语法的文本文件导致体积稍大（不过有`svgz`）
+
+## 引入SVG
+
+**作为图片引入**
+
+```html
+<img src="someSVGPic.svg" alt="svg" />
+```
+
+> 使用此种方式引入渲染逻辑（高度和宽度）会比普通的栅格图像更加复杂。主要体现在viewBox属性的使用
+
+**作为CSS背景引入**
+
+```css
+.someStyle {
+  background-image: url("someSVGPic.svg");
+}
+```
+
+**作为object资源引入**
+
+```html
+<object type="image/svg+xml" data="kiwi.svg" class="logo">
+  logo<!-- fallback image in CSS -->
+</object>
+```
+
+**使用Data URI引入**
+
+```html
+<img src="data:image/svg+xml;base64,[data]">
+```
+
+**使用inline方式引入**
+
+```html
+<svg xmlns="http://www.w3.org/2000/svg">
+  <text x="125" y="125" dy="0.5em" text-anchor="middle">
+    Hello, world!
+  </text>
+</svg>
+```
+
+> 如果你的HTML文档使用了HTML 5的文档声明（<!DOCTYPE	html>），那么`xmlns`属性可以忽略
+
+> 默认情况，svg原始使用display: inline的展示方式，当然你可以使用CSS来更改svg的各种样式属性。
 
 ## 参考资源
 
