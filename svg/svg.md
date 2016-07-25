@@ -139,6 +139,67 @@ preserveAspectRatio="[defer] <align> [<meetOrSlice>]"
 
 [详细介绍见W3C](https://www.w3.org/TR/SVG11/coords.html#PreserveAspectRatioAttribute)
 
+## 基本形状
+
+```html
+<svg width="200" height="250">
+
+  <rect x="10" y="10" width="30" height="30" stroke="black" fill="transparent" stroke-width="5"/>
+  <rect x="60" y="10" rx="10" ry="10" width="30" height="30" stroke="black" fill="transparent" stroke-width="5"/>
+
+  <circle cx="25" cy="75" r="20" stroke="red" fill="transparent" stroke-width="5"/>
+  <ellipse cx="75" cy="75" rx="20" ry="5" stroke="red" fill="transparent" stroke-width="5"/>
+
+  <line x1="10" x2="50" y1="110" y2="150" stroke="orange" fill="transparent" stroke-width="5"/>
+  <polyline points="60 110 65 120 70 115 75 130 80 125 85 140 90 135 95 150 100 145"
+      stroke="orange" fill="transparent" stroke-width="5"/>
+
+  <polygon points="50 160 55 180 70 180 60 190 65 205 50 195 35 205 40 190 30 180 45 180"
+      stroke="green" fill="transparent" stroke-width="5"/>
+
+  <path d="M20,230 Q40,205 50,230 T90,230" fill="none" stroke="blue" stroke-width="5"/>
+</svg>
+```
+
+![](https://developer.mozilla.org/@api/deki/files/359/=Shapes.png)
+
+所有的基本形状都可以由`path`来完成，在实际的编程开发中不太推荐直接使用这些基本形状。
+
+## Path
+
+path元素需要一个d属性（代表data），d属性里面由一系列的命令+参数组成：
+
+- Moveto
+- Lineto
+- Curveto
+- Arcto
+- ClosePath
+
+**Moveto**
+
+命令：M/m，参数：x y，移动到指定坐标
+
+> 小写的m使用相对距离，参考点为上一点个位置，以下类似。
+
+**Lineto**
+
+命令：L/l，参数：x y，在目标点之间画一条直线
+
+命令：H/h，参数：x，在目标点之间画一条与x轴平行的直线
+
+命令：V/v，参数：y，在目标点之间画一条与y轴平行的直线
+
+命令：A/a，参数：rx ry xAxisRotate LargeArcFlag SweepFlag x y，在目标点之间画一条椭圆弧曲线路径
+
+> 由于给定x轴和y轴半径以及两个坐标点，总是有两个路径可以连接它们，所以画椭圆曲线需要额外的参数
+> rx/ry分别代表x轴和y轴半径
+> x和y代表终点坐标
+> xAxisRotate为x轴旋转角度
+> LargeArcFlag表示弧度是否大于180度，0为小角弧
+> SweepFlag表示从起点到终点画弧是顺时针还是逆时针（0为逆时针）
+
+![](https://developer.mozilla.org/@api/deki/files/345/=SVGArcs_Flags.png)
+
 ## 参考资源
 
 - [可縮放向量圖形 - 维基百科](https://zh.wikipedia.org/wiki/%E5%8F%AF%E7%B8%AE%E6%94%BE%E5%90%91%E9%87%8F%E5%9C%96%E5%BD%A2)
