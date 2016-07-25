@@ -53,6 +53,12 @@ SVG支持矢量图形、栅格图像（JPG、PNG等）以及文本，提供的�
 }
 ```
 
+**使用iframe引入**
+
+```html
+<iframe src="someSVGPic.svg" frameborder="0"></iframe>
+```
+
 **作为object资源引入**
 
 ```html
@@ -79,10 +85,11 @@ SVG支持矢量图形、栅格图像（JPG、PNG等）以及文本，提供的�
 
 > 如果你的HTML文档使用了HTML 5的文档声明（<!DOCTYPE	html>），那么`xmlns`属性可以忽略
 
-> 默认情况，svg原始使用display: inline的展示方式，当然你可以使用CSS来更改svg的各种样式属性。
+> 默认情况，svg元素使用display: inline的展示方式，当然你可以使用CSS来更改svg的各种样式属性。
 
 ## 参考资源
 
 - [可縮放向量圖形 - 维基百科](https://zh.wikipedia.org/wiki/%E5%8F%AF%E7%B8%AE%E6%94%BE%E5%90%91%E9%87%8F%E5%9C%96%E5%BD%A2)
 - [Using SVG - CSS Tricks](https://css-tricks.com/using-svg/)
 - [SVG - MDN](https://developer.mozilla.org/zh-CN/docs/Web/SVG)
+- [SVG Essentials](https://book.douban.com/subject/26640057/)
