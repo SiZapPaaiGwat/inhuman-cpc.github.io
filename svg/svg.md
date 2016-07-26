@@ -105,7 +105,7 @@ svg根元素的width和height属性决定了整个svg画布的大小，**如果�
 
 **viewBox**
 
-viewBox指定画布上可以显示的区域，通过与svg元素自身的的width/height属性，能达使svg具有图形伸缩的能力。
+viewBox指定画布上可以显示的区域，通过与svg元素自身的的width/height属性，能使svg具有图形伸缩的能力。
 它接受四个数值由空格或者逗号分隔，分别表示能够显示的最小的X轴的值以及最小的Y轴值、宽度、高度。
 
 ```html
@@ -189,16 +189,58 @@ path元素需要一个d属性（代表data），d属性里面由一系列的命�
 
 命令：V/v，参数：y，在目标点之间画一条与y轴平行的直线
 
+**Arcto**
+
 命令：A/a，参数：rx ry xAxisRotate LargeArcFlag SweepFlag x y，在目标点之间画一条椭圆弧曲线路径
 
 > 由于给定x轴和y轴半径以及两个坐标点，总是有两个路径可以连接它们，所以画椭圆曲线需要额外的参数
+>
 > rx/ry分别代表x轴和y轴半径
+>
 > x和y代表终点坐标
+>
 > xAxisRotate为x轴旋转角度
+>
 > LargeArcFlag表示弧度是否大于180度，0为小角弧
+>
 > SweepFlag表示从起点到终点画弧是顺时针还是逆时针（0为逆时针）
 
 ![](https://developer.mozilla.org/@api/deki/files/345/=SVGArcs_Flags.png)
+
+**Curveto**
+
+命令：C/c，参数：x1 y1 x2 y2 x y，从当前点到(x, y)画一个三次贝塞尔曲线，使用(x1, y1)作为起始控制点，(x2, y2)作为结束控制点
+
+![](https://developer.mozilla.org/@api/deki/files/159/=Cubic_Bezier_Curves.png)
+
+命令：S/s，参数：x2 y2 x y，从当前点到(x, y)画一个三次贝塞尔曲线，使用(x2, y2)作为结束控制点，上一次的结束控制点的对称点作为起始控制点
+
+![S/s](https://developer.mozilla.org/@api/deki/files/363/=ShortCut_Cubic_Bezier.png)
+
+命令：Q/q，参数：x1 y1 x y，从当前点到(x, y)画一个二次贝塞尔曲线，使用(x1, y1)作为控制点
+
+> 二次贝塞尔曲线只需要一个控制点
+
+![](https://developer.mozilla.org/@api/deki/files/326/=Quadratic_Bezier.png)
+
+命令：T/t，参数：x y，从当前点到(x, y)画一个二次贝塞尔曲线，类似于三次贝塞尔曲线的S命令，使用上一次的控制点的对称点
+
+![](https://developer.mozilla.org/@api/deki/files/364/=Shortcut_Quadratic_Bezier.png)
+
+**ClosePath**
+
+命令：Z/z，闭合路径（不区分大小写）
+
+> 用四条直线画一个矩形和使用闭合路径有哪些不一样？主要体现在当你使用了较宽的stroke-width或stroke-linecap、stroke-linejoin等效果 	
+
+```html
+<g style="stroke: gray;stroke-width: 8;fill: none;">
+  <!-- rectangle 四条直线 -->
+  <path d="M 10 10 L 40 10 L 40 30 L 10 30 L 10 10"/>
+  <!-- rectangle 闭合 -->
+  <path d="M 60 10 L 90 10 L 90 30 L 60 30 Z"/>
+</g>
+```
 
 ## 参考资源
 
