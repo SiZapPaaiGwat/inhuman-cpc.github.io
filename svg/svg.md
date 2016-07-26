@@ -293,6 +293,148 @@ marker是一个容器元素，它允许在特定的元素上(path/line/polyline/
 
 [查看示例](http://codepen.io/simongfxu/pen/kXJKvV)
 
+## 使用样式
+
+**Inline Styles**
+
+```html
+<circle cx="20" cy="20" r="10"
+  style="stroke:black;stroke-width:1.5;fill:blue;fill-opacity:	0.6"
+/>
+```
+
+**Internal Stylesheets**
+
+```html
+<svg width="200px" height="200px" viewBox="0	0	200	200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style	type="text/css">
+      circle {
+        fill: #ffc;
+        stroke: blue;
+        stroke-width: 2;
+        stroke-dasharray: 5	3;
+      }
+    </style>
+  </defs>
+  <circle	cx="20"	cy="20"	r="10"/>
+</svg>
+```
+
+**External	Stylesheets**
+
+```html
+<?xml	version="1.0"?>
+<?xml-stylesheet	href="ext_style.css"	type="text/css"?>
+<!DOCTYPE	svg	PUBLIC	"-//W3C//DTD	SVG	1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="200px"	height="200px"	viewBox="0	0	200	200">
+  <line	x1="10"	y1="10"	x2="40"	y2="10"/>
+  <rect	x="10"	y="20"	width="40"	height="30"/>
+  <circle	class="yellow"	cx="70"	cy="20"	r="10"/>
+  <polygon	class="thick"	points="60	50,	60	80,		90	80"/>
+  <polygon	class="thick	semiblue" points="100	30,	150	30,	150	50,	130	50"/>
+</svg>
+```
+
+**Presentation	Attributes**
+
+```html
+<circle	cx="10" cy="10" r="5" fill="red" stroke="black" stroke-width="2" />
+```
+
+> `Presentation	Attributes`的优先级最低，仅仅高于继承属性
+
+## 分组和引用
+
+**<g>**
+
+```html
+<svg viewBox="0 0 100 50" width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+   <g stroke="green" fill="white" stroke-width="5">
+     <title>g</title>
+     <desc>audi?</desc>
+     <circle cx="25" cy="25" r="15"/>
+     <circle cx="40" cy="25" r="15"/>
+     <circle cx="55" cy="25" r="15"/>
+     <circle cx="70" cy="25" r="15"/>
+   </g>
+</svg>
+```
+
+g代表`Grouped Objects`，用于组合对象的容器。添加到g元素上的变换和属性都会应用到子元素上。
+g元素也可以用来定义复杂的对象，然后通过use元素来引用。
+
+[查看示例](https://codepen.io/simongfxu/pen/EyLqyK)
+
+**<use>**
+
+use赋予svg`复制粘贴`的功能
+
+```html
+<svg width="100%" height="100%">
+  <style>
+    .classA { fill:red }
+  </style>
+
+  <circle id="Port" style="fill:inherit" r="10" cx="10" cy="10"/>
+
+  <use x="10" y="30" xlink:href="#Port" />
+  <use x="10" y="50" xlink:href="#Port" class="classA"/>
+  <use x="10" y="70" xlink:href="#Port" style="fill:blue"/>
+</svg>
+```
+
+[查看示例](http://codepen.io/simongfxu/pen/qNYZRA)
+
+**<defs>**
+
+在defs元素中定义的图形元素不会直接呈现，你可以利用<use>元素呈现这些元素。
+
+```html
+<svg width="80px" height="30px" viewBox="0 0 80 30"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <linearGradient id="Gradient01">
+      <stop offset="20%" stop-color="#39F" />
+      <stop offset="90%" stop-color="#F3F" />
+    </linearGradient>
+  </defs>
+
+  <rect x="10" y="10" width="60" height="10"
+        fill="url(#Gradient01)"  />
+</svg>
+```
+
+[查看示例](http://codepen.io/simongfxu/pen/wWjVqN)
+
+**<symbol>**
+
+symbol和g元素一样用于组合元素，不过symbol并不直接显示图形。
+symbol主要用于重用和可访问性提高，使用use元素来生成symbol实例显示它们。
+
+> symbol有2个专有属性（viewBox / preserveAspectRatio），而g没有
+
+```html
+<svg>
+<!-- symbol definition  NEVER draw -->
+<symbol id="sym01" viewBox="0 0 150 110">
+  <circle cx="50" cy="50" r="40" stroke-width="8" stroke="red" fill="red"/>
+  <circle cx="90" cy="60" r="40" stroke-width="8" stroke="green" fill="white"/>
+</symbol>
+
+<!-- actual drawing by "use" element -->
+<use xlink:href="#sym01"
+     x="0" y="0" width="100" height="50"/>
+<use xlink:href="#sym01"
+     x="0" y="50" width="75" height="38"/>
+<use xlink:href="#sym01"
+     x="0" y="100" width="50" height="25"/>
+</svg>
+```
+
+[查看示例](http://codepen.io/simongfxu/pen/wWjVyO)
+
 ## 参考资源
 
 - [可縮放向量圖形 - 维基百科](https://zh.wikipedia.org/wiki/%E5%8F%AF%E7%B8%AE%E6%94%BE%E5%90%91%E9%87%8F%E5%9C%96%E5%BD%A2)
