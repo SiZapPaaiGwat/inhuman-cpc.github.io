@@ -1,4 +1,4 @@
-# SVG学习笔记
+# SVG简明笔记
 
 ## 概述
 
@@ -241,6 +241,43 @@ path元素需要一个d属性（代表data），d属性里面由一系列的命�
   <path d="M 60 10 L 90 10 L 90 30 L 60 30 Z"/>
 </g>
 ```
+
+## Marker
+
+marker是一个容器元素，它允许在特定的元素上(path/line/polyline/polygon)绘制各种箭头或者图形标记。
+
+**专有属性**
+
+- markerUnits [strokeWidth|userSpaceOnUse] 设置marker内的图形尺寸是否与外部图形的stroke-width相关
+- refX
+- refY
+- markerWidth
+- markerHeight
+- orient 设置旋转的度数，auto表示与当前路径方向一致。
+
+```html
+<svg>
+  <defs>
+    <marker id="mCircle" markerWidth="10" markerHeight="10" refX="5" refY="5">
+      <circle cx="5" cy="5" r="4" style="fill:    none;    stroke:    black;">
+      </circle>
+    </marker>
+    <marker id="mArrow" markerWidth="6" markerHeight="10" refX="0" refY="4" orient="auto">
+      <path d="M 0 0 4 4 0 8" style="fill: none; stroke: black;">
+      </path>
+    </marker>
+    <marker id="mTriangle" markerWidth="5" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M 0 0 5 5 0 10 Z" style="fill: black;">
+      </path>
+    </marker>
+  </defs>
+  <path d="M 10 20 100 20A 20 30 0 0 1 120 50L 120 110"
+    style="marker-start: url(#mCircle);marker-mid: url(#mArrow);marker-end: url(#mTriangle);fill: none; stroke: black;">
+  </path>
+</svg>
+```
+
+[查看示例](http://codepen.io/simongfxu/pen/kXJKvV)
 
 ## 参考资源
 
