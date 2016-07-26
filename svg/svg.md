@@ -87,6 +87,8 @@ SVG支持矢量图形、栅格图像（JPG、PNG等）以及文本，提供的�
 
 > 默认情况，svg元素使用display: inline的展示方式，当然你可以使用CSS来更改svg的各种样式属性。
 
+[查看示例](http://codepen.io/simongfxu/pen/LkmKJN)
+
 ## 坐标定位
 
 SVG使用的坐标系统和Canvas一样，以页面的左上角为(0,0)坐标点，坐标以像素为单位，x轴正方向是向右，y轴正方向是向下。
@@ -163,6 +165,8 @@ preserveAspectRatio="[defer] <align> [<meetOrSlice>]"
 
 ![](https://developer.mozilla.org/@api/deki/files/359/=Shapes.png)
 
+[查看示例](http://codepen.io/simongfxu/pen/BzxgOY)
+
 所有的基本形状都可以由`path`来完成，在实际的编程开发中不太推荐直接使用这些基本形状。
 
 ## Path
@@ -207,11 +211,15 @@ path元素需要一个d属性（代表data），d属性里面由一系列的命�
 
 ![](https://developer.mozilla.org/@api/deki/files/345/=SVGArcs_Flags.png)
 
+[演示](http://oreillymedia.github.io/svg-essentials-examples/ch07/arc.html)
+
 **Curveto**
 
 命令：C/c，参数：x1 y1 x2 y2 x y，从当前点到(x, y)画一个三次贝塞尔曲线，使用(x1, y1)作为起始控制点，(x2, y2)作为结束控制点
 
 ![](https://developer.mozilla.org/@api/deki/files/159/=Cubic_Bezier_Curves.png)
+
+[演示](http://oreillymedia.github.io/svg-essentials-examples/ch07/cubic-bezier.html)
 
 命令：S/s，参数：x2 y2 x y，从当前点到(x, y)画一个三次贝塞尔曲线，使用(x2, y2)作为结束控制点，上一次的结束控制点的对称点作为起始控制点
 
@@ -223,9 +231,13 @@ path元素需要一个d属性（代表data），d属性里面由一系列的命�
 
 ![](https://developer.mozilla.org/@api/deki/files/326/=Quadratic_Bezier.png)
 
+[演示](http://oreillymedia.github.io/svg-essentials-examples/ch07/quadratic-bezier.html)
+
 命令：T/t，参数：x y，从当前点到(x, y)画一个二次贝塞尔曲线，类似于三次贝塞尔曲线的S命令，使用上一次的控制点的对称点
 
 ![](https://developer.mozilla.org/@api/deki/files/364/=Shortcut_Quadratic_Bezier.png)
+
+[演示](http://oreillymedia.github.io/svg-essentials-examples/ch07/smooth-quadratic-bezier.html)
 
 **ClosePath**
 
@@ -241,6 +253,8 @@ path元素需要一个d属性（代表data），d属性里面由一系列的命�
   <path d="M 60 10 L 90 10 L 90 30 L 60 30 Z"/>
 </g>
 ```
+
+[查看示例](http://codepen.io/simongfxu/pen/xOjoyG)
 
 ## Marker
 
