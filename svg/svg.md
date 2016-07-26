@@ -384,6 +384,14 @@ use赋予svg`复制粘贴`的功能
 </svg>
 ```
 
+专有属性：
+
+- x
+- y
+- width
+- height
+- xlink:href
+
 [查看示例](http://codepen.io/simongfxu/pen/qNYZRA)
 
 **<defs>**
@@ -434,6 +442,25 @@ symbol主要用于重用和可访问性提高，使用use元素来生成symbol�
 ```
 
 [查看示例](http://codepen.io/simongfxu/pen/wWjVyO)
+
+## Pattern
+
+pattern和symbol一样，定义在defs元素内，用于使用一些预定义的图形对元素进行填充(fill)或描边(stroke)。
+
+专有属性：
+
+- `patternUnits` [objectBoundingBox|userSpaceOnUse]
+- `patternContentUnits` [userSpaceOnUse|objectBoundingBox]
+- `patternTransform`
+- x
+- y
+- width
+- height
+- xlink:href
+- preserveAspectRatio
+
+userSpaceOnUse表示以使用者坐标为基准，objectBoundingBox表示以所绘制元素的坐标为基准。
+
 
 ## 参考资源
 
