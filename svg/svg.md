@@ -465,6 +465,77 @@ objectBoundingBox表示以当前应用的绘制元素的坐标为基准，需要
 
 [演示](http://oreillymedia.github.io/svg-essentials-examples/ch08/patternunits.html)
 
+## 渐变
+
+可以在填充和描边上应用渐变，避免单一的填充和描边。
+
+**线性渐变**
+
+专有属性：
+
+- gradientUnits 默认为objectBoundingBox，属性值一般填0～1的数值
+- gradientTransform
+- x1
+- y1
+- x2
+- y2
+- spreadMethod
+- xlink:href
+
+> x1/y1/x2/h2（0~1） 用于定义渐变的方向。比如x1=0,x2=1表示从做到右渐变；x1=0,y1=0,x2=1,y2=1表示从左上到右下对角线做渐变。[演示](http://oreillymedia.github.io/svg-essentials-examples/ch08/transition_line.html)
+
+> spreadMethod 用于控制渐变到达终点的行为（因为对象可能还没被完全填充），有pad/reflect/repeat
+
+```html
+<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+      <linearGradient id="Gradient1">
+        <stop class="stop1" offset="0%"/>
+        <stop class="stop2" offset="50%"/>
+        <stop class="stop3" offset="100%"/>
+      </linearGradient>
+      <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="red"/>
+        <stop offset="50%" stop-color="black" stop-opacity="0"/>
+        <stop offset="100%" stop-color="blue"/>
+      </linearGradient>
+      <style type="text/css">
+        #rect1 { fill: url(#Gradient1); }
+        .stop1 { stop-color: red; }
+        .stop2 { stop-color: black; stop-opacity: 0; }
+        .stop3 { stop-color: blue; }
+      </style>
+  </defs>
+
+  <rect id="rect1" x="10" y="10" rx="15" ry="15" width="100" height="100"/>
+  <rect x="10" y="120" rx="15" ry="15" width="100" height="100" fill="url(#Gradient2)"/>
+</svg>
+```
+
+[查看示例](https://codepen.io/simongfxu/pen/KrZawy)
+
+**径向渐变**
+
+从一个中心点发散绘制渐变。
+
+专有属性：
+
+- gradientUnits 默认为objectBoundingBox，属性值一般填0～1的数值
+- gradientTransform
+- cx
+- cy
+- r
+- fx
+- fy
+- spreadMethod
+- xlink:href
+
+> cx/cy定义中心点位置，r定义半径大小
+
+> fx/fy定义焦点位置
+
+[查看示例](http://codepen.io/simongfxu/pen/rLKjxK)
+
 ## 参考资源
 
 - [可縮放向量圖形 - 维基百科](https://zh.wikipedia.org/wiki/%E5%8F%AF%E7%B8%AE%E6%94%BE%E5%90%91%E9%87%8F%E5%9C%96%E5%BD%A2)
