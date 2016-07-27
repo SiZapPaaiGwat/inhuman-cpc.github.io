@@ -83,7 +83,7 @@ SVG支持矢量图形、栅格图像（JPG、PNG等）以及文本，提供的�
 </svg>
 ```
 
-> 如果你的HTML文档使用了HTML 5的文档声明（<!DOCTYPE	html>），那么`xmlns`属性可以忽略
+> 如果你的HTML文档使用了HTML 5的文档声明（<!DOCTYPE html>），那么`xmlns`属性可以忽略
 
 > 默认情况，svg元素使用display: inline的展示方式，当然你可以使用CSS来更改svg的各种样式属性。
 
@@ -243,7 +243,7 @@ path元素需要一个d属性（代表data），d属性里面由一系列的命�
 
 命令：Z/z，闭合路径（不区分大小写）
 
-> 用四条直线画一个矩形和使用闭合路径有哪些不一样？主要体现在当你使用了较宽的stroke-width或stroke-linecap、stroke-linejoin等效果 	
+> 用四条直线画一个矩形和使用闭合路径有哪些不一样？主要体现在当你使用了较宽的stroke-width或stroke-linecap、stroke-linejoin等效果  
 
 ```html
 <g style="stroke: gray;stroke-width: 8;fill: none;">
@@ -299,50 +299,50 @@ marker是一个容器元素，它允许在特定的元素上(path/line/polyline/
 
 ```html
 <circle cx="20" cy="20" r="10"
-  style="stroke:black;stroke-width:1.5;fill:blue;fill-opacity:	0.6"
+  style="stroke:black;stroke-width:1.5;fill:blue;fill-opacity: 0.6"
 />
 ```
 
 **Internal Stylesheets**
 
 ```html
-<svg width="200px" height="200px" viewBox="0	0	200	200" xmlns="http://www.w3.org/2000/svg">
+<svg width="200px" height="200px" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <style	type="text/css">
+    <style type="text/css">
       circle {
         fill: #ffc;
         stroke: blue;
         stroke-width: 2;
-        stroke-dasharray: 5	3;
+        stroke-dasharray: 5 3;
       }
     </style>
   </defs>
-  <circle	cx="20"	cy="20"	r="10"/>
+  <circle cx="20" cy="20" r="10"/>
 </svg>
 ```
 
-**External	Stylesheets**
+**External Stylesheets**
 
 ```html
-<?xml	version="1.0"?>
-<?xml-stylesheet	href="ext_style.css"	type="text/css"?>
-<!DOCTYPE	svg	PUBLIC	"-//W3C//DTD	SVG	1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" width="200px"	height="200px"	viewBox="0	0	200	200">
-  <line	x1="10"	y1="10"	x2="40"	y2="10"/>
-  <rect	x="10"	y="20"	width="40"	height="30"/>
-  <circle	class="yellow"	cx="70"	cy="20"	r="10"/>
-  <polygon	class="thick"	points="60	50,	60	80,		90	80"/>
-  <polygon	class="thick	semiblue" points="100	30,	150	30,	150	50,	130	50"/>
+<?xml version="1.0"?>
+<?xml-stylesheet href="ext_style.css" type="text/css"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="200px" height="200px" viewBox="0 0 200 200">
+  <line x1="10" y1="10" x2="40" y2="10"/>
+  <rect x="10" y="20" width="40" height="30"/>
+  <circle class="yellow" cx="70" cy="20" r="10"/>
+  <polygon class="thick" points="60 50, 60 80,  90 80"/>
+  <polygon class="thick semiblue" points="100 30, 150 30, 150 50, 130 50"/>
 </svg>
 ```
 
-**Presentation	Attributes**
+**Presentation Attributes**
 
 ```html
-<circle	cx="10" cy="10" r="5" fill="red" stroke="black" stroke-width="2" />
+<circle cx="10" cy="10" r="5" fill="red" stroke="black" stroke-width="2" />
 ```
 
-> `Presentation	Attributes`的优先级最低，仅仅高于继承属性
+> `Presentation Attributes`的优先级最低，仅仅高于继承属性
 
 ## 分组和引用
 
@@ -535,6 +535,60 @@ objectBoundingBox表示以当前应用的绘制元素的坐标为基准，需要
 > fx/fy定义焦点位置
 
 [查看示例](http://codepen.io/simongfxu/pen/rLKjxK)
+
+## Text
+
+**text**
+
+定义由文字组成的图形，渐变、图案、剪切路径、遮罩或者滤镜都可以应用到text上。
+
+专有属性：
+
+- x
+- y
+- dx 从当前位置，用一个水平偏移开始绘制文本。你可以提供一个值数列，可以应用到连续的字体，因此每次累积一个偏移。
+- dy 垂直偏移
+- text-anchor [start|middle|end|inherit] 从哪一点决定文本流的方向
+- rotate 旋转一个角度。如果是数列，则使每个字符旋转分别旋转到那个值，剩下的字符根据最后一个值旋转。
+- textLength 设置文本为固定长度
+- lengthAdjust [spacing|spacingAndGlyphs] 根据textLength自动调整空格或者同时调整空格和文字
+
+> 字体相关的属性都可以作用在text元素上：比如font-family、font-style、font-weight、font-variant、font-stretch、font-size、font-size-adjust、kerning、letter-spacing、word-spacing和text-decoration
+
+[查看示例](http://codepen.io/simongfxu/pen/bZKqAO)
+
+**tspan**
+
+标记文本块的子元素，它只能是text或者tspan的子元素。
+
+> 专有属性同text
+
+[查看示例](http://codepen.io/simongfxu/pen/bZKqAO)
+
+**textPath**
+
+把字符对齐到路径
+
+```html
+<svg width="300" height="300">
+<defs>
+<path id="curvepath"
+    d="M30 40 C 50 10, 70 10, 120 40 S 150 0, 200 40"
+    style="stroke: gray; fill: none;"/>
+</defs>
+<g style="font-family: 'Liberation Sans';
+  font-size: 10pt;">
+  <use xlink:href="#curvepath"/>
+  <text>
+    <textPath xlink:href="#curvepath">
+    Following a cubic Bézier curve.
+    </textPath>
+  </text>
+</g>
+</svg>
+```
+
+[查看示例](http://codepen.io/simongfxu/pen/jAKBpN)
 
 ## 参考资源
 
