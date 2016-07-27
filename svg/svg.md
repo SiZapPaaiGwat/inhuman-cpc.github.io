@@ -8,7 +8,7 @@ SVG是一个W3C标准，能够与CSS、DOM等协同工作。
 SVG推出于1999年，但是浏览器的实现进度却非常缓慢，直到2009年应用在Web上的SVG内容都不是非常多。
 关键在于即使浏览器支持SVG，在当时的实现程度也不如竞争技术如`Canvas`和`Flash`。
 
-当然SVG有它自身的有点比如，它实现了DOM接口，比Canvas使用起来要方便；
+当然SVG有它自身的优点比如，它实现了DOM接口，比Canvas使用起来要方便；
 它也不需要安装浏览器插件，这一点比Flash要方便。
 
 SVG2003年成为W3C推荐标准，最接近的完整版本是SVG1.1。SVG1.1在2011年成为推荐标准。
@@ -95,7 +95,7 @@ SVG使用的坐标系统和Canvas一样，以页面的左上角为(0,0)坐标点
 
 **Viewport**
 
-svg根元素的width和height属性决定了整个svg画布的大小，**如果不指定单位默认实现像素px(svg子元素也是如此)**。当然你还可以指定如下的单位：
+svg根元素的width和height属性决定了整个svg画布的大小，**如果不指定单位默认使用像素px(svg子元素也是如此)**。当然你还可以指定如下的单位：
 
 - em 相对大小,1em表示当前字体尺寸
 - ex x的字体尺寸，通常是普通字体的一半
@@ -346,7 +346,7 @@ marker是一个容器元素，它允许在特定的元素上(path/line/polyline/
 
 ## 分组和引用
 
-**<g>**
+**&lt;g&gt;**
 
 ```html
 <svg viewBox="0 0 100 50" width="400" height="200" xmlns="http://www.w3.org/2000/svg">
@@ -366,7 +366,7 @@ g元素也可以用来定义复杂的对象，然后通过use元素来引用。
 
 [查看示例](https://codepen.io/simongfxu/pen/EyLqyK)
 
-**<use>**
+**&lt;use&gt;**
 
 use赋予svg`复制粘贴`的功能
 
@@ -394,7 +394,7 @@ use赋予svg`复制粘贴`的功能
 
 [查看示例](http://codepen.io/simongfxu/pen/qNYZRA)
 
-**<defs>**
+**&lt;defs&gt;**
 
 在defs元素中定义的图形元素不会直接呈现，你可以利用<use>元素呈现这些元素。
 
@@ -416,7 +416,7 @@ use赋予svg`复制粘贴`的功能
 
 [查看示例](http://codepen.io/simongfxu/pen/wWjVqN)
 
-**<symbol>**
+**&lt;symbol&gt;**
 
 symbol和g元素一样用于组合元素，不过symbol并不直接显示图形。
 symbol主要用于重用和可访问性提高，使用use元素来生成symbol实例显示它们。
