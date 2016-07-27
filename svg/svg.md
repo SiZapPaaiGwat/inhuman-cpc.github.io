@@ -449,8 +449,8 @@ pattern和symbol一样，定义在defs元素内，用于使用一些预定义的
 
 专有属性：
 
-- `patternUnits` [objectBoundingBox|userSpaceOnUse]
-- `patternContentUnits` [userSpaceOnUse|objectBoundingBox]
+- `patternUnits` [objectBoundingBox|userSpaceOnUse] 默认objectBoundingBox
+- `patternContentUnits` [userSpaceOnUse|objectBoundingBox] 默认userSpaceOnUse
 - `patternTransform`
 - x
 - y
@@ -459,8 +459,11 @@ pattern和symbol一样，定义在defs元素内，用于使用一些预定义的
 - xlink:href
 - preserveAspectRatio
 
-userSpaceOnUse表示以使用者坐标为基准，objectBoundingBox表示以所绘制元素的坐标为基准。
+userSpaceOnUse表示以使用者坐标为基准填写实际数值
 
+objectBoundingBox表示以当前应用的绘制元素的坐标为基准，需要填写0~1的数值。
+
+[演示](http://oreillymedia.github.io/svg-essentials-examples/ch08/patternunits.html)
 
 ## 参考资源
 
