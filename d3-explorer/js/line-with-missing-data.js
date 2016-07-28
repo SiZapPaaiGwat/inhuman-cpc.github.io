@@ -1,5 +1,5 @@
 // http://bl.ocks.org/mbostock/0533f44f2cfabecc5e3a
-loadContent('./shape.md')
+
 /**
  * 常量配置
  */
