@@ -6,7 +6,7 @@
 
 ## 涉及API
 
-- d3.range [d3-array](../d3-array.md)
-- d3.scaleLinear
-- d3.axisBottom
-- d3.line
+- d3.range 生成一组间隔一致的连续数据 [d3-array](../d3-array.md)
+- d3.scaleLinear 创建定量线性比例尺 [d3-scale](../d3-scale.md)
+- d3.axisBottom 创建一个底部轴生成器 [d3-axis](../d3-axis.md)
+- d3.line 创建一个新的线生成器 [d3-shape](../d3-shape.md)
