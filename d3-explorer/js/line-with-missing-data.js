@@ -15,11 +15,21 @@ var linePathData = d3.line()
   .y(function(d) {return y(d.y)})
 
 class App extends React.Component {
+  renderXAxisTicks() {
+
+  }
+
   renderXAxis() {
     return (
       <g className="axis axis--x" transform={`translate(0, ${height})`}>
+        <path d={''} />
+
       </g>
     )
+  }
+
+  renderYAxisTicks() {
+
   }
 
   renderYAxis() {
