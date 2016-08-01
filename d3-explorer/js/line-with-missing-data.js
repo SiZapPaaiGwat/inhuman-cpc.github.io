@@ -1,51 +1,73 @@
+/**
+ * 常量配置
+ */
 let margin = {top: 40, right: 40, bottom: 40, left: 40}
 let width = 960 - margin.left - margin.right
 let height = 500 - margin.top - margin.bottom
+let tickLength = 6
+let yAsixTickOffset = -9
+let styles = {
+  fill: 'none',
+  stroke: '#000',
+  shapeRendering: 'crispEdges'
+}
 
+/**
+ * d3相关的API使用
+ */
 let data = d3.range(40).map(function(i) {
   return i % 5 ? {x: i / 39, y: (Math.sin(i / 3) + 2) / 4} : null;
 })
-
-var x = d3.scaleLinear().range([0, width])
-var y = d3.scaleLinear().range([height, 0])
-
-var linePathData = d3.line()
+let xScale = d3.scaleLinear().range([0, width])
+let yScale = d3.scaleLinear().range([height, 0])
+let format = d3.format('.1f')
+let linePathData = d3.line()
   .defined(function(d) {return d})
   .x(function(d) {return x(d.x)})
   .y(function(d) {return y(d.y)})
 
 class App extends React.Component {
-  renderXAxisTicks() {
-
-  }
-
   renderXAxis() {
-    return (
-      <g className="axis axis--x" transform={`translate(0, ${height})`}>
-        <path d={''} />
+    let ticks = xScale.ticks()
+    let tickNodes = ticks.map((val, i) => {
+      return (
+        <g key={val} transform={`translate(${xScale(val)}, 0)`}>
+          <line y2={tickLength} x2="0" {...styles} />
+          <text dy="9" y="9" x="0" style={{textAnchor:'middle'}}>
+            {format(val)}
+          </text>
+        </g>
+      )
+    })
 
+    return (
+      <g transform={`translate(0, ${height})`}>
+        <title>x轴及刻度</title>
+        {tickNodes}
+        <path d="M0,6V0H880V6" {...styles} />
       </g>
     )
-  }
-
-  renderYAxisTicks() {
-
   }
 
   renderYAxis() {
+    let ticks = yScale.ticks()
+    let tickNodes = ticks.map((val, i) => {
+      return (
+        <g key={val} transform={`translate(0, ${yScale(val)})`}>
+          <line y2="0" x2="-6" {...styles} />
+          <text dy="0.4em" y="0" x={yAsixTickOffset} style={{textAnchor:'end'}}>
+            {format(val)}
+          </text>
+        </g>
+      )
+    })
+
     return (
-      <g className="axis axis--y">
+      <g>
+        <title>y轴及刻度</title>
+        {tickNodes}
+        <path d="M-6,420H0V0H-6" {...styles} />
       </g>
-    )
-  }
-
-  renderLine() {
-    return <path className="line" d={linePathData} />
-  }
-
-  renderPoints() {
-    return (
-      <g></g>
     )
   }
 
@@ -55,8 +77,6 @@ class App extends React.Component {
         <g transform={`translate(${margin.left}, ${margin.top})`}>
           {this.renderXAxis()}
           {this.renderYAxis()}
-          {this.renderLine()}
-          {this.renderPoints()}
         </g>
       </svg>
     )
