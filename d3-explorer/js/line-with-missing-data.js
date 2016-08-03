@@ -33,7 +33,7 @@ class App extends React.Component {
       return (
         <g key={val} transform={`translate(${xScale(val)}, 0)`}>
           <line y2={tickLength} x2="0" {...styles} />
-          <text dy="9" y="9" x="0" style={{textAnchor:'middle'}}>
+          <text dy={tickLength * 1.5} y={tickLength * 1.5} x="0" style={{textAnchor:'middle'}}>
             {format(val)}
           </text>
         </g>
@@ -44,7 +44,7 @@ class App extends React.Component {
       <g transform={`translate(0, ${height})`}>
         <title>x轴及刻度</title>
         {tickNodes}
-        <path d="M0,6V0H880V6" {...styles} />
+        <path d={`M0,${tickLength}V0H880V${tickLength}`} {...styles} />
       </g>
     )
   }
@@ -54,7 +54,7 @@ class App extends React.Component {
     let tickNodes = ticks.map((val, i) => {
       return (
         <g key={val} transform={`translate(0, ${yScale(val)})`}>
-          <line y2="0" x2="-6" {...styles} />
+          <line y2="0" x2={-1 * tickLength} {...styles} />
           <text dy="0.4em" y="0" x={yAsixTickOffset} style={{textAnchor:'end'}}>
             {format(val)}
           </text>
@@ -66,7 +66,7 @@ class App extends React.Component {
       <g>
         <title>y轴及刻度</title>
         {tickNodes}
-        <path d="M-6,420H0V0H-6" {...styles} />
+        <path d={`M${-1 * tickLength},420H0V0H${-1 * tickLength}`} {...styles} />
       </g>
     )
   }

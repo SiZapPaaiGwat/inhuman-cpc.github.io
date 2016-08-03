@@ -1,14 +1,14 @@
 # 在React的世界畅游d3 - 第一篇：绘制坐标轴
 
-d3是一个JavaScript的数据可视化的类库，如果你还没有听说过请自行脑补。
+> 注意：阅读本系列文章需要一些React/SVG等方面的知识。
 
-本文系列计划通过一步步实现官网的多个DEMO带领大家在React的世界中畅游d3，第一个要实现的DEMO是[Line with Missing Data](http://bl.ocks.org/mbostock/0533f44f2cfabecc5e3a)。
+随着大数据相关技术的流行，数据分析在企业决策中的地位越来越突显，数据可视化在企业中的应用越来越多，当然对可视化效果的要求也越来越高。
 
-本系列必备的基础知识包含：
+`d3`作为前端界最负盛名的数据可视化工具，能满足常用的各种可视化需求，所以你一定不能忽略它。
 
-- React
-- d3
-- SVG
+本系列文章将使用`React + SVG + d3`一步步的实现官网的一些具有代表性的demo，带领大家在React的世界中畅游d3。
+
+第一个要实现的DEMO是[Line with Missing Data](http://bl.ocks.org/mbostock/0533f44f2cfabecc5e3a)。
 
 ## 配置代码
 
@@ -19,11 +19,8 @@ d3是一个JavaScript的数据可视化的类库，如果你还没有听说过�
 let margin = {top: 40, right: 40, bottom: 40, left: 40}
 let width = 960 - margin.left - margin.right
 let height = 500 - margin.top - margin.bottom
-// 刻度长度
 let tickLength = 6
-// y轴刻度偏移量
 let yAsixTickOffset = -9
-// 绘制元素的一些通用样式
 let styles = {
   fill: 'none',
   stroke: '#000',
@@ -31,9 +28,9 @@ let styles = {
 }
 ```
 
-## d3相关逻辑
+## d3 API
 
-**涉及到的API**
+本文主要使用到的API如下：
 
 - d3.range 生成一组间隔一致的连续数据 [d3-array](../d3-array.md)
 - d3.scaleLinear 创建定量线性比例尺 [d3-scale](../d3-scale.md)
@@ -58,7 +55,8 @@ let linePathData = d3.line()
   .y(function(d) {return y(d.y)})
 ```
 
-这里需要重点强调下比例尺，因为它在绘制图形时非常重要。d3提供了多种比例尺，我们这里使用的是线性比例尺。
+对于绘制坐标轴，比例尺必不可少。它能够根据一组定义域(`domain`)来输出一组值域(`range`)。
+d3提供了多种比例尺，我们这里使用的是线性比例尺。更多比例尺介绍请看[d3-scale](../api/d3-scale.md)。
 
 定义好比例尺之后我们可以使用如下方式获得每一个刻度的值。
 
@@ -71,17 +69,15 @@ let rangeVal = xScale(0.5)
 
 ## 绘制坐标轴及刻度
 
-一个比较好的编程实践就是将相关的元素全部放在g元素之下，这样方便对这组元素整体进行变换以及绘制样式设置。
+首先我们要明确我们需要绘制的图形元素：对于x轴需要一条长的水平线（坐标轴），一条短垂直线以及对应的文本（刻度），
+Y轴类似。
 
-```js
-<g transform={`translate(0, ${height})`}>
-  ...
-</g>
-```
+一个比较好的编程实践就是将相关的元素（刻度）全部放在g元素之下，这样方便对这组元素整体进行变换以及绘制样式设置。
 
-注意：X轴需要对高度进行变换。
+**绘制x轴**
 
-绘制x轴非常简单（移动到0,6，画连接到原点的垂直线，画横线到880,0，画垂直先到880,6）
+绘制x轴非常简单：移动到点(0,6)，画垂直线到原点，画水平线到(880,0)，画垂直线到(880,6)
+注意：x轴需要对高度进行变换。
 
 ```js
 <g transform={`translate(0, ${height})`}>
@@ -147,4 +143,4 @@ renderYAxis() {
 }
 ```
 
-至此，我们的坐标轴和刻度已经绘制完成。
+至此，我们的坐标轴和刻度已经大功告成！
