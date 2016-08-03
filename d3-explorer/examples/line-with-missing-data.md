@@ -1,4 +1,4 @@
-# 在React的世界畅游d3 - 第一篇：绘制坐标轴
+# 在React的世界畅游d3 - 第一篇
 
 > 注意：阅读本系列文章需要一些React/SVG等方面的知识。
 
@@ -8,7 +8,7 @@
 
 本系列文章将使用`React + SVG + d3`一步步的实现官网的一些具有代表性的demo，带领大家在React的世界中畅游d3。
 
-第一个要实现的DEMO是[Line with Missing Data](http://bl.ocks.org/mbostock/0533f44f2cfabecc5e3a)。
+本文要实现的demo是[Line with Missing Data](http://bl.ocks.org/mbostock/0533f44f2cfabecc5e3a)。
 
 ## 配置代码
 
@@ -32,27 +32,27 @@ let styles = {
 
 本文主要使用到的API如下：
 
-- d3.range 生成一组间隔一致的连续数据 [d3-array](../d3-array.md)
-- d3.scaleLinear 创建定量线性比例尺 [d3-scale](../d3-scale.md)
-- d3.line 创建一个新的线生成器 [d3-shape](../d3-shape.md)
+- d3.range 生成一组间隔一致的连续数据 [d3-array](http://simongfxu.github.io/d3-explorer/api/d3-array.md)
+- d3.scaleLinear 创建定量线性比例尺 [d3-scale](http://simongfxu.github.io/d3-explorer/api/d3-scale.md)
+- d3.line 创建一个新的线生成器 [d3-shape](http://simongfxu.github.io/d3-explorer/api/d3-shape.md)
 - d3.format 生成格式化函数 [d3-format](https://github.com/d3/d3-format)
 
 ```js
-// 使用正弦函数生成数据源
 let data = d3.range(40).map(function(i) {
-  return i % 5 ? {x: i / 39, y: (Math.sin(i / 3) + 2) / 4} : null
+  return i % 5 ? {x: i / 39, y: (Math.sin(i / 3) + 2) / 4} : null;
 })
-// x轴比例尺
 let xScale = d3.scaleLinear().range([0, width])
-// y轴比例尺
 let yScale = d3.scaleLinear().range([height, 0])
-// 格式化函数
 let format = d3.format('.1f')
-// 数据源处理函数，过滤未定义的数据以及设置x/y访问函数
-let linePathData = d3.line()
+let line = d3.line()
   .defined(function(d) {return d})
-  .x(function(d) {return x(d.x)})
-  .y(function(d) {return y(d.y)})
+  .x(function(d) {return xScale(d.x)})
+  .y(function(d) {return yScale(d.y)})
+// 生成path路径数据
+let linePathData = line(data)
+// 生成x访问函数，通过调用xAccessor({x, y})获取x
+let xAccessor = line.x()
+let yAccessor = line.y()
 ```
 
 对于绘制坐标轴，比例尺必不可少。它能够根据一组定义域(`domain`)来输出一组值域(`range`)。
@@ -87,7 +87,7 @@ Y轴类似。
 
 **绘制刻度**
 
-对于每一个刻度我们需要有一条刻度线以及对应的标签显示。
+对于每一个刻度我们需要有一条刻度线以及对应的标签文本显示。
 同样我们将他们包裹在g元素里，然后对其整体进行平移变换。这样不用对内部的每个元素都进行平移变换。
 平移的值就是当前刻度对应的值，获取方式`xScale(tickValue)`。
 
@@ -98,7 +98,7 @@ renderXAxis() {
     return (
       <g key={val} transform={`translate(${xScale(val)}, 0)`}>
         <line y2={tickLength} x2="0" {...styles} />
-        <text dy=".71em" y="9" x="0" style={{textAnchor:'middle'}}>
+        <text dy={tickLength * 1.5} y={tickLength * 1.5} x="0" style={{textAnchor:'middle'}}>
           {format(val)}
         </text>
       </g>
@@ -109,7 +109,7 @@ renderXAxis() {
     <g transform={`translate(0, ${height})`}>
       <title>x轴及刻度</title>
       {tickNodes}
-      <path d="M0,6V0H880V6" {...styles} />
+      <path d={`M0,${tickLength}V0H${width}V${tickLength}`} {...styles} />
     </g>
   )
 }
@@ -125,7 +125,7 @@ renderYAxis() {
   let tickNodes = ticks.map((val, i) => {
     return (
       <g key={val} transform={`translate(0, ${yScale(val)})`}>
-        <line y2="0" x2="-6" {...styles} />
+        <line y2="0" x2={-1 * tickLength} {...styles} />
         <text dy="0.4em" y="0" x={yAsixTickOffset} style={{textAnchor:'end'}}>
           {format(val)}
         </text>
@@ -137,10 +137,52 @@ renderYAxis() {
     <g>
       <title>y轴及刻度</title>
       {tickNodes}
-      <path d="M-6,420H0V0H-6" {...styles} />
+      <path d={`M${-1 * tickLength},${height}H0V0H${-1 * tickLength}`} {...styles} />
     </g>
   )
 }
 ```
 
-至此，我们的坐标轴和刻度已经大功告成！
+## 绘制曲线
+
+绘制曲线包含两部分：线条和每个刻度的y值。线条我们使用path绘制，这里只需要路径数据即可。
+刻度的y值则使用一个小圆圈表示。
+
+所以这里的关键在于获取x轴上的每个刻度在定义域（x轴）和值域(y轴)对应的值。
+
+```js
+let line = d3.line()
+  .defined(function(d) {return d})
+  .x(function(d) {return xScale(d.x)})
+  .y(function(d) {return yScale(d.y)})
+// 生成path路径数据
+let linePathData = line(data)
+// 生成x访问函数，通过调用xAccessor({x, y})获取x
+let xAccessor = line.x()
+let yAccessor = line.y()
+
+// ...
+
+renderChart() {
+  return (
+    <path d={linePathData} fill="none" stroke="steelblue" strokeWidth="1.5px" shapeRendering="optimizeSpeed" />
+  )
+}
+
+renderCircles() {
+  let circleItems = data.map(item => {
+    if (!item) return
+    let cx = xAccessor(item)
+    let cy = yAccessor(item)
+    return <circle key={cx} cx={cx} cy={cy} r="3.5" />
+  })
+
+  return (
+    <g fill="white" stroke="steelblue" strokeWidth="1.5px">
+      {circleItems}
+    </g>
+  )
+}
+```
+
+至此，大功告成！

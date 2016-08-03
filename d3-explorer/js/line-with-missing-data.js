@@ -21,10 +21,15 @@ let data = d3.range(40).map(function(i) {
 let xScale = d3.scaleLinear().range([0, width])
 let yScale = d3.scaleLinear().range([height, 0])
 let format = d3.format('.1f')
-let linePathData = d3.line()
+let line = d3.line()
   .defined(function(d) {return d})
-  .x(function(d) {return x(d.x)})
-  .y(function(d) {return y(d.y)})
+  .x(function(d) {return xScale(d.x)})
+  .y(function(d) {return yScale(d.y)})
+// 生成path路径数据
+let linePathData = line(data)
+// 生成x访问函数，通过调用xAccessor({x, y})获取x
+let xAccessor = line.x()
+let yAccessor = line.y()
 
 class App extends React.Component {
   renderXAxis() {
@@ -44,7 +49,7 @@ class App extends React.Component {
       <g transform={`translate(0, ${height})`}>
         <title>x轴及刻度</title>
         {tickNodes}
-        <path d={`M0,${tickLength}V0H880V${tickLength}`} {...styles} />
+        <path d={`M0,${tickLength}V0H${width}V${tickLength}`} {...styles} />
       </g>
     )
   }
@@ -66,7 +71,28 @@ class App extends React.Component {
       <g>
         <title>y轴及刻度</title>
         {tickNodes}
-        <path d={`M${-1 * tickLength},420H0V0H${-1 * tickLength}`} {...styles} />
+        <path d={`M${-1 * tickLength},${height}H0V0H${-1 * tickLength}`} {...styles} />
+      </g>
+    )
+  }
+
+  renderChart() {
+    return (
+      <path d={linePathData} fill="none" stroke="steelblue" strokeWidth="1.5px" shapeRendering="optimizeSpeed" />
+    )
+  }
+
+  renderCircles() {
+    let circleItems = data.map(item => {
+      if (!item) return
+      let cx = xAccessor(item)
+      let cy = yAccessor(item)
+      return <circle key={cx} cx={cx} cy={cy} r="3.5" />
+    })
+
+    return (
+      <g fill="white" stroke="steelblue" strokeWidth="1.5px">
+        {circleItems}
       </g>
     )
   }
@@ -77,6 +103,8 @@ class App extends React.Component {
         <g transform={`translate(${margin.left}, ${margin.top})`}>
           {this.renderXAxis()}
           {this.renderYAxis()}
+          {this.renderChart()}
+          {this.renderCircles()}
         </g>
       </svg>
     )
