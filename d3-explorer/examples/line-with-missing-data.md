@@ -32,9 +32,9 @@ let styles = {
 
 本文主要使用到的API如下：
 
-- d3.range 生成一组间隔一致的连续数据 [d3-array](http://simongfxu.github.io/d3-explorer/api/d3-array.md)
-- d3.scaleLinear 创建定量线性比例尺 [d3-scale](http://simongfxu.github.io/d3-explorer/api/d3-scale.md)
-- d3.line 创建一个新的线生成器 [d3-shape](http://simongfxu.github.io/d3-explorer/api/d3-shape.md)
+- d3.range 生成一组间隔一致的连续数据 [d3-array](https://github.com/simongfxu/simongfxu.github.com/blob/master/d3-explorer/api/d3-array.md)
+- d3.scaleLinear 创建定量线性比例尺 [d3-scale](https://github.com/simongfxu/simongfxu.github.com/blob/master/d3-explorer/api/d3-scale.md)
+- d3.line 创建一个新的线生成器 [d3-shape](https://github.com/simongfxu/simongfxu.github.com/blob/master/d3-explorer/api/d3-shape.md)
 - d3.format 生成格式化函数 [d3-format](https://github.com/d3/d3-format)
 
 ```js
