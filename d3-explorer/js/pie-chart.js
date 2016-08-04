@@ -21,6 +21,7 @@ let data = [
 let color = d3.scaleOrdinal().range([
   '#98abc5', '#8a89a6', '#7b6888', '#6b486b', '#a05d56', '#d0743c', '#ff8c00'
 ])
+// sort(null) 表示不对数据源进行排序。默认会使用内部的降序排列
 let pie = d3.pie().sort(null).value(d => {
   return d.population
 })
@@ -32,10 +33,14 @@ class App extends React.Component {
     let arcList = pie(data).map(item => {
       return (
         <g title={item.data.population}>
-          <path d={arc(item)} fill={color(item.data.age)} shapeRendering="optimizeSpeed" stroke="#FFF" />
+          <path
+            shapeRendering="optimizeSpeed"
+            stroke="#FFF"
+            d={arc(item)}
+            fill={color(item.data.age)}
+          />
           <text
             transform={`translate(${labelArc.centroid(item)})`}
-            dy=".35em"
             style={{font: '10px sans-serif', textAnchor: 'middle'}}
           >
             {item.data.age}
