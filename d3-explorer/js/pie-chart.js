@@ -29,6 +29,14 @@ let arc = d3.arc().outerRadius(radius - 10).innerRadius(0)
 let labelArc = d3.arc().outerRadius(radius - 40).innerRadius(radius - 40)
 
 class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      type: 'pie'
+    }
+    this.togglePie = this.togglePie.bind(this)
+  }
+
   renderPie() {
     let arcList = pie(data).map(item => {
       return (
@@ -56,11 +64,28 @@ class App extends React.Component {
     )
   }
 
+  togglePie() {
+    if (this.state.type === 'pie') {
+      arc = d3.arc().outerRadius(radius - 10).innerRadius(radius - 70)
+      this.setState({
+        type: 'donut'
+      })
+    } else {
+      arc = d3.arc().outerRadius(radius - 10).innerRadius(0)
+      this.setState({
+        type: 'pie'
+      })
+    }
+  }
+
   render() {
     return (
-      <svg width={width} height={height}>
-        {this.renderPie()}
-      </svg>
+      <div>
+        <svg width={width} height={height}>
+          {this.renderPie()}
+        </svg>
+        <button onClick={this.togglePie}>{this.state.type === 'pie' ? '甜甜圈' : '饼图'}</button>
+      </div>
     )
   }
 }

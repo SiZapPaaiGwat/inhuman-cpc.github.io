@@ -130,3 +130,9 @@ render() {
   )
 }
 ```
+
+有些时候我们需要将饼图转化为“甜甜圈”(Donut Chart)，此时我们只需要将arc的innerRadius设置为非0数值即可。
+
+```js
+let arc = d3.arc().outerRadius(radius - 10).innerRadius(radius - 70)
+```
