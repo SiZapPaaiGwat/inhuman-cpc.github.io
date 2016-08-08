@@ -20,25 +20,23 @@ let xScale =  d3.scaleBand().rangeRound([0, width]).padding(0.1).align(0.1)
 let yScale = d3.scaleLinear().rangeRound([height, 0])
 let zScale = d3.scaleOrdinal().range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"])
 let stack = d3.stack()
+let position = function(input) {
+  var offset = xScale.bandwidth() / 2
+  if (xScale.round())  {
+    offset = Math.round(offset)
+  }
+  return xScale(input) + offset
+}
 
 function type(d, i, columns) {
   i= 1
   let t = 0
   for (; i < columns.length; ++i) {
-    t += d[columns[i]] = +d[columns[i]]
+    d[columns[i]] = +d[columns[i]]
+    t += d[columns[i]]
   }
   d.total = t
   return d
-}
-
-function center(scale) {
-  var offset = scale.bandwidth() / 2
-  if (scale.round())  {
-    offset = Math.round(offset)
-  }
-  return function(d) {
-    return scale(d) + offset
-  }
 }
 
 class App extends React.Component {
@@ -84,7 +82,6 @@ class App extends React.Component {
   renderXAxis() {
     let ticks = xScale.domain()
     let tickNodes = ticks.map((val, i) => {
-      let position = center(xScale.copy())
       return (
         <g key={val} transform={`translate(${position(val)}, 0)`}>
           <line y2={tickLength} x2="0" stroke="#000" />
