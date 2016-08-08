@@ -1,0 +1,523 @@
+/**
+ * borrowed from atom markdown-preview
+ * Source: https://github.com/atom/markdown-preview
+ */
+
+.markdown-preview:not([data-use-github-style]) {
+  padding: 2em;
+  font-size: 1.2em;
+  color: #abb2bf;
+  background-color: #282c34;
+  overflow: auto;
+}
+.markdown-preview:not([data-use-github-style]) > :first-child {
+  margin-top: 0;
+}
+.markdown-preview:not([data-use-github-style]) h1,
+.markdown-preview:not([data-use-github-style]) h2,
+.markdown-preview:not([data-use-github-style]) h3,
+.markdown-preview:not([data-use-github-style]) h4,
+.markdown-preview:not([data-use-github-style]) h5,
+.markdown-preview:not([data-use-github-style]) h6 {
+  line-height: 1.2;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: #ffffff;
+}
+.markdown-preview:not([data-use-github-style]) h1 {
+  font-size: 2.4em;
+  font-weight: 300;
+}
+.markdown-preview:not([data-use-github-style]) h2 {
+  font-size: 1.8em;
+  font-weight: 400;
+}
+.markdown-preview:not([data-use-github-style]) h3 {
+  font-size: 1.5em;
+  font-weight: 500;
+}
+.markdown-preview:not([data-use-github-style]) h4 {
+  font-size: 1.2em;
+  font-weight: 600;
+}
+.markdown-preview:not([data-use-github-style]) h5 {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.markdown-preview:not([data-use-github-style]) h6 {
+  font-size: 1.0em;
+  font-weight: 600;
+}
+.markdown-preview:not([data-use-github-style]) strong {
+  color: #ffffff;
+}
+.markdown-preview:not([data-use-github-style]) del {
+  color: #7c879c;
+}
+.markdown-preview:not([data-use-github-style]) a,
+.markdown-preview:not([data-use-github-style]) a code {
+  color: #528bff;
+}
+.markdown-preview:not([data-use-github-style]) img {
+  max-width: 100%;
+}
+.markdown-preview:not([data-use-github-style]) > p {
+  margin-top: 0;
+  margin-bottom: 1.5em;
+}
+.markdown-preview:not([data-use-github-style]) > ul,
+.markdown-preview:not([data-use-github-style]) > ol {
+  margin-bottom: 1.5em;
+}
+.markdown-preview:not([data-use-github-style]) blockquote {
+  margin: 1.5em 0;
+  font-size: inherit;
+  color: #7c879c;
+  border-color: #4b5362;
+  border-width: 4px;
+}
+.markdown-preview:not([data-use-github-style]) hr {
+  margin: 3em 0;
+  border-top: 2px dashed #4b5362;
+  background: none;
+}
+.markdown-preview:not([data-use-github-style]) table {
+  margin: 1.5em 0;
+}
+.markdown-preview:not([data-use-github-style]) th {
+  color: #ffffff;
+}
+.markdown-preview:not([data-use-github-style]) th,
+.markdown-preview:not([data-use-github-style]) td {
+  padding: .66em 1em;
+  border: 1px solid #4b5362;
+}
+.markdown-preview:not([data-use-github-style]) code {
+  color: #ffffff;
+  background-color: #3a3f4b;
+}
+.markdown-preview:not([data-use-github-style]) atom-text-editor {
+  margin: 1.5em 0;
+  padding: 1em;
+  font-size: .92em;
+  border-radius: 3px;
+  background-color: #31363f;
+}
+.markdown-preview:not([data-use-github-style]) kbd {
+  color: #ffffff;
+  border: 1px solid #4b5362;
+  border-bottom: 2px solid #3e4451;
+  background-color: #3a3f4b;
+}
+.markdown-preview[data-use-github-style] {
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  line-height: 1.6;
+  word-wrap: break-word;
+  padding: 30px;
+  font-size: 16px;
+  color: #333;
+  background-color: #fff;
+  overflow: scroll;
+}
+.markdown-preview[data-use-github-style] > *:first-child {
+  margin-top: 0 !important;
+}
+.markdown-preview[data-use-github-style] > *:last-child {
+  margin-bottom: 0 !important;
+}
+.markdown-preview[data-use-github-style] a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+.markdown-preview[data-use-github-style] .absent {
+  color: #c00;
+}
+.markdown-preview[data-use-github-style] .anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  padding-right: 6px;
+  padding-left: 30px;
+  margin-left: -30px;
+}
+.markdown-preview[data-use-github-style] .anchor:focus {
+  outline: none;
+}
+.markdown-preview[data-use-github-style] h1,
+.markdown-preview[data-use-github-style] h2,
+.markdown-preview[data-use-github-style] h3,
+.markdown-preview[data-use-github-style] h4,
+.markdown-preview[data-use-github-style] h5,
+.markdown-preview[data-use-github-style] h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+.markdown-preview[data-use-github-style] h1 .octicon-link,
+.markdown-preview[data-use-github-style] h2 .octicon-link,
+.markdown-preview[data-use-github-style] h3 .octicon-link,
+.markdown-preview[data-use-github-style] h4 .octicon-link,
+.markdown-preview[data-use-github-style] h5 .octicon-link,
+.markdown-preview[data-use-github-style] h6 .octicon-link {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+.markdown-preview[data-use-github-style] h1:hover .anchor,
+.markdown-preview[data-use-github-style] h2:hover .anchor,
+.markdown-preview[data-use-github-style] h3:hover .anchor,
+.markdown-preview[data-use-github-style] h4:hover .anchor,
+.markdown-preview[data-use-github-style] h5:hover .anchor,
+.markdown-preview[data-use-github-style] h6:hover .anchor {
+  padding-left: 8px;
+  margin-left: -30px;
+  text-decoration: none;
+}
+.markdown-preview[data-use-github-style] h1:hover .anchor .octicon-link,
+.markdown-preview[data-use-github-style] h2:hover .anchor .octicon-link,
+.markdown-preview[data-use-github-style] h3:hover .anchor .octicon-link,
+.markdown-preview[data-use-github-style] h4:hover .anchor .octicon-link,
+.markdown-preview[data-use-github-style] h5:hover .anchor .octicon-link,
+.markdown-preview[data-use-github-style] h6:hover .anchor .octicon-link {
+  display: inline-block;
+}
+.markdown-preview[data-use-github-style] h1 tt,
+.markdown-preview[data-use-github-style] h2 tt,
+.markdown-preview[data-use-github-style] h3 tt,
+.markdown-preview[data-use-github-style] h4 tt,
+.markdown-preview[data-use-github-style] h5 tt,
+.markdown-preview[data-use-github-style] h6 tt,
+.markdown-preview[data-use-github-style] h1 code,
+.markdown-preview[data-use-github-style] h2 code,
+.markdown-preview[data-use-github-style] h3 code,
+.markdown-preview[data-use-github-style] h4 code,
+.markdown-preview[data-use-github-style] h5 code,
+.markdown-preview[data-use-github-style] h6 code {
+  font-size: inherit;
+}
+.markdown-preview[data-use-github-style] h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+.markdown-preview[data-use-github-style] h1 .anchor {
+  line-height: 1;
+}
+.markdown-preview[data-use-github-style] h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+.markdown-preview[data-use-github-style] h2 .anchor {
+  line-height: 1;
+}
+.markdown-preview[data-use-github-style] h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+.markdown-preview[data-use-github-style] h3 .anchor {
+  line-height: 1.2;
+}
+.markdown-preview[data-use-github-style] h4 {
+  font-size: 1.25em;
+}
+.markdown-preview[data-use-github-style] h4 .anchor {
+  line-height: 1.2;
+}
+.markdown-preview[data-use-github-style] h5 {
+  font-size: 1em;
+}
+.markdown-preview[data-use-github-style] h5 .anchor {
+  line-height: 1.1;
+}
+.markdown-preview[data-use-github-style] h6 {
+  font-size: 1em;
+  color: #777;
+}
+.markdown-preview[data-use-github-style] h6 .anchor {
+  line-height: 1.1;
+}
+.markdown-preview[data-use-github-style] p,
+.markdown-preview[data-use-github-style] blockquote,
+.markdown-preview[data-use-github-style] ul,
+.markdown-preview[data-use-github-style] ol,
+.markdown-preview[data-use-github-style] dl,
+.markdown-preview[data-use-github-style] table,
+.markdown-preview[data-use-github-style] pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+.markdown-preview[data-use-github-style] hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+.markdown-preview[data-use-github-style] ul,
+.markdown-preview[data-use-github-style] ol {
+  padding-left: 2em;
+}
+.markdown-preview[data-use-github-style] ul.no-list,
+.markdown-preview[data-use-github-style] ol.no-list {
+  padding: 0;
+  list-style-type: none;
+}
+.markdown-preview[data-use-github-style] ul ul,
+.markdown-preview[data-use-github-style] ul ol,
+.markdown-preview[data-use-github-style] ol ol,
+.markdown-preview[data-use-github-style] ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.markdown-preview[data-use-github-style] li > p {
+  margin-top: 16px;
+}
+.markdown-preview[data-use-github-style] dl {
+  padding: 0;
+}
+.markdown-preview[data-use-github-style] dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+.markdown-preview[data-use-github-style] dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+.markdown-preview[data-use-github-style] blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+.markdown-preview[data-use-github-style] blockquote > :first-child {
+  margin-top: 0;
+}
+.markdown-preview[data-use-github-style] blockquote > :last-child {
+  margin-bottom: 0;
+}
+.markdown-preview[data-use-github-style] table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+.markdown-preview[data-use-github-style] table th {
+  font-weight: bold;
+}
+.markdown-preview[data-use-github-style] table th,
+.markdown-preview[data-use-github-style] table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+.markdown-preview[data-use-github-style] table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+.markdown-preview[data-use-github-style] table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+.markdown-preview[data-use-github-style] img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.markdown-preview[data-use-github-style] .emoji {
+  max-width: none;
+}
+.markdown-preview[data-use-github-style] span.frame {
+  display: block;
+  overflow: hidden;
+}
+.markdown-preview[data-use-github-style] span.frame > span {
+  display: block;
+  float: left;
+  width: auto;
+  padding: 7px;
+  margin: 13px 0 0;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+.markdown-preview[data-use-github-style] span.frame span img {
+  display: block;
+  float: left;
+}
+.markdown-preview[data-use-github-style] span.frame span span {
+  display: block;
+  padding: 5px 0 0;
+  clear: both;
+  color: #333;
+}
+.markdown-preview[data-use-github-style] span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+.markdown-preview[data-use-github-style] span.align-center > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+.markdown-preview[data-use-github-style] span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+.markdown-preview[data-use-github-style] span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+.markdown-preview[data-use-github-style] span.align-right > span {
+  display: block;
+  margin: 13px 0 0;
+  overflow: hidden;
+  text-align: right;
+}
+.markdown-preview[data-use-github-style] span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+.markdown-preview[data-use-github-style] span.float-left {
+  display: block;
+  float: left;
+  margin-right: 13px;
+  overflow: hidden;
+}
+.markdown-preview[data-use-github-style] span.float-left span {
+  margin: 13px 0 0;
+}
+.markdown-preview[data-use-github-style] span.float-right {
+  display: block;
+  float: right;
+  margin-left: 13px;
+  overflow: hidden;
+}
+.markdown-preview[data-use-github-style] span.float-right > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: right;
+}
+.markdown-preview[data-use-github-style] code,
+.markdown-preview[data-use-github-style] tt {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 3px;
+}
+.markdown-preview[data-use-github-style] code:before,
+.markdown-preview[data-use-github-style] tt:before,
+.markdown-preview[data-use-github-style] code:after,
+.markdown-preview[data-use-github-style] tt:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+.markdown-preview[data-use-github-style] code br,
+.markdown-preview[data-use-github-style] tt br {
+  display: none;
+}
+.markdown-preview[data-use-github-style] del code {
+  text-decoration: inherit;
+}
+.markdown-preview[data-use-github-style] pre > code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+.markdown-preview[data-use-github-style] .highlight {
+  margin-bottom: 16px;
+}
+.markdown-preview[data-use-github-style] .highlight pre,
+.markdown-preview[data-use-github-style] pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+.markdown-preview[data-use-github-style] .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+.markdown-preview[data-use-github-style] pre {
+  word-wrap: normal;
+}
+.markdown-preview[data-use-github-style] pre code,
+.markdown-preview[data-use-github-style] pre tt {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+.markdown-preview[data-use-github-style] pre code:before,
+.markdown-preview[data-use-github-style] pre tt:before,
+.markdown-preview[data-use-github-style] pre code:after,
+.markdown-preview[data-use-github-style] pre tt:after {
+  content: normal;
+}
+.markdown-preview[data-use-github-style] kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbbbbb;
+}
+.markdown-preview[data-use-github-style] a {
+  color: #337ab7;
+}
+.markdown-preview[data-use-github-style] code {
+  color: inherit;
+}
+.markdown-preview[data-use-github-style] atom-text-editor {
+  padding: .8em 1em;
+  margin-bottom: 1em;
+  font-size: .85em;
+  border-radius: 4px;
+  overflow: auto;
+}
+.scrollbars-visible-always .markdown-preview atom-text-editor::shadow .vertical-scrollbar,
+.scrollbars-visible-always .markdown-preview atom-text-editor::shadow .horizontal-scrollbar {
+  visibility: hidden;
+}
+.scrollbars-visible-always .markdown-preview atom-text-editor:hover::shadow .vertical-scrollbar,
+.scrollbars-visible-always .markdown-preview atom-text-editor:hover::shadow .horizontal-scrollbar {
+  visibility: visible;
+}
+.markdown-spinner {
+  margin: auto;
+  background-image: url(images/octocat-spinner-128.gif);
+  background-repeat: no-repeat;
+  background-size: 64px;
+  background-position: top center;
+  padding-top: 70px;
+  text-align: center;
+}
