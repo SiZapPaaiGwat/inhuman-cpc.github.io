@@ -14,9 +14,12 @@
   "author": "simongfxu",
   "license": "MIT",
   "dependencies": {
-    "htmlparser2": "^3.9.1",
+    "parse5": "^2.2.0",
     "superagent": "^2.1.0",
     "superagent-proxy": "^1.0.1",
     "to-markdown": "^3.0.1"
+  },
+  "devDependencies": {
+    "pretty-format": "^3.5.3"
   }
 }
