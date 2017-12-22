@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>JavaScript乱弹之（一）：JQuery+CSS入门 | 小紫baby的个人站点</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一直没有系统的学习JavaScript，因为总感觉花太多时间来学习JS似乎有点浪费。现实也似乎是如此，太多人执迷于服务器端语言而忽视了最基本的HTML、JavaScript语言。其中这个“太多人”里面自然也包括我在内。 不过本文并不打算去按照一篇HTML语言基础或者JavaScript语言基础教程来介绍这些东西。即使你和我一样是一个新手，阅读他们也不会有什么困难。因为我的宗旨就是在应用中掌握他们，">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript乱弹之（一）：JQuery+CSS入门">
+<meta property="og:url" content="http://yoursite.com/2010/01/25/JavaScript乱弹之（一）：JQuery+CSS入门/index.html">
+<meta property="og:site_name" content="小紫baby的个人站点">
+<meta property="og:description" content="一直没有系统的学习JavaScript，因为总感觉花太多时间来学习JS似乎有点浪费。现实也似乎是如此，太多人执迷于服务器端语言而忽视了最基本的HTML、JavaScript语言。其中这个“太多人”里面自然也包括我在内。 不过本文并不打算去按照一篇HTML语言基础或者JavaScript语言基础教程来介绍这些东西。即使你和我一样是一个新手，阅读他们也不会有什么困难。因为我的宗旨就是在应用中掌握他们，">
+<meta property="og:updated_time" content="2017-12-22T14:34:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript乱弹之（一）：JQuery+CSS入门">
+<meta name="twitter:description" content="一直没有系统的学习JavaScript，因为总感觉花太多时间来学习JS似乎有点浪费。现实也似乎是如此，太多人执迷于服务器端语言而忽视了最基本的HTML、JavaScript语言。其中这个“太多人”里面自然也包括我在内。 不过本文并不打算去按照一篇HTML语言基础或者JavaScript语言基础教程来介绍这些东西。即使你和我一样是一个新手，阅读他们也不会有什么困难。因为我的宗旨就是在应用中掌握他们，">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/typing.css">
+  <link rel="stylesheet" href="/css/donate.css">
+  
+</head>
+
+  
+    
+      <body>
+    
+  
+      <div id="container" class="container">
+        <article id="post-JavaScript乱弹之（一）：JQuery+CSS入门" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+  <nav id="main-nav" class="main-nav">
+    
+      <a class="main-nav-link" href="/">首页</a>
+    
+      <a class="main-nav-link" href="/archives">归档</a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JavaScript乱弹之（一）：JQuery+CSS入门
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <p>一直没有系统的学习JavaScript，因为总感觉花太多时间来学习JS似乎有点浪费。<br>现实也似乎是如此，太多人执迷于服务器端语言而忽视了最基本的HTML、JavaScript语言。<br>其中这个<strong>“太多人”</strong>里面自然也包括我在内。</p>
+<p>不过本文并不打算去按照一篇HTML语言基础或者JavaScript语言基础教程来介绍这些东西。<br>即使你和我一样是一个新手，阅读他们也不会有什么困难。<br>因为我的宗旨就是在应用中掌握他们，正所谓<strong>“书读百遍其义自见”</strong>就是这个道理。</p>
+<p>注明：本系列文章是本人学习笔记和知识摘要，错误之处肯定很多，还请指出。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ Page Language=&quot;C#&quot; AutoEventWireup=&quot;true&quot;  CodeFile=&quot;Default.aspx.cs&quot; Inherits=&quot;_Default&quot; %&gt;</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;</span><br><span class="line">&lt;head runat=&quot;server&quot;&gt;</span><br><span class="line">    &lt;title&gt;JS乱弹系列（一）&lt;/title&gt;</span><br><span class="line">    &lt;%--这里只例举了2种常用的CSS选择器--%&gt;</span><br><span class="line">    &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">        body</span><br><span class="line">        &#123;</span><br><span class="line">            background-color:Black;</span><br><span class="line">            &#125;</span><br><span class="line">    #div1</span><br><span class="line">    &#123;</span><br><span class="line">        width:300px;</span><br><span class="line">        height:50px;</span><br><span class="line">        background-color:White;</span><br><span class="line">        border-color:Red;</span><br><span class="line">        margin-top:1%;</span><br><span class="line">        margin-bottom:2%;</span><br><span class="line">    &#125;</span><br><span class="line">        #div2</span><br><span class="line">    &#123;</span><br><span class="line">        width:417px;</span><br><span class="line">        height:133px;</span><br><span class="line">        background-color:White;</span><br><span class="line">        margin-bottom:2%;</span><br><span class="line">    &#125;</span><br><span class="line">        #div3</span><br><span class="line">    &#123;</span><br><span class="line">        width:500px;</span><br><span class="line">        height:50px;</span><br><span class="line">        background-color:White;</span><br><span class="line">        margin-bottom:2%;</span><br><span class="line">    &#125;</span><br><span class="line">        #div4</span><br><span class="line">    &#123;</span><br><span class="line">        width:600px;</span><br><span class="line">        height:50px;</span><br><span class="line">        background-color:White;</span><br><span class="line">        margin-bottom:2%;</span><br><span class="line">    &#125;</span><br><span class="line">        #div5</span><br><span class="line">    &#123;</span><br><span class="line">        width:700px;</span><br><span class="line">        height:100px;</span><br><span class="line">        background-color:White;</span><br><span class="line">        text-align:center;</span><br><span class="line">    &#125;</span><br><span class="line">    &lt;/style&gt;</span><br><span class="line">    &lt;script src=&quot;JS/jquery-1.3.2-vsdoc2.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</span><br><span class="line">    &lt;%--加入此引用后，按Crtl+Shift+J更新智能感知#--%&gt;</span><br><span class="line">    &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;</span><br><span class="line">        $(document).ready(function() &#123; $(&quot;#btn1&quot;).bind(&quot;click&quot;, function() &#123; alert(&quot;绑定成功!&quot;); &#125;) &#125;)</span><br><span class="line">        $(document).ready(function() &#123;</span><br><span class="line">            $(&quot;#btn&quot;).bind(&quot;click&quot;, function() &#123;</span><br><span class="line">                var name = $(&quot;#txtname&quot;).val();</span><br><span class="line">                var pwd = $(&quot;#txtpwd&quot;).val();</span><br><span class="line">                if (name=== &quot;&quot; || pwd === &quot;&quot;)</span><br><span class="line">                &#123; alert(&quot;用户名和密码不能为空！&quot;); return false; &#125;</span><br><span class="line">                else &#123;</span><br><span class="line">                    alert(name + &quot;/&quot; + pwd);</span><br><span class="line">                    return true;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">        //假值，按照crockford的建议最好使用===代替==</span><br><span class="line">        $(document).ready(function() &#123;</span><br><span class="line">            var a = (undefined == &quot;&quot;);</span><br><span class="line">            var b = (undefined == null);</span><br><span class="line">            var c = (undefined == NaN);</span><br><span class="line">            var d = (undefined === &quot;&quot;);</span><br><span class="line">            var e = (undefined === null);</span><br><span class="line">            var f = (undefined === NaN);</span><br><span class="line">            $(&quot;#div2&quot;).text(String(a) + &quot;\n&quot; + String(b) + &quot;\n&quot; + String(c) + &quot;\n&quot; + String(d) + &quot;\n&quot; + String(e) + &quot;\n&quot; + String(f));</span><br><span class="line">        &#125;)</span><br><span class="line">//        是不是很像C#的typeof</span><br><span class="line">        $(document).ready(function() &#123;</span><br><span class="line">            var a =typeof(undefined) ;</span><br><span class="line">            var b =typeof(null) ;</span><br><span class="line">            var c =typeof(&quot;&quot;) ;</span><br><span class="line">            var d = typeof (NaN);</span><br><span class="line">            $(&quot;#div3&quot;).text(String(a) + &quot;/&quot; + String(b) + &quot;/&quot; + String(c) + &quot;/&quot; + String(d));</span><br><span class="line">        &#125;)</span><br><span class="line">        //存在表单输入时自动聚焦</span><br><span class="line">        $(document).ready(function() &#123; document.form1.txtname.focus(); &#125;)</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;form id=&quot;form1&quot; runat=&quot;server&quot;&gt;</span><br><span class="line">    &lt;div id=&quot;divmain&quot;&gt;</span><br><span class="line">&lt;div id=&quot;div1&quot;&gt;</span><br><span class="line">这是div1</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;div2&quot;&gt;</span><br><span class="line">这是div2</span><br><span class="line">&lt;br/&gt;</span><br><span class="line">JavaScript的假值，你知道这些结果是true还是false吗？</span><br><span class="line">1.undefined == &quot;&quot;</span><br><span class="line">2.undefined == null</span><br><span class="line">3.undefined == NaN</span><br><span class="line">4.undefined === &quot;&quot;</span><br><span class="line">5.undefined === null</span><br><span class="line">6.undefined === NaN</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;div3&quot;&gt;</span><br><span class="line">这是div3</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;div4&quot;&gt;</span><br><span class="line">    &lt;input id=&quot;btn1&quot; type=&quot;button&quot; value=&quot;使用JQuery为按钮绑定事件&quot;  title=&quot;在ready函数中绑定button的Click函数&quot;/&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;div5&quot;&gt;</span><br><span class="line">这是模拟一个登陆验证</span><br><span class="line">&lt;br /&gt;</span><br><span class="line">  &lt;span style=&quot;background-color:White&quot;&gt; 账号：&lt;/span&gt;&lt;asp:TextBox ID=&quot;txtname&quot; runat=&quot;server&quot;&gt;&lt;/asp:TextBox&gt;</span><br><span class="line">    &lt;br /&gt;</span><br><span class="line">   &lt;span style=&quot;background-color:White&quot;&gt; 密码：&lt;/span&gt;&lt;asp:TextBox ID=&quot;txtpwd&quot; runat=&quot;server&quot;&gt;&lt;/asp:TextBox&gt;</span><br><span class="line">    &lt;br /&gt;</span><br><span class="line">    &lt;asp:Button ID=&quot;btn&quot; runat=&quot;server&quot; Text=&quot;登陆验证&quot;/&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+      
+      <div id="donate" class="donate">
+        <a id="github" href="" target="_blank" class="pos-f tr3" title="Github"></a>
+	      <div id="DonateText" class="tr3">Donate</div>
+	      <ul id="donateBox" class="list pos-f tr3">
+		      <li id="PayPal"><a href="" target="_blank">PayPal</a></li>
+		      <li id="BTC" data-footnote="Copy addres and show QRCode"><button id="BTCBn"  data-clipboard-target="#btc-key" alt="Copy to clipboard">Bitcoin</button></li>
+		      <li id="AliPay">AliPay</li>
+		      <li id="WeChat">WeChat</li>
+	      </ul>
+	      <div id="QRBox" class="pos-f left-100">
+		      <div id="BTCQR" class="MainBox" style="background-image: url()"></div>
+		      <div id="AliPayQR" class="MainBox" style="background-image: url()"></div>
+		      <div id="WeChatQR" class="MainBox" style="background-image: url()"></div>
+	      </div>
+	      <!-- Bitcoin 账号 -->
+	      <input id="btc-key" type="text" value="" readonly="readonly">
+      </div>
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">发表日期:</span>
+          <a href="/2010/01/25/JavaScript乱弹之（一）：JQuery+CSS入门/" class="article-date">
+  <time datetime="2010-01-24T16:00:00.000Z" itemprop="datePublished">2010-01-25</time>
+</a>
+
+        </li>
+        
+        
+          <li>
+            <span class="label">标签:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2010/01/26/JavaScript乱弹之（二）： String/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">上一页</strong>
+      <div class="article-nav-title">
+        
+          JavaScript乱弹之（二）： String
+        
+      </div>
+    </a>
+  
+  
+    <a href="/1970/01/01/hello-world/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">下一页</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>你做着和他人一样的事，却想脱颖而出，这不可能！</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  </body>
+</html>

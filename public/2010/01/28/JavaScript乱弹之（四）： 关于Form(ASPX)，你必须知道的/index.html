@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的 | 小紫baby的个人站点</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在aspx页面中，可以使用Request.Form[“controlname”]来得到控件value属性。 那么这些控件必须是哪些类型的控件呢？ 所有HTML元素里面的input元素，但是还需要另外一个条件就是这个input元素必须要有name属性，id属性可有可无。 可能你问如果多个元素的name属性相同怎么办？ 如果name相同则这些元素的value以逗号分隔，形如“value1,value2">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的">
+<meta property="og:url" content="http://yoursite.com/2010/01/28/JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的/index.html">
+<meta property="og:site_name" content="小紫baby的个人站点">
+<meta property="og:description" content="在aspx页面中，可以使用Request.Form[“controlname”]来得到控件value属性。 那么这些控件必须是哪些类型的控件呢？ 所有HTML元素里面的input元素，但是还需要另外一个条件就是这个input元素必须要有name属性，id属性可有可无。 可能你问如果多个元素的name属性相同怎么办？ 如果name相同则这些元素的value以逗号分隔，形如“value1,value2">
+<meta property="og:updated_time" content="2017-12-22T14:34:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的">
+<meta name="twitter:description" content="在aspx页面中，可以使用Request.Form[“controlname”]来得到控件value属性。 那么这些控件必须是哪些类型的控件呢？ 所有HTML元素里面的input元素，但是还需要另外一个条件就是这个input元素必须要有name属性，id属性可有可无。 可能你问如果多个元素的name属性相同怎么办？ 如果name相同则这些元素的value以逗号分隔，形如“value1,value2">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/typing.css">
+  <link rel="stylesheet" href="/css/donate.css">
+  
+</head>
+
+  
+    
+      <body>
+    
+  
+      <div id="container" class="container">
+        <article id="post-JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+  <nav id="main-nav" class="main-nav">
+    
+      <a class="main-nav-link" href="/">首页</a>
+    
+      <a class="main-nav-link" href="/archives">归档</a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <p>在aspx页面中，可以使用<strong>Request.Form[“controlname”]</strong>来得到控件value属性。</p>
+<p>那么这些控件必须是哪些类型的控件呢？</p>
+<p>所有HTML元素里面的input元素，但是还需要另外一个条件就是这个input元素必须要有name属性，id属性可有可无。</p>
+<p>可能你问如果多个元素的name属性相同怎么办？</p>
+<p>如果name相同则这些元素的value以逗号分隔，形如“value1,value2”。如果你使用的是服务器控件那么在生成的aspx页面中会自动给所有服务器控件加上name属性，这个name和id的值是相同的。不过当存在母板页时可能会要加上形如“ctl00<em>ContentPlaceHolder</em>”的标记，这些只要看看aspx源码就知道了。</p>
+<p>另外在Request.Form这是一个NameValueCollection，你可以使用如下代码看看本页面中的表单请求：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">  For(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Request.Form.Count;i++)&#123;</span><br><span class="line">textbox1.Text+=Request.Form[i]+<span class="string">","</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>你会发现多了最后textbox1呈现的结果比你vs编辑器里的input元素总是多2个，而且这两个都是很长的“乱码”。其实这些就是ViewState，你可以去MSDN查看相关介绍。<br>另外所有的服务器控件最后都是转化为HTML控件的，这个转化因控件不同复杂性也不同，比如TreeView转化为HTML控件之后就是DIV嵌套TABLE形成的，这里不详述，自己拖一个看看就知道关系了。</p>
+<p>另外你有可能需要通过脚本来操作隐藏的控件，这个时候你需要注意这个控件是服务器控件还是HTML控件以及你如何隐藏这些控件。</p>
+<p>服务器控件可以简单的设置Visible=”false”来隐藏控件，但是一旦这样隐藏，在页面源码中你就找不到该控件的HTML代码了。也就是说，你通过脚本是无法找到该控件的，只有在后台编码中可以使用该控件。</p>
+<p>但是如果你是通过css来控制的，通过脚本就可以找到。虽然如此你仍然需要掌握css两种不同的隐藏元素的方法：display:none和visibility:hidden,区别在于后者在页面中仍然占据物理空间，前者则通过其他文本流或控件元素自动填补。你拖两个这样的控件，去尝试一下在页面上右键复制这两个控件。</p>
+<p>html控件的只能通过css来设置其显隐，虽然在vs编辑器里有一个visible属性但是那只有当该控件加上runat=”server”才有效。一旦如此它就是HTML服务器控件了。</p>
+<p>暂时到这吧，以后继续更新。</p>
+
+      
+      <div id="donate" class="donate">
+        <a id="github" href="" target="_blank" class="pos-f tr3" title="Github"></a>
+	      <div id="DonateText" class="tr3">Donate</div>
+	      <ul id="donateBox" class="list pos-f tr3">
+		      <li id="PayPal"><a href="" target="_blank">PayPal</a></li>
+		      <li id="BTC" data-footnote="Copy addres and show QRCode"><button id="BTCBn"  data-clipboard-target="#btc-key" alt="Copy to clipboard">Bitcoin</button></li>
+		      <li id="AliPay">AliPay</li>
+		      <li id="WeChat">WeChat</li>
+	      </ul>
+	      <div id="QRBox" class="pos-f left-100">
+		      <div id="BTCQR" class="MainBox" style="background-image: url()"></div>
+		      <div id="AliPayQR" class="MainBox" style="background-image: url()"></div>
+		      <div id="WeChatQR" class="MainBox" style="background-image: url()"></div>
+	      </div>
+	      <!-- Bitcoin 账号 -->
+	      <input id="btc-key" type="text" value="" readonly="readonly">
+      </div>
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">发表日期:</span>
+          <a href="/2010/01/28/JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的/" class="article-date">
+  <time datetime="2010-01-27T16:00:00.000Z" itemprop="datePublished">2010-01-28</time>
+</a>
+
+        </li>
+        
+        
+          <li>
+            <span class="label">标签:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2010/01/29/JavaScript乱弹之（五）：使用脚本创建动态内容/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">上一页</strong>
+      <div class="article-nav-title">
+        
+          JavaScript乱弹之（五）：使用脚本创建动态内容
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2010/01/27/JavaScript乱弹之（三）：管理浏览器窗口/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">下一页</strong>
+      <div class="article-nav-title">JavaScript乱弹之（三）：管理浏览器窗口</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>你做着和他人一样的事，却想脱颖而出，这不可能！</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  </body>
+</html>

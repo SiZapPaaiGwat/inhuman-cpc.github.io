@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>初识JavaScript Promises之二 | 小紫baby的个人站点</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="上一篇我们初步学习了JavaScript Promises，本篇将介绍Promise如何优雅地进行错误处理以及提升操作node.js风格[^1]的异步方法的逼格，没错就是使用promisify[^2]。 异步编程中的错误处理 人性的、理想的也正如很多编程语言中已经实现的错误处理方式应该是这样： 1234567try &amp;#123;    var val = JSON.parse(fs.readFil">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识JavaScript Promises之二">
+<meta property="og:url" content="http://yoursite.com/2014/07/15/初识JavaScript Promises之二/index.html">
+<meta property="og:site_name" content="小紫baby的个人站点">
+<meta property="og:description" content="上一篇我们初步学习了JavaScript Promises，本篇将介绍Promise如何优雅地进行错误处理以及提升操作node.js风格[^1]的异步方法的逼格，没错就是使用promisify[^2]。 异步编程中的错误处理 人性的、理想的也正如很多编程语言中已经实现的错误处理方式应该是这样： 1234567try &amp;#123;    var val = JSON.parse(fs.readFil">
+<meta property="og:updated_time" content="2017-12-22T07:19:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识JavaScript Promises之二">
+<meta name="twitter:description" content="上一篇我们初步学习了JavaScript Promises，本篇将介绍Promise如何优雅地进行错误处理以及提升操作node.js风格[^1]的异步方法的逼格，没错就是使用promisify[^2]。 异步编程中的错误处理 人性的、理想的也正如很多编程语言中已经实现的错误处理方式应该是这样： 1234567try &amp;#123;    var val = JSON.parse(fs.readFil">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/typing.css">
+  <link rel="stylesheet" href="/css/donate.css">
+  
+</head>
+
+  
+    
+      <body>
+    
+  
+      <div id="container" class="container">
+        <article id="post-初识JavaScript Promises之二" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+  <nav id="main-nav" class="main-nav">
+    
+      <a class="main-nav-link" href="/">首页</a>
+    
+      <a class="main-nav-link" href="/archives">归档</a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      初识JavaScript Promises之二
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <p>上一篇我们初步学习了JavaScript Promises，本篇将介绍Promise如何优雅地进行错误处理以及提升操作<strong>node.js风格</strong>[^1]的异步方法的逼格，没错就是使用<strong>promisify</strong>[^2]。</p>
+<h2 id="异步编程中的错误处理"><a href="#异步编程中的错误处理" class="headerlink" title="异步编程中的错误处理"></a>异步编程中的错误处理</h2><p> 人性的、理想的也正如很多编程语言中已经实现的错误处理方式应该是这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> val = <span class="built_in">JSON</span>.parse(fs.readFileSync(<span class="string">"file.json"</span>));</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="built_in">SyntaxError</span> e) &#123;<span class="comment">//json语法错误</span></span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">"不符合json格式"</span>);</span><br><span class="line">&#125;<span class="keyword">catch</span>(<span class="built_in">Error</span> e) &#123;<span class="comment">//其它类型错误</span></span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">"无法读取文件"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很遗憾，JavaScript并不支持上述方式，于是“聪明的猴子”很可能写出下面的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">//code</span></span><br><span class="line">&#125;<span class="keyword">catch</span>(e) &#123;</span><br><span class="line">    <span class="keyword">if</span>( e <span class="keyword">instanceof</span> <span class="built_in">SyntaxError</span>) &#123;</span><br><span class="line">        <span class="comment">//handle</span></span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">      	<span class="comment">//handle  </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>相信没人会喜欢第二段代码，不过传统的JavaScript也只能帮你到这里了。</p>
+<p>上面的代码是同步模式，异步模式中的错误处理又是如何呢？</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">fs.readFile(<span class="string">'file.json'</span>, <span class="string">'utf8'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, data</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(err)&#123;</span><br><span class="line">		<span class="built_in">console</span>.error(<span class="string">"无法读取文件"</span>)</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="keyword">try</span>&#123;</span><br><span class="line">			<span class="keyword">var</span> json = <span class="built_in">JSON</span>.parese(data)</span><br><span class="line">		&#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">			<span class="built_in">console</span>.error(<span class="string">"不符合json格式"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>友情提醒：在node.js中你应该尽量避免使用同步方法。</p>
+<p>仔细比较第一段和第三段的代码的差异会发现，如此简单的代码竟然用了三次缩进！如果再加入其它异步操作，邂逅<code>callback hell</code>是必然的了。</p>
+<hr>
+<h2 id="使用Promise进行错误处理"><a href="#使用Promise进行错误处理" class="headerlink" title="使用Promise进行错误处理"></a>使用Promise进行错误处理</h2><p>假设fs.readFileAsync是fs.readFile的Promise版本，这意味着什么呢，不妨回忆一下：</p>
+<blockquote>
+<ul>
+<li>fs.readFileAsync方法的返回结果是一个Promise对象</li>
+<li>fs.readFileAsync方法的返回结果拥有一个then方法</li>
+<li>fs.readFileAsync方法接受参数与fs.readFile一致，除了最后一个回调函数</li>
+</ul>
+</blockquote>
+<p>返回Promise对象意味着，执行fs.readFileAsync并不会立即执行异步操作，而是通过调用其then方法来执行，then方法接受的回调函数用于处理正确返回结果。所以使用fs.readFileAsync的使用方式如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Promise版本</span></span><br><span class="line">fs.readFileAsync(<span class="string">'file.json'</span>, <span class="string">'utf8'</span>).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>OK，让我们继续错误处理这个话题。由于<a href="http://promisesaplus.com/" target="_blank" rel="noopener">Promises/A+</a>标准对Promise对象只规定了唯一的then方法，没有专门针对catch或者error的方法，我们将继续使用<a href="https://github.com/petkaantonov/bluebird" target="_blank" rel="noopener">bluebird</a>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 带错误处理的Promise版本</span></span><br><span class="line">fs.readFileAsync(<span class="string">'file.json'</span>, <span class="string">'utf8'</span>).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(data)</span><br><span class="line">&#125;).catch(<span class="built_in">SyntaxError</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//code here</span></span><br><span class="line">&#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//code here</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>上面的代码没有嵌套回调，和本文开始的第一段代码的编写模式也基本一致。</p>
+<h2 id="神奇的Promisify"><a href="#神奇的Promisify" class="headerlink" title="神奇的Promisify"></a>神奇的Promisify</h2><p>注：</p>
+<p>下面我们看如何对fs.readFileAsync方法进行promisify，依然是使用bluebird。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = <span class="built_in">require</span>(<span class="string">'bluebird'</span>)</span><br><span class="line">fs.readFileAsync = <span class="built_in">Promise</span>.promisify(fs.readFie, fs)</span><br></pre></td></tr></table></figure>
+<p>怎么样，就是如此简单！对于bluebird它还有一个更强大的方法，那就是promisify的高级版本 <code>promisifyAll</code>，比如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = <span class="built_in">require</span>(<span class="string">'bluebird'</span>)</span><br><span class="line"><span class="built_in">Promise</span>.promisifyAll(fs)</span><br></pre></td></tr></table></figure>
+<p>执行完上面的代码之后，fs对象下所有的异步方法都会对应的生成一个Promise版本方法，比如fs.readFile对应fs.readFileAsync，fs.mkdir对应fs.mkdirAsync，以此类推。</p>
+<p>另外要注意的就是，Promise版本的函数除了最后一个参数（回调函数），其它参数与原函数均一一对应，调用的时候别忘了传递原有的参数。</p>
+<p>对fs的<code>promisification</code>还不能令我满足，我需要更神奇的魔法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// redis</span></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = <span class="built_in">require</span>(<span class="string">"bluebird"</span>);</span><br><span class="line"><span class="built_in">Promise</span>.promisifyAll(<span class="built_in">require</span>(<span class="string">"redis"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// mongoose</span></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = <span class="built_in">require</span>(<span class="string">"bluebird"</span>);</span><br><span class="line"><span class="built_in">Promise</span>.promisifyAll(<span class="built_in">require</span>(<span class="string">"mongoose"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// mongodb</span></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = <span class="built_in">require</span>(<span class="string">"bluebird"</span>);</span><br><span class="line"><span class="built_in">Promise</span>.promisifyAll(<span class="built_in">require</span>(<span class="string">"mongodb"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// mysql</span></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = <span class="built_in">require</span>(<span class="string">"bluebird"</span>);</span><br><span class="line"><span class="built_in">Promise</span>.promisifyAll(<span class="built_in">require</span>(<span class="string">"mysql/lib/Connection"</span>).prototype);</span><br><span class="line"><span class="built_in">Promise</span>.promisifyAll(<span class="built_in">require</span>(<span class="string">"mysql/lib/Pool"</span>).prototype);</span><br><span class="line"></span><br><span class="line"><span class="comment">// request</span></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = <span class="built_in">require</span>(<span class="string">"bluebird"</span>);</span><br><span class="line"><span class="built_in">Promise</span>.promisifyAll(<span class="built_in">require</span>(<span class="string">"request"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// mkdir</span></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = <span class="built_in">require</span>(<span class="string">"bluebird"</span>);</span><br><span class="line"><span class="built_in">Promise</span>.promisifyAll(<span class="built_in">require</span>(<span class="string">"mkdirp"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// winston</span></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = <span class="built_in">require</span>(<span class="string">"bluebird"</span>);</span><br><span class="line"><span class="built_in">Promise</span>.promisifyAll(<span class="built_in">require</span>(<span class="string">"winston"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Nodemailer</span></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = <span class="built_in">require</span>(<span class="string">"bluebird"</span>);</span><br><span class="line"><span class="built_in">Promise</span>.promisifyAll(<span class="built_in">require</span>(<span class="string">"nodemailer"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// pg</span></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">Promise</span> = <span class="built_in">require</span>(<span class="string">"bluebird"</span>);</span><br><span class="line"><span class="built_in">Promise</span>.promisifyAll(<span class="built_in">require</span>(<span class="string">"pg"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+<p>少年，这下你颤抖了吗？</p>
+<p>注：如果你正在使用mongoose，除了bluebird你可能还需要<a href="https://github.com/simongfxu/mongoomise" target="_blank" rel="noopener"><strong>mongoomise</strong></a>，它的优点在于：</p>
+<blockquote>
+<ul>
+<li>能够接受任意的Promise Library (Q/when.js/RSVP/bluebird/es6-promise等等)</li>
+<li>支持对多个数据库实例进行promisify</li>
+<li>能够对Model自定义静态私有方法进行promisify，而bluebird.promisifyAll不支持</li>
+<li>mongoomise + bluebird与仅使用bluebird性能相差无几，可能更好。</li>
+</ul>
+</blockquote>
+<p>我们<a href="http://www.coinxu.com" target="_blank" rel="noopener"><strong>币须网</strong></a>已经在生产环境中使用mongoomise + bluebird，目前为止一切安好。</p>
+<p>注：</p>
+<ul>
+<li><p>node.js风格函数指的是这样的一种异步函数，它接受的最后一个参数是异步操作完成之后的回调函数，这个回调函数的第一个参数接受执行错误的Error对象，第二个参数接受成功返回值）。</p>
+</li>
+<li><p><code>promisify</code>大概的意思就是根据一个<strong>node.js风格</strong>的异步方法生成另一个等价的Promise风格的方法（这个方法返回值是一个Promise，其它形参与原方法相同除了没有最后一个回调函数），这个名词我最早是看到bluebird使用。</p>
+</li>
+</ul>
+<p>(未完待续 2014-07-15 23:40)</p>
+
+      
+      <div id="donate" class="donate">
+        <a id="github" href="" target="_blank" class="pos-f tr3" title="Github"></a>
+	      <div id="DonateText" class="tr3">Donate</div>
+	      <ul id="donateBox" class="list pos-f tr3">
+		      <li id="PayPal"><a href="" target="_blank">PayPal</a></li>
+		      <li id="BTC" data-footnote="Copy addres and show QRCode"><button id="BTCBn"  data-clipboard-target="#btc-key" alt="Copy to clipboard">Bitcoin</button></li>
+		      <li id="AliPay">AliPay</li>
+		      <li id="WeChat">WeChat</li>
+	      </ul>
+	      <div id="QRBox" class="pos-f left-100">
+		      <div id="BTCQR" class="MainBox" style="background-image: url()"></div>
+		      <div id="AliPayQR" class="MainBox" style="background-image: url()"></div>
+		      <div id="WeChatQR" class="MainBox" style="background-image: url()"></div>
+	      </div>
+	      <!-- Bitcoin 账号 -->
+	      <input id="btc-key" type="text" value="" readonly="readonly">
+      </div>
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">发表日期:</span>
+          <a href="/2014/07/15/初识JavaScript Promises之二/" class="article-date">
+  <time datetime="2014-07-14T16:00:00.000Z" itemprop="datePublished">2014-07-15</time>
+</a>
+
+        </li>
+        
+        
+          <li>
+            <span class="label">标签:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2014/07/29/程序员的强迫症/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">上一页</strong>
+      <div class="article-nav-title">
+        
+          程序员的强迫症
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/06/28/初识JavaScript Promises之一/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">下一页</strong>
+      <div class="article-nav-title">初识JavaScript Promises之一</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>你做着和他人一样的事，却想脱颖而出，这不可能！</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  </body>
+</html>
