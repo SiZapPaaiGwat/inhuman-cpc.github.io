@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Better React 后续 | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="之前重构项目后根据个人实战经验写了一篇《Better React》，总结在React中传递props应该注意的事项。在后来与网友的讨论中发现行文总结不太严谨，于是乎再度发文，争取纠正其中某些纰漏之处，不至于误导他人。如果你还没有阅读《Better React》，推荐阅读之后再来阅读本文。 缓存函数作为组件的prop传递不可取吗？之前的文章中不推荐缓存函数主要是因为下面这两个原因：  类似的prop">
+<meta name="keywords" content="React">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Better React 后续">
+<meta property="og:url" content="http://yoursite.com/2016/03/12/better-react-2/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="之前重构项目后根据个人实战经验写了一篇《Better React》，总结在React中传递props应该注意的事项。在后来与网友的讨论中发现行文总结不太严谨，于是乎再度发文，争取纠正其中某些纰漏之处，不至于误导他人。如果你还没有阅读《Better React》，推荐阅读之后再来阅读本文。 缓存函数作为组件的prop传递不可取吗？之前的文章中不推荐缓存函数主要是因为下面这两个原因：  类似的prop">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.684Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Better React 后续">
+<meta name="twitter:description" content="之前重构项目后根据个人实战经验写了一篇《Better React》，总结在React中传递props应该注意的事项。在后来与网友的讨论中发现行文总结不太严谨，于是乎再度发文，争取纠正其中某些纰漏之处，不至于误导他人。如果你还没有阅读《Better React》，推荐阅读之后再来阅读本文。 缓存函数作为组件的prop传递不可取吗？之前的文章中不推荐缓存函数主要是因为下面这两个原因：  类似的prop">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-better-react-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/12/better-react-2/" class="article-date">
+  <time datetime="2016-03-11T16:00:00.000Z" itemprop="datePublished">2016-03-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Better React 后续
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前重构项目后根据个人实战经验写了一篇<a href="http://zhuanlan.zhihu.com/reduixs/20554654" target="_blank" rel="noopener">《Better React》</a>，总结在React中传递props应该注意的事项。<br>在后来与网友的讨论中发现行文总结不太严谨，于是乎再度发文，争取纠正其中某些纰漏之处，不至于误导他人。<br>如果你还没有阅读<a href="http://zhuanlan.zhihu.com/reduixs/20554654" target="_blank" rel="noopener">《Better React》</a>，推荐阅读之后再来阅读本文。</p>
+<h2 id="缓存函数作为组件的prop传递不可取吗？"><a href="#缓存函数作为组件的prop传递不可取吗？" class="headerlink" title="缓存函数作为组件的prop传递不可取吗？"></a>缓存函数作为组件的prop传递不可取吗？</h2><p>之前的文章中不推荐缓存函数主要是因为下面这两个原因：</p>
+<ul>
+<li><em>类似的prop越多，外层缓存的函数越多，代码风格极其不自然</em></li>
+<li><em>如果函数依赖于局部变量，缓存的方式异常麻烦甚至于无法解决</em></li>
+</ul>
+<p>这里我们有必要再进行一些科普工作。 React组件可以接受函数作为prop，一般我们传递的时候有三种方式：</p>
+<ol>
+<li>在组件当前作用域定义局部变量</li>
+<li>在最外层的作用域定义全局变量</li>
+<li>作为组件自身的实例方法定义</li>
+</ol>
+<p>第一种方式写法最自然，但是危害最大，因为函数引用在父组件render的时候会一直变化。 第二种方式写法最蛋疼，函数引用不会变化，但是可以解决一些问题。<br>第三种方式则是前两种方法的一个比较完美结合。</p>
+<p>至此，第一个原因提及的问题通过第三种方式可以解决。至于代码风格问题，因人而异。<br>第二个原因提到的问题可能描述的不太详细，以致于会有人疑惑：</p>
+<ul>
+<li>为什么不把依赖的变量作为prop一同传入给子组件，这样反而更符合React的思想</li>
+</ul>
+<p>传还是不传，怎么做才是最佳实践？且往下看。</p>
+<h2 id="应该使用EventEmitter吗？"><a href="#应该使用EventEmitter吗？" class="headerlink" title="应该使用EventEmitter吗？"></a>应该使用EventEmitter吗？</h2><p>依赖是否需要作为props传递给子组件？这个我只能无奈地说要结合实际需求决定。<br>当我们不使用EventEmitter的时候，看看我们怎么处理下面三个比较复杂的场景：</p>
+<p><strong>_场景一</strong>_<br><em>假设多个父组件引用了同一子组件，父组件的依赖又各不相同，这种方式需要将依赖全部加入到子组件的props里，必然引起子组件props爆炸。</em><br><em>props爆炸带来的就是一堆无谓的propType约束定义以及执行时的非空判断，代码臭味非常明显。</em><br><em>倘若子组件未来再增加一些函数类型的props，这种方式简直就是灾难！</em><br>而EventEmitter只需要给子组件绑定所需的事件交给子组件自己在合适的时机触发就可以了。</p>
+<p><strong>_场景二</strong>_<br>少数情况我们要考虑事件解绑，而置空函数类型的props必然导致rerender。<br>当然你也可以通过设置开关变量来解决，但原本简单的逻辑变得更复杂了。<br>如果函数类型的props很多，开关变量的数目也不会少，徒增很多无意义的代码。<br>而EventEmitter只需要简单的解绑事件，也不会引起rerender。</p>
+<p><strong>_场景三</strong>_<br>在场景一的情况下，假设现在需要把子组件的事件处理结果同步到父组件的上级。<br>在我们重构代码的时候，这种方式需要修改所有的父组件的代码才能满足需求。<br>而EventEmitter只需要在最外层的组件给子组件绑定一个事件即可。</p>
+<p>更多的例子我就不一一列举了，相信真实世界的案例会更加多变和复杂。不过我们基本可以看出，场景越复杂EventEmitter的优势越明显。<br>EventEmitter能够将组件之间的依赖层层解耦，从而能够从容的应对需求的不断变化。</p>
+<h2 id="什么情况下不应该使用EventEmitter？"><a href="#什么情况下不应该使用EventEmitter？" class="headerlink" title="什么情况下不应该使用EventEmitter？"></a>什么情况下不应该使用EventEmitter？</h2><p>首先我们必须承认，在开源的React组件中，使用EventEmitter非常少见。<br>为什么呢？我个人认为主要是以下几个原因：</p>
+<ul>
+<li>浏览器不像Node.js，没有原生的EventEmitter实现，需要引入额外的库来支持；</li>
+<li>开源组件一般功能和需求规划较为明确，变化相对较少，使用EventEmitter收益非常有限。</li>
+</ul>
+<p>所以我推荐在功能通用或逻辑相对简单的组件中不必使用EventEmitter，而在功能复杂需求变化频繁的业务组件中优先使用EventEmitter。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/12/better-react-2/" data-id="cjf865ufe000h8wp14hrf3b5e" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/06/18/violet/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          violet - 值得一试的写作同步小助手
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/02/21/redux/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Redux三分钟入门</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

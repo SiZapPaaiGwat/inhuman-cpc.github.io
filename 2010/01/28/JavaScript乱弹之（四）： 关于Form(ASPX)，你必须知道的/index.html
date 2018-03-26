@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的 | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在aspx页面中，可以使用Request.Form[“controlname”]来得到控件value属性。 那么这些控件必须是哪些类型的控件呢？ 所有HTML元素里面的input元素，但是还需要另外一个条件就是这个input元素必须要有name属性，id属性可有可无。 可能你问如果多个元素的name属性相同怎么办？ 如果name相同则这些元素的value以逗号分隔，形如“value1,value2">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的">
+<meta property="og:url" content="http://yoursite.com/2010/01/28/JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="在aspx页面中，可以使用Request.Form[“controlname”]来得到控件value属性。 那么这些控件必须是哪些类型的控件呢？ 所有HTML元素里面的input元素，但是还需要另外一个条件就是这个input元素必须要有name属性，id属性可有可无。 可能你问如果多个元素的name属性相同怎么办？ 如果name相同则这些元素的value以逗号分隔，形如“value1,value2">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.682Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的">
+<meta name="twitter:description" content="在aspx页面中，可以使用Request.Form[“controlname”]来得到控件value属性。 那么这些控件必须是哪些类型的控件呢？ 所有HTML元素里面的input元素，但是还需要另外一个条件就是这个input元素必须要有name属性，id属性可有可无。 可能你问如果多个元素的name属性相同怎么办？ 如果name相同则这些元素的value以逗号分隔，形如“value1,value2">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/01/28/JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的/" class="article-date">
+  <time datetime="2010-01-27T16:00:00.000Z" itemprop="datePublished">2010-01-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在aspx页面中，可以使用<strong>Request.Form[“controlname”]</strong>来得到控件value属性。</p>
+<p>那么这些控件必须是哪些类型的控件呢？</p>
+<p>所有HTML元素里面的input元素，但是还需要另外一个条件就是这个input元素必须要有name属性，id属性可有可无。</p>
+<p>可能你问如果多个元素的name属性相同怎么办？</p>
+<p>如果name相同则这些元素的value以逗号分隔，形如“value1,value2”。如果你使用的是服务器控件那么在生成的aspx页面中会自动给所有服务器控件加上name属性，这个name和id的值是相同的。不过当存在母板页时可能会要加上形如“ctl00_ContentPlaceHolder_”的标记，这些只要看看aspx源码就知道了。</p>
+<p>另外在Request.Form这是一个NameValueCollection，你可以使用如下代码看看本页面中的表单请求：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">  For(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Request.Form.Count;i++)&#123;</span><br><span class="line">textbox1.Text+=Request.Form[i]+<span class="string">","</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>你会发现多了最后textbox1呈现的结果比你vs编辑器里的input元素总是多2个，而且这两个都是很长的“乱码”。其实这些就是ViewState，你可以去MSDN查看相关介绍。<br>另外所有的服务器控件最后都是转化为HTML控件的，这个转化因控件不同复杂性也不同，比如TreeView转化为HTML控件之后就是DIV嵌套TABLE形成的，这里不详述，自己拖一个看看就知道关系了。</p>
+<p>另外你有可能需要通过脚本来操作隐藏的控件，这个时候你需要注意这个控件是服务器控件还是HTML控件以及你如何隐藏这些控件。</p>
+<p>服务器控件可以简单的设置Visible=”false”来隐藏控件，但是一旦这样隐藏，在页面源码中你就找不到该控件的HTML代码了。也就是说，你通过脚本是无法找到该控件的，只有在后台编码中可以使用该控件。</p>
+<p>但是如果你是通过css来控制的，通过脚本就可以找到。虽然如此你仍然需要掌握css两种不同的隐藏元素的方法：display:none和visibility:hidden,区别在于后者在页面中仍然占据物理空间，前者则通过其他文本流或控件元素自动填补。你拖两个这样的控件，去尝试一下在页面上右键复制这两个控件。</p>
+<p>html控件的只能通过css来设置其显隐，虽然在vs编辑器里有一个visible属性但是那只有当该控件加上runat=”server”才有效。一旦如此它就是HTML服务器控件了。</p>
+<p>暂时到这吧，以后继续更新。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/01/28/JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的/" data-id="cjf865ufb000d8wp1bafkvyb8" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2010/01/29/JavaScript乱弹之（五）：使用脚本创建动态内容/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          JavaScript乱弹之（五）：使用脚本创建动态内容
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2010/01/27/JavaScript乱弹之（三）：管理浏览器窗口/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">JavaScript乱弹之（三）：管理浏览器窗口</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

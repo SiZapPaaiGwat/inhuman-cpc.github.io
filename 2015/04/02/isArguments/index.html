@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>美妙的函数之isArguments | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="判断变量是否为Arguments对象没有想象中的那么简单，你可能会使用下面这种方法： 1Object.prototype.toString.call(value) === &amp;apos;[Object Arguments]&amp;apos; 我们先来看看著名的es5-shim是如何实现的。 1234567891011121314var _toString = ObjectPrototype.toStrin">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="美妙的函数之isArguments">
+<meta property="og:url" content="http://yoursite.com/2015/04/02/isArguments/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="判断变量是否为Arguments对象没有想象中的那么简单，你可能会使用下面这种方法： 1Object.prototype.toString.call(value) === &amp;apos;[Object Arguments]&amp;apos; 我们先来看看著名的es5-shim是如何实现的。 1234567891011121314var _toString = ObjectPrototype.toStrin">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.694Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="美妙的函数之isArguments">
+<meta name="twitter:description" content="判断变量是否为Arguments对象没有想象中的那么简单，你可能会使用下面这种方法： 1Object.prototype.toString.call(value) === &amp;apos;[Object Arguments]&amp;apos; 我们先来看看著名的es5-shim是如何实现的。 1234567891011121314var _toString = ObjectPrototype.toStrin">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-isArguments" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/04/02/isArguments/" class="article-date">
+  <time datetime="2015-04-01T16:00:00.000Z" itemprop="datePublished">2015-04-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      美妙的函数之isArguments
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>判断变量是否为Arguments对象没有想象中的那么简单，你可能会使用下面这种方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object.prototype.toString.call(value) === &apos;[Object Arguments]&apos;</span><br></pre></td></tr></table></figure>
+<p>我们先来看看著名的es5-shim是如何实现的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">var _toString = ObjectPrototype.toString;</span><br><span class="line"></span><br><span class="line">var isFunction = function(val) &#123;</span><br><span class="line">    return ObjectPrototype.toString.call(val) === &apos;[object Function]&apos;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var isArguments = function isArguments(value) &#123;</span><br><span class="line">    var str = _toString.call(value);</span><br><span class="line">    var isArgs = str === &apos;[object Arguments]&apos;;</span><br><span class="line">    if (!isArgs) &#123;</span><br><span class="line">        isArgs = !isArray(value) &amp;&amp; value !== null &amp;&amp; typeof value === &apos;object&apos; &amp;&amp; typeof value.length === &apos;number&apos; &amp;&amp; value.length &gt;= 0 &amp;&amp; isFunction(value.callee);</span><br><span class="line">    &#125;</span><br><span class="line">    return isArgs;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>因为某些浏览器的<a href="https://github.com/lodash/lodash/blob/master/lodash.src.js#L1004" target="_blank" rel="noopener">buggy</a>行为，这个方法不得不这么长。再看看<a href="https://github.com/lodash/lodash/blob/master/lodash.src.js#L8480" target="_blank" rel="noopener">lodash</a>的实现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;</span><br><span class="line"></span><br><span class="line">function isObjectLike(value) &#123;</span><br><span class="line">    return !!value &amp;&amp; typeof value == &apos;object&apos;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function isLength(value) &#123;</span><br><span class="line">  return typeof value == &apos;number&apos; &amp;&amp; value &gt; -1 &amp;&amp; value % 1 == 0 &amp;&amp; value &lt;= MAX_SAFE_INTEGER;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function isArguments(value) &#123;</span><br><span class="line">  var length = isObjectLike(value) ? value.length : undefined;</span><br><span class="line">  return isLength(length) &amp;&amp; objToString.call(value) == argsTag;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// Fallback for environments without a `toStringTag` for `arguments` objects.</span><br><span class="line">if (!support.argsTag) &#123;</span><br><span class="line">  isArguments = function(value) &#123;</span><br><span class="line">    var length = isObjectLike(value) ? value.length : undefined;</span><br><span class="line">    return isLength(length) &amp;&amp; hasOwnProperty.call(value, &apos;callee&apos;) &amp;&amp;</span><br><span class="line">      !propertyIsEnumerable.call(value, &apos;callee&apos;);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对比两种实现，es5-shim仅仅只是做了arguments对象特有的属性检测，而lodash的实现不论是从代码可读性还是严谨方面来考察都是极其完美的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/04/02/isArguments/" data-id="cjf865ufr00128wp1nmlcuol3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/04/09/requirejs定义模块的两种方式/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          RequireJS定义模块常用的两种方式
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/07/29/程序员的强迫症/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">程序员的强迫症</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

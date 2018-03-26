@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>JavaScript乱弹之（三）：管理浏览器窗口 | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="曾几何时，弹出式窗口大行其道，随着浏览器的竞争态势愈演愈烈，虽然给开发者带来极大的不便，但是浏览器的规范化已经成为了共识。 如今弹出式窗口的局面已经有效地得到了控制，如果你要在页面中通过脚本打开一个新窗口，那么许多“潜规则”你必须要有所了解。 与窗口相关的绝大部分行为都涉及到window对象，window对象涉及大量的属性和方法，但是在不同的浏览器之间确实千差万别。 部分原因是由于window对象">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript乱弹之（三）：管理浏览器窗口">
+<meta property="og:url" content="http://yoursite.com/2010/01/27/JavaScript乱弹之（三）：管理浏览器窗口/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="曾几何时，弹出式窗口大行其道，随着浏览器的竞争态势愈演愈烈，虽然给开发者带来极大的不便，但是浏览器的规范化已经成为了共识。 如今弹出式窗口的局面已经有效地得到了控制，如果你要在页面中通过脚本打开一个新窗口，那么许多“潜规则”你必须要有所了解。 与窗口相关的绝大部分行为都涉及到window对象，window对象涉及大量的属性和方法，但是在不同的浏览器之间确实千差万别。 部分原因是由于window对象">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.679Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript乱弹之（三）：管理浏览器窗口">
+<meta name="twitter:description" content="曾几何时，弹出式窗口大行其道，随着浏览器的竞争态势愈演愈烈，虽然给开发者带来极大的不便，但是浏览器的规范化已经成为了共识。 如今弹出式窗口的局面已经有效地得到了控制，如果你要在页面中通过脚本打开一个新窗口，那么许多“潜规则”你必须要有所了解。 与窗口相关的绝大部分行为都涉及到window对象，window对象涉及大量的属性和方法，但是在不同的浏览器之间确实千差万别。 部分原因是由于window对象">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-JavaScript乱弹之（三）：管理浏览器窗口" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/01/27/JavaScript乱弹之（三）：管理浏览器窗口/" class="article-date">
+  <time datetime="2010-01-26T16:00:00.000Z" itemprop="datePublished">2010-01-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JavaScript乱弹之（三）：管理浏览器窗口
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>曾几何时，弹出式窗口大行其道，随着浏览器的竞争态势愈演愈烈，虽然给开发者带来极大的不便，<br>但是浏览器的规范化已经成为了共识。</p>
+<p>如今弹出式窗口的局面已经有效地得到了控制，如果你要在页面中通过脚本打开一个新窗口，<br>那么许多<strong>“潜规则”</strong>你必须要有所了解。</p>
+<p>与窗口相关的绝大部分行为都涉及到window对象，window对象涉及大量的属性和方法，<br>但是在不同的浏览器之间确实千差万别。</p>
+<p>部分原因是由于window对象是脚本任务中最大的全局上下文。<br>IE利用这个上下文为window对象嵌入了许多与浏览器和操作系统相关的属性和方法，<br>而Mozilla却认为window对象的属性会威胁用户的隐私，因此只能通过被服务器打上电子标签的脚本来访问，<br>这些脚本的来源必须经过用户的明确允许（带有签名的脚本）。</p>
+<h2 id="八条”潜规则”"><a href="#八条”潜规则”" class="headerlink" title="八条”潜规则”"></a>八条”潜规则”</h2><h3 id="潜规则一：不要修改主窗口的界面元素（chrome）"><a href="#潜规则一：不要修改主窗口的界面元素（chrome）" class="headerlink" title="潜规则一：不要修改主窗口的界面元素（chrome）"></a>潜规则一：不要修改主窗口的界面元素（chrome）</h3><p>比如状态栏、菜单栏、滚动条、工具栏、标题栏等。唯一的定制窗口界面的方法是打开一个全新的窗口。</p>
+<h3 id="潜规则二：不要在子窗口中通过脚本关闭主窗口"><a href="#潜规则二：不要在子窗口中通过脚本关闭主窗口" class="headerlink" title="潜规则二：不要在子窗口中通过脚本关闭主窗口"></a>潜规则二：不要在子窗口中通过脚本关闭主窗口</h3><p>尽管可以使用opener.close()方法来实现。</p>
+<h3 id="潜规则三：不要试图替用户关闭主窗口之外的其他窗口"><a href="#潜规则三：不要试图替用户关闭主窗口之外的其他窗口" class="headerlink" title="潜规则三：不要试图替用户关闭主窗口之外的其他窗口"></a>潜规则三：不要试图替用户关闭主窗口之外的其他窗口</h3><p>因为通过脚本你无法得知用户打开了多少个窗口。</p>
+<h3 id="潜规则四：不要试图访问位于其他域的窗口的文档属性"><a href="#潜规则四：不要试图访问位于其他域的窗口的文档属性" class="headerlink" title="潜规则四：不要试图访问位于其他域的窗口的文档属性"></a>潜规则四：不要试图访问位于其他域的窗口的文档属性</h3><p>因为这会引发潜在的恶意时间，浏览器都实现了同源安全策略–除非两窗口来自于同一域中的同一服务器，且协议相同，否则不能通过脚本访问另一窗口的关键细节。</p>
+<h3 id="潜规则五：不要试图阻止或者激活浏览器的窗口按钮"><a href="#潜规则五：不要试图阻止或者激活浏览器的窗口按钮" class="headerlink" title="潜规则五：不要试图阻止或者激活浏览器的窗口按钮"></a>潜规则五：不要试图阻止或者激活浏览器的窗口按钮</h3><p>许多开发人员希望拦截后退和前进按钮来控制浏览器的导航，但是这些用户动作不会出现在window对象中。</p>
+<h3 id="潜规则六：不要试图改变地址栏的内容"><a href="#潜规则六：不要试图改变地址栏的内容" class="headerlink" title="潜规则六：不要试图改变地址栏的内容"></a>潜规则六：不要试图改变地址栏的内容</h3><p>脚本唯一能做的是通过location.href赋值使其渲染新页面。</p>
+<h3 id="潜规则七：不要试图添加或删除收藏夹的项目"><a href="#潜规则七：不要试图添加或删除收藏夹的项目" class="headerlink" title="潜规则七：不要试图添加或删除收藏夹的项目"></a>潜规则七：不要试图添加或删除收藏夹的项目</h3><p>在IE中window.external.AddFavorite(“URL”,”Title”)方法可以添加到收藏夹，即使是这个功能，添加之前也会询问用户是否允许。收藏夹是用户私有的，不应该暴露给脚本。</p>
+<h3 id="潜规则八：不要试图修改浏览器偏好设置"><a href="#潜规则八：不要试图修改浏览器偏好设置" class="headerlink" title="潜规则八：不要试图修改浏览器偏好设置"></a>潜规则八：不要试图修改浏览器偏好设置</h3><p>Mozilla允许带有签名的脚本应用程序的偏好设置，该功能是网络管理功能。</p>
+<h2 id="设置窗口的尺寸"><a href="#设置窗口的尺寸" class="headerlink" title="设置窗口的尺寸"></a>设置窗口的尺寸</h2><p>1.window.resizeTo(800,600);设置窗口为指定尺寸</p>
+<p>2.window.resizeBy(50,-10);按一定像素增大或缩小窗口</p>
+<p>调整窗口大小使其符合指定内容大小，并不简单。Mozilla，Opera和Safari提供了一对读写属性可以对窗口的内容区域进行特殊控制–innerHeight和innerwidth，而IE只提供了只读操作document.body.parentNode.clientHeight(clientWidth)。</p>
+<p>注意：设置窗口的外围尺寸来管理内容区域的思想是糟糕的，用户可能选择工具栏进行设置或者浏览器的操作询问都会影响到你精心设计的布局。</p>
+<h2 id="移动窗口"><a href="#移动窗口" class="headerlink" title="移动窗口"></a>移动窗口</h2><p>3.window.moveTo(10,20);移动窗口到指定坐标</p>
+<p>4.window.moveBy(0,10);按一定像素改变窗口的位置</p>
+<p>移动窗口时，窗口尺寸不变</p>
+<p>##最大化主窗口</p>
+<p>实例：function maximizeWindow()</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.moveTo(<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line"><span class="built_in">window</span>.resizeTo(screen.availWidth,screen.availHeight);</span><br></pre></td></tr></table></figure>
+<p>注意：XP真正最大化窗口并没有定位在（0，0）点。其实窗口的左上角位于（-4，-4）。没有真正最大化窗口的方法，也没有最小化窗口的实现方法。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/01/27/JavaScript乱弹之（三）：管理浏览器窗口/" data-id="cjf865uf9000a8wp19sjve7lz" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2010/01/28/JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2010/01/26/JavaScript乱弹之（二）： String/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">JavaScript乱弹之（二）： String</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Better React | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Better React使用Ractive（一个MVVM框架）编写组件的时候，我就经常想获取用户当前传入的attributes。很无奈，Ractive并不支持此功能。为此我还专门提过一个issue。React开始流行的时候，作为MVVM的爱好者我其实是比较抵触的。后来发现势头不太对，感觉还是有必要了解下。于是就抱着试一试的心理，开始了React的学习历程。依稀记得当我首次接触props和state">
+<meta name="keywords" content="React">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Better React">
+<meta property="og:url" content="http://yoursite.com/2016/02/04/better-react/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="Better React使用Ractive（一个MVVM框架）编写组件的时候，我就经常想获取用户当前传入的attributes。很无奈，Ractive并不支持此功能。为此我还专门提过一个issue。React开始流行的时候，作为MVVM的爱好者我其实是比较抵触的。后来发现势头不太对，感觉还是有必要了解下。于是就抱着试一试的心理，开始了React的学习历程。依稀记得当我首次接触props和state">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.685Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Better React">
+<meta name="twitter:description" content="Better React使用Ractive（一个MVVM框架）编写组件的时候，我就经常想获取用户当前传入的attributes。很无奈，Ractive并不支持此功能。为此我还专门提过一个issue。React开始流行的时候，作为MVVM的爱好者我其实是比较抵触的。后来发现势头不太对，感觉还是有必要了解下。于是就抱着试一试的心理，开始了React的学习历程。依稀记得当我首次接触props和state">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-better-react" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/04/better-react/" class="article-date">
+  <time datetime="2016-02-03T16:00:00.000Z" itemprop="datePublished">2016-02-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Better React
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Better-React"><a href="#Better-React" class="headerlink" title="Better React"></a>Better React</h1><p>使用Ractive（一个MVVM框架）编写组件的时候，我就经常想获取用户当前传入的attributes。<br>很无奈，Ractive并不支持此功能。为此我还专门提过一个<a href="https://github.com/ractivejs/ractive/issues/2059" target="_blank" rel="noopener">issue</a>。<br>React开始流行的时候，作为MVVM的爱好者我其实是比较抵触的。<br>后来发现势头不太对，感觉还是有必要了解下。<br>于是就抱着试一试的心理，开始了React的学习历程。<br>依稀记得当我首次接触props和state这对兄弟的时候，我的内心是十分激动的。</p>
+<p>随着React学习的愈发深入，就愈发觉得掌握props和state的使用，对于掌握React整个基础体系是有多么重要。<br>今天本文就结合我自己的开发实践，讲讲使用props的一个基本原则。当然如果有更好的实践方法，烦请多交流。</p>
+<h2 id="一个典型"><a href="#一个典型" class="headerlink" title="一个典型"></a>一个典型</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> Component = React.createClass(&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">let</span> handleClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'click handled'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;SubComponent onClick=&#123;handleClick&#125; /&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>通常来说，子组件依赖父组件的某些变量、状态，或者需要更新父组件的UI这种需求还是很普遍的。<br>上例中父组件将一个handleClick函数作为prop传入给子组件，handleClick由于其作用域的天然优势可以将子组件的依赖问题层层化解，异常的简单方便。<br>这种将函数作为props传入子组件解决依赖问题的处理方式，也是目前React父子组件通信处理中一种非常普遍且流行的方式。</p>
+<p>但是既然以此为例，那它肯定是反面典型了！</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>下面我们以一个稍微复杂点的例子来看看这种处理方式的缺陷， <a href="http://codepen.io/simongfxu/pen/rxZBNz?editors=0010" target="_blank" rel="noopener">查看演示效果</a>。<br>试试点击演示中的Add按钮，然后查看控制台输出。</p>
+<p>你会发现每点一次，底层的DumbCompoent的render都会触发一次。<br>照理说DumbComponent没有任何的props的变更应该不会rerender，为什么呢？<br>因为SmartComponent中传递prop的时候传递的是一个匿名函数，<br>DumbComponent在shouldComponentUpdate判断的时候由于onClick的引用不同而返回true。</p>
+<p>如何修复呢？<br>很自然的你可能会想到将onClick这个函数缓存起来，这样引用就不会一直变了。<br>仔细思考一番其实这个方式并不可取，主要是因为：</p>
+<blockquote>
+<ul>
+<li>类似的prop越多，外层缓存的函数越多，代码风格极其不自然</li>
+<li>如果prop依赖于局部变量，缓存的方式异常麻烦甚至于无法解决</li>
+</ul>
+</blockquote>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>避免将函数作为props传递，使用EventEmitter来对父子组件的依赖解耦。</p>
+<p>如果不了解EventEmitter，可以看看这篇<a href="http://www.html-js.com/article/1649" target="_blank" rel="noopener">文章</a>。<br>浏览器端的实现我推荐<a href="https://github.com/primus/eventemitter3" target="_blank" rel="noopener">EventEmitter3</a>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>为了避免不必要的麻烦，请不要将函数传入props中，取而代之使用EventEmitter。<br>遵循此原则，props始终传递基本类型或者只包含基本类型的对象。<br>在今后的React学习之路上，当你了解<a href="https://github.com/camsong/blog/issues/3" target="_blank" rel="noopener">ImmutableJS</a>时，这个原则将会让你深深受益。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/04/better-react/" data-id="cjf865ufg000j8wp1nc8kx1mv" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/02/21/redux/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Redux三分钟入门
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/12/17/ci-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">【读书笔记】持续集成（软件质量改进和风险降低之道）之二</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

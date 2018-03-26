@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>【读书笔记】持续集成（软件质量改进和风险降低之道）之一 | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="持续集成（软件质量改进和风险降低之道）第一章 启程每天吃一个苹果和实际去做是两码事。 by Kathy Sierra 1.1 针对每次变更构建软件 一次构建不止是一次编译。它可能包含编译、测试、代码审查和部署以及其它一些事情。一次构建是将源代码放在一起，并验证软件可以作为一个一致的单元运行的过程。 CI场景中的步骤通常是这样的：  开发者提交代码到版本控制库，CI服务器轮询检查代码变更； CI服务">
+<meta name="keywords" content="持续集成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【读书笔记】持续集成（软件质量改进和风险降低之道）之一">
+<meta property="og:url" content="http://yoursite.com/2015/12/10/ci-1/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="持续集成（软件质量改进和风险降低之道）第一章 启程每天吃一个苹果和实际去做是两码事。 by Kathy Sierra 1.1 针对每次变更构建软件 一次构建不止是一次编译。它可能包含编译、测试、代码审查和部署以及其它一些事情。一次构建是将源代码放在一起，并验证软件可以作为一个一致的单元运行的过程。 CI场景中的步骤通常是这样的：  开发者提交代码到版本控制库，CI服务器轮询检查代码变更； CI服务">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.686Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【读书笔记】持续集成（软件质量改进和风险降低之道）之一">
+<meta name="twitter:description" content="持续集成（软件质量改进和风险降低之道）第一章 启程每天吃一个苹果和实际去做是两码事。 by Kathy Sierra 1.1 针对每次变更构建软件 一次构建不止是一次编译。它可能包含编译、测试、代码审查和部署以及其它一些事情。一次构建是将源代码放在一起，并验证软件可以作为一个一致的单元运行的过程。 CI场景中的步骤通常是这样的：  开发者提交代码到版本控制库，CI服务器轮询检查代码变更； CI服务">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ci-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/10/ci-1/" class="article-date">
+  <time datetime="2015-12-09T16:00:00.000Z" itemprop="datePublished">2015-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      【读书笔记】持续集成（软件质量改进和风险降低之道）之一
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="持续集成（软件质量改进和风险降低之道）"><a href="#持续集成（软件质量改进和风险降低之道）" class="headerlink" title="持续集成（软件质量改进和风险降低之道）"></a>持续集成（软件质量改进和风险降低之道）</h1><h2 id="第一章-启程"><a href="#第一章-启程" class="headerlink" title="第一章 启程"></a>第一章 启程</h2><p><em>每天吃一个苹果和实际去做是两码事。 by Kathy Sierra</em></p>
+<p><strong>1.1 针对每次变更构建软件</strong></p>
+<p><em>一次构建不止是一次编译。它可能包含编译、测试、代码审查和部署以及其它一些事情。一次构建是将源代码放在一起，并验证软件可以作为一个一致的单元运行的过程。</em></p>
+<p>CI场景中的步骤通常是这样的：</p>
+<ol>
+<li>开发者提交代码到版本控制库，CI服务器轮询检查代码变更；</li>
+<li>CI服务器取出最新的源代码执行构建脚本，对软件进行集成；</li>
+<li>CI服务器向指定的成员发出电子邮件，提供构建结果的反馈信息；</li>
+<li>CI服务器继续轮询检查代码变更。</li>
+</ol>
+<p>通过一次构建，开发团队可以回答以下问题：</p>
+<ul>
+<li>软件组成部分是否能协同工作？</li>
+<li>代码复杂度如何？</li>
+<li>是否坚持了制定的编码标准？</li>
+<li>自动测试覆盖了多少代码？</li>
+<li>是否成功的通过了所有测试？</li>
+<li>应用程序是否满足性能要求？</li>
+<li>最近的开发是否存在问题</li>
+</ul>
+<p>你之所以希望“持续”地构建，就是为了得到快速的反馈。这样能在开发生命周期找到并修正问题。</p>
+<p><strong>1.2 CI的特征</strong></p>
+<p>CI需要具备的特征</p>
+<ul>
+<li>与版本控制库连接</li>
+<li>构建脚本</li>
+<li>某种类型的反馈机制（通常是邮件）</li>
+<li>集成源代码变更的过程（CI服务器）</li>
+</ul>
+<p>CI的子过程：</p>
+<ul>
+<li>源代码编译</li>
+<li>数据库集成</li>
+<li>测试 <em>（没有自动化的、持续的测试的CI不能算是CI）</em></li>
+<li>审查 <em>（自动化代码审查通过强制遵守规则来增加软件品质）</em></li>
+<li>部署 <em>（任何时候都可以拿出能工作、可部署的软件）</em></li>
+<li>文档与反馈</li>
+</ul>
+<p>一个好的CI系统的关键特征就是“速度”。CI系统的本质是及时向开发者和项目风险承担着提供反馈信息。</p>
+<h2 id="第二章-引入持续集成"><a href="#第二章-引入持续集成" class="headerlink" title="第二章 引入持续集成"></a>第二章 引入持续集成</h2><p><em>假定是所有麻烦之母</em></p>
+<ul>
+<li>假定一个方法会得到正确的调用参数</li>
+<li>假定开发者会坚持编码标准</li>
+<li>假定配置文件不会被覆盖或者修改</li>
+</ul>
+<p>持续集成在每次版本控制系统发生变化时就执行构建，这有助于减少项目中的假定。<br>CI是一些基本实践。它不是软件开发中最炫目的工作，不会有用户说“哇，我真的喜欢你们上一个版本的集成方式”。它是软件开发的幕后工作，只有使用过CI的人才能体会到一致的、可重复的构建过程所带来的好处。</p>
+<p>检查软件的品质就是检查最新的集成构建，就这么简单！</p>
+<p><strong>2.1 CI生活中的一天</strong></p>
+<p>无</p>
+<p><strong>2.2 CI的价值是什么</strong></p>
+<ul>
+<li>减少风险</li>
+<li>减少重复过程</li>
+<li>在任何时间地点生成可部署的软件</li>
+<li>增强项目的可见性</li>
+<li>对开发团队的软件建立起更强大的产品信心</li>
+</ul>
+<p>减少风险</p>
+<ul>
+<li>缺陷的检测和修复变得更快</li>
+<li>软件的健康程度可以测量</li>
+<li>减少假定</li>
+</ul>
+<p>增强项目的可见性</p>
+<ul>
+<li>对当前构建状态和品质指标提供及时的信息</li>
+<li>观察到一些项目相关的趋势</li>
+</ul>
+<p>建立更强大的产品信心</p>
+<ul>
+<li>如果没有频繁的集成，团队成员会感到压抑，因为他不知道代码的修改所造成的影响。比如罚款！</li>
+</ul>
+<p><strong>2.3 什么阻碍了团队使用CI</strong></p>
+<ul>
+<li>增加了维护CI系统的开销（项目太复杂、额外工作太多）</li>
+<li>变化太大（增量实现，从日构建开始）</li>
+<li>失败的构建太多</li>
+<li>额外的硬件/软件成本</li>
+</ul>
+<p><strong>2.4 如何进行持续集成</strong></p>
+<ul>
+<li>确定：确定需要自动化的过程（编译、审查、测试、部署、数据库集成）</li>
+<li>构建：创建构建脚本</li>
+<li>分享：利用版本控制库让其它人用起来</li>
+<li>持续：在变更之后执行自动化的过程</li>
+</ul>
+<p><strong>2.5 项目应该再何时以何种方式实现CI</strong></p>
+<ul>
+<li>越早越好，越晚越拒绝改变。</li>
+<li>CI最终希望是在每次代码库变更时就执行构建，但是也可以从每日构建开始。</li>
+<li>早起可以不加入某些功能，比如自动化的回归测试</li>
+</ul>
+<p><strong>2.6 集成的演进</strong></p>
+<p>它不是突然冒出来的软件开发方法，是集成软件演进的成功。</p>
+<p><strong>2.7 如何与其它开发实践配合</strong></p>
+<ul>
+<li>单元测试</li>
+<li>编码标准</li>
+<li>重构</li>
+<li>小发行版本</li>
+<li>共同拥有代码，避免知识孤岛</li>
+</ul>
+<p><strong>2.8 CI需要多少时间架设</strong></p>
+<p><strong>2.9 CI与您</strong></p>
+<p>七项最佳实践：</p>
+<ul>
+<li>经常提交代码（每天至少一次）</li>
+<li>不要提交无法构建的代码（不能编译、无法通过测试、代码审查失败）</li>
+<li>立即修复无法构建的代码（优先级最高）</li>
+<li>编写自动化的单元测试</li>
+<li>必须通过所有测试和审查（不是90%或者99%，而是100%）</li>
+<li>执行私有构建（先在本地构建成功）</li>
+<li>避免签出无法构建的代码（等待新的变更或者帮助修复无法集成的构建）</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/12/10/ci-1/" data-id="cjf865ufj000o8wp1t8ahog33" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/12/17/ci-2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          【读书笔记】持续集成（软件质量改进和风险降低之道）之二
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/06/30/decodeURIComponent/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">捉虫记之decodeURIComponent</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

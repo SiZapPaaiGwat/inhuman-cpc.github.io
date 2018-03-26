@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="在路上">
+<meta property="og:url" content="http://yoursite.com/page/3/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在路上">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-关于容灾，前端能够做什么" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2012/03/28/关于容灾，前端能够做什么/" class="article-date">
+  <time datetime="2012-03-27T16:00:00.000Z" itemprop="datePublished">2012-03-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2012/03/28/关于容灾，前端能够做什么/">关于容灾，前端能够做什么</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>存在轮询的AJAX或者JSONP跨域请求的Web应用。</p>
+<p>比如我们有两台服务器，分别是a.com和a-bk.com，默认的轮询请求使用a.com；</p>
+<p>当a.com由于某种原因无法访问，需要按照一种事先约定的机制，将后续请求指向到备用服务器。</p>
+<p>同时当主服务器正常时，立即切换到主服务器。</p>
+<h2 id="现实项目"><a href="#现实项目" class="headerlink" title="现实项目"></a>现实项目</h2><p>在我们的应用中，JSONP轮询的频率是每十秒一次。由于移动机房经常性的故障，导致客户长时间不能正常访问。</p>
+<p>于是客户经常向我们报障，试想如果此时，前端能够将用户的后续访问切换到我们的电信服务器，那该多好啊！</p>
+<p>虽然响应会慢一些，但是至少整个系统处于可用状态。</p>
+<h2 id="容灾机制"><a href="#容灾机制" class="headerlink" title="容灾机制"></a>容灾机制</h2><p>经过和同事们的一番讨论最后确定我们的容灾机制：</p>
+<p>连续两次请求没有及时应答则认定当前服务器不可用，切换到备用服务器；</p>
+<p>同时发起一个定时器，每55秒检测主服务器是否可用（访问主服务器上的一张43b的图片），一旦可用，立刻切换到主服务器。</p>
+<h2 id="实现逻辑"><a href="#实现逻辑" class="headerlink" title="实现逻辑"></a>实现逻辑</h2><p>确定好容灾机制以后，剩下的就是编码了。</p>
+<p>不过编码之前其实还有一个隐藏的重大问题，那就是我们如何确定这个请求是否超时？</p>
+<p>因为我们的跨域JSONP请求都是使用script tag，而且需要兼容IE 6,自然没有什么类似的ontimeout事件去检测。</p>
+<p>那我们就只有自己动手来处理了。</p>
+<p>对于单个请求超时的判断，我们可以在主函数启动时设置一个状态量为false，回调函数中修改这个值为true。</p>
+<p>由于需要尽量避免修改原函数逻辑，这里用到了 <code>AOP</code> 技术，详细参见<a href="http://xugaofan.github.com/javascript/2012/03/18/AOP-in-JavaScript/" target="_blank" rel="noopener">这里</a></p>
+<h3 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h3><p>每一次发起JSONP请求后，开启一个setTimeout 8秒后去检测状态量是否被修改（变量由回调函数修改），依此判断响应成功与否。</p>
+<h3 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h3><p>建立一个对象，给每一次请求标记ID，将其使用的服务器地址和响应结果记录下来；</p>
+<p>在第N次请求发起之前，判断第N-2次和N-1次请求是否使用相同的服务器，如果是，当这两次请求都没有及时响应时切换到备用服务器。</p>
+<h3 id="比较结果"><a href="#比较结果" class="headerlink" title="比较结果"></a>比较结果</h3><p>方案一对每次请求都在下一次轮询之前就决定它是成功还是失败。我在生产中设置的值是6.5秒，但发现许多客户经常在主服务器和备用服务器上来回切换。</p>
+<p>方案二的好处在于，首先没有发起额外的setTimeout来监测请求成功是否响应，其次对于每一次请求方案二的超时时间实际是一个动态的值。</p>
+<p>对比下就知道方案一对每个请求的超时容忍度都是相同的6.5秒，最大也只能是10秒，而方案二第N-2次的超时容忍时间是20秒，第N-1次是10秒。</p>
+<p>所以严格意义上来讲，方案二更宽容也更加合理。</p>
+<h2 id="编码实现"><a href="#编码实现" class="headerlink" title="编码实现"></a>编码实现</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* @description 网络模块</span></span><br><span class="line"><span class="comment">* @property &#123;Number&#125; DETECT_CYCLE 切换到备用服务器后，监测主域名的周期，单位为秒，周期长度最好不要设置为10的倍数，便于调试观察</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">_.net = &#123; <span class="attr">DETECT_CYCLE</span>:<span class="number">55</span> &#125;;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* @description 为跨域请求函数注入容灾备份机制，需要将原函数的请求服务器地址改成_.net['funcname_current_server'];</span></span><br><span class="line"><span class="comment">* 实现原理：使用对象存储每一次请求使用的服务器地址和请求结果，然后在每一次请求之前，判断前两次使用相同服务器的请求是否都不成功。</span></span><br><span class="line"><span class="comment">* 如果都不成功表明连续两次请求失败则切换到备用服务器</span></span><br><span class="line"><span class="comment">* @param &#123;Object&#125; entry 入口函数&#123;context:执行环境,name:函数名称&#125;</span></span><br><span class="line"><span class="comment">* @param &#123;Object&#125; exit 回调函数&#123;context:执行环境,name:函数名称&#125;</span></span><br><span class="line"><span class="comment">* @param &#123;Object&#125; settings 服务端配置&#123;server:主域地址,backupServer:备选服务器地址，数组，长度为0则不启用容灾机制,serverImg:监测主域名可用的图片&#125;</span></span><br><span class="line"><span class="comment">* @param &#123;Function&#125; forward 动态判断是否在入口函数继续执行注入的容灾机制</span></span><br><span class="line"><span class="comment">* @usage 参见/user/js/map.js</span></span><br><span class="line"><span class="comment">* @dependacy &#123;Function&#125; _.inject</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">_.net.backup = <span class="function"><span class="keyword">function</span>(<span class="params">entry,exit,settings,forward</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> server = settings.server,currentServer = entry.name + <span class="string">'_current_server'</span>;</span><br><span class="line">    _.net[currentServer] = server;</span><br><span class="line">    <span class="comment">//没有备用地址则不启动容灾备份机制</span></span><br><span class="line">    <span class="keyword">if</span>(!settings.backupServer || !_.isArray(settings.backupServer) || !settings.backupServer.length) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">var</span> interval = entry.name + <span class="string">'_interval'</span>,<span class="comment">//切换到备用以后发起定时器key_name</span></span><br><span class="line">        total = entry.name + <span class="string">'_total'</span>,<span class="comment">//总的请求次数key_name</span></span><br><span class="line">        status = entry.name + <span class="string">'_status'</span>,<span class="comment">//维护各次请求的地址和请求结果key_name</span></span><br><span class="line">        serverAvailable = entry.name + <span class="string">'_server_available'</span>;<span class="comment">//表明当前主服务器是否可用的key_name</span></span><br><span class="line">    <span class="comment">//主服务器可用时立即切换，并重置对应的变量</span></span><br><span class="line">    <span class="keyword">var</span> resetServer = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        _.net[serverAvailable] = <span class="literal">true</span>;</span><br><span class="line">        _.net[currentServer] = server;</span><br><span class="line">        clearInterval(_.net[interval]);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">//筛选服务器算法，如果当前使用主服务器则切换到备用，如果已经是备用，有多个备用时则切换到下一个备用，只有一个备用是切换到主服务器</span></span><br><span class="line">    <span class="keyword">var</span> selectServer = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(_.net[currentServer] == server)&#123;</span><br><span class="line">            <span class="keyword">return</span> settings.backupServer[<span class="number">0</span>];</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">var</span> len = settings.backupServer.length;</span><br><span class="line">            <span class="keyword">if</span>(len ==<span class="number">1</span>)</span><br><span class="line">                <span class="keyword">return</span> server;</span><br><span class="line">            <span class="keyword">var</span> index = _.indexOf(settings.backupServer,_.net[currentServer]);</span><br><span class="line">            <span class="keyword">return</span> settings.backupServer[index+<span class="number">1</span>] || settings.backupServer[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    _.net[serverAvailable] = <span class="literal">true</span>;</span><br><span class="line">    _.net[interval] = <span class="literal">null</span>;</span><br><span class="line">    _.net[total] = <span class="number">0</span>;</span><br><span class="line">    _.net[status] = &#123;&#125;;<span class="comment">//格式：&#123;1:['http://a.net/',true], 2:['http://a.net/']&#125;</span></span><br><span class="line">    entry.start = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">typeof</span> forward == <span class="string">'function'</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!forward())<span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        _.net[total] += <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">var</span> count = _.net[total];</span><br><span class="line">        <span class="comment">//存储当此请求使用的服务器地址和响应结果</span></span><br><span class="line">        _.net[status][count<span class="number">-1</span>] = [];</span><br><span class="line">        <span class="keyword">if</span>(count &gt; <span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">var</span> prev = _.net[status][count<span class="number">-2</span>], prevPrev = _.net[status][count<span class="number">-3</span>];</span><br><span class="line">            <span class="comment">//上两次请求使用同一个服务器且都失败了，则切换服务器</span></span><br><span class="line">            <span class="keyword">if</span>(prev[<span class="number">0</span>] == prevPrev[<span class="number">0</span>] &amp;&amp; !prev[<span class="number">1</span>] &amp;&amp; !prevPrev[<span class="number">1</span>])&#123;</span><br><span class="line">                <span class="keyword">var</span> usingServer = _.net[currentServer] == server, old = _.net[currentServer];</span><br><span class="line">                <span class="keyword">if</span>(usingServer)&#123;</span><br><span class="line">                    _.net[interval] = setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                        <span class="keyword">var</span> img = <span class="keyword">new</span> Image();</span><br><span class="line">                        img.onload = resetServer;</span><br><span class="line">                        img.src = settings.serverImg + (settings.serverImg.indexOf(<span class="string">'?'</span>)&gt;<span class="number">-1</span>?<span class="string">'&amp;'</span>:<span class="string">'?'</span>) + <span class="string">'t='</span> + <span class="keyword">new</span> <span class="built_in">Date</span>().getTime();</span><br><span class="line">                    &#125;, _.net.DETECT_CYCLE*<span class="number">1000</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//如果只有一个备用服务器且备用不可用则立即切换到tbo</span></span><br><span class="line">                <span class="keyword">if</span>(!usingServer &amp;&amp; settings.backupServer.length==<span class="number">1</span>)&#123;</span><br><span class="line">                    resetServer();</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    _.net[currentServer] = selectServer(_.net[currentServer]);</span><br><span class="line">                    _.net[serverAvailable] = _.net[currentServer] == server;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(settings.errorHandler)&#123;</span><br><span class="line">                    settings.errorHandler(old,_.net[currentServer]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//如果备用服务器一直正常，那么需要一直检测主域名是否可用，如果可用立即切换到主域名</span></span><br><span class="line">                <span class="keyword">if</span>(_.net[currentServer] != server)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(_.net[serverAvailable])&#123;</span><br><span class="line">                        resetServer();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//删除冗余信息，保证数组长度为2</span></span><br><span class="line">            <span class="keyword">delete</span> _.net[status][count<span class="number">-3</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//记录当此请求使用的服务器地址</span></span><br><span class="line">        _.net[status][count<span class="number">-1</span>][<span class="number">0</span>] = _.net[currentServer];</span><br><span class="line">    &#125;;</span><br><span class="line">    exit.start = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//标记本次请求成功，不成功的请求数组长度为1</span></span><br><span class="line">        _.net[status][_.net[total]<span class="number">-1</span>][<span class="number">1</span>] = <span class="literal">true</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    _.inject(entry);</span><br><span class="line">    _.inject(exit);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2012/03/28/关于容灾，前端能够做什么/" data-id="cjf865ufz001h8wp1ai95x4pd" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-AOP-in-JavaScript" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2012/03/18/AOP-in-JavaScript/" class="article-date">
+  <time datetime="2012-03-17T16:00:00.000Z" itemprop="datePublished">2012-03-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2012/03/18/AOP-in-JavaScript/">AOP in JavaScript</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p><code>面向侧面的程序设计</code>（aspect-oriented programming，AOP，又译作面向方面的程序设计、观点导向编程）是计算机科学中的一个术语，指一种程序设计范型。</p>
+<p>该范型以一种称为侧面（aspect，又译作方面）的语言构造为基础，侧面是一种新的模块化机制，用来描述分散在对象、类或函数中的 <code>横切关注点</code> （crosscutting concern）。</p>
+<h2 id="使用目的"><a href="#使用目的" class="headerlink" title="使用目的"></a>使用目的</h2><p>需要增强或者修改原有函数的功能，但并不直接修改原函数的内部逻辑。比如为函数添加 <code>前置</code> 和 <code>后置</code> 操作。</p>
+<p>最常见的应用比如计算函数执行的时间、函数执行时的<code>日志记录</code>。</p>
+<h2 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h2><p>在系统中有两个函数，func1和func2，func2是func1代码末尾的JSONP（跨域请求）回调。这两个函数内部逻辑相对复杂，代码也较多。</p>
+<p>func1的执行频率是10秒一次，而客户端与服务器之间的网络并不能保证永远正常连接，除了后端有DNSPOD、反向代理等容灾方案，前端也要做一些容灾工作。</p>
+<p><code>如何容灾</code> ？就是在发现连续两次请求失败，就认定主服务器不可用，立刻在前端切换到备用服务器。<br>确定好这个思路以后剩下的就是在服务端添加各种配置，然后在前端为原有的func1加入请求超时的统计功能。</p>
+<p>超时统计无非就是在func1的开始设置一个变量，func2结束后还原为初始值，如果在指定的超时时间段内发现变量未还原则判定为请求超时。</p>
+<p>这段代码与原函数func1和func2均无逻辑关联，所以尽量不直接修改这2个函数的代码，<br>加之func1和func2已经相对复杂，若直接修改函数内部代码将导致代码复杂度加倍而且难于维护。</p>
+<p>于是乎，AOP就派上用场了！</p>
+<h2 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _ = <span class="function"><span class="keyword">function</span>(<span class="params">id</span>)</span>&#123;<span class="keyword">return</span> <span class="built_in">document</span>.getElementById(id);&#125;;</span><br><span class="line"><span class="keyword">var</span> GFRAME = &#123;&#125;;</span><br><span class="line">GFRAME.name = <span class="string">'GFRAME'</span>;</span><br><span class="line">GFRAME.func1 = <span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name,x);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @description AOP in JavaScript，不直接修改原函数而增强函数功能。未考虑前置操作的函数返回值的情况</span></span><br><span class="line"><span class="comment"> * @param &#123;Object&#125; args &#123;context:执行环境，name:函数名称，start:前置操作，end:后置操作&#125;</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line">_.inject = <span class="function"><span class="keyword">function</span>(<span class="params">args</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> origin = args.name,</span><br><span class="line">        context = args.context || <span class="built_in">window</span>,</span><br><span class="line">        start = args.start || (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;),</span><br><span class="line">        end = args.end || (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;);</span><br><span class="line">    <span class="keyword">var</span> temp = context[origin];</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> temp != <span class="string">'function'</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">Error</span>(origin + <span class="string">' is not a function in the given context.'</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> start != <span class="string">'function'</span> || <span class="keyword">typeof</span> end != <span class="string">'function'</span> )</span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">Error</span>(<span class="string">'start and end is not a function in the given context.'</span>);</span><br><span class="line">    context[origin] = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        start.apply(<span class="keyword">this</span>,<span class="built_in">arguments</span>);</span><br><span class="line">        <span class="keyword">var</span> ret = temp.apply(<span class="keyword">this</span>,<span class="built_in">arguments</span>);</span><br><span class="line">        end.apply(<span class="keyword">this</span>,<span class="built_in">arguments</span>);</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">_.inject(&#123;</span><br><span class="line">    name:<span class="string">'func1'</span>,</span><br><span class="line">    context:GFRAME,</span><br><span class="line">    start:<span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'start'</span>,<span class="keyword">this</span>.name,x);</span><br><span class="line">    &#125;,</span><br><span class="line">    end:<span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'end'</span>,<span class="keyword">this</span>.name,x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">GFRAME.func1(<span class="string">'test'</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">start GFRAME test</span><br><span class="line">GFRAME test</span><br><span class="line">end GFRAME test</span><br></pre></td></tr></table></figure>
+<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ul>
+<li><a href="http://zh.wikipedia.org/wiki/AOP" target="_blank" rel="noopener">AOP@维基百科</a></li>
+<li><a href="http://www.cnblogs.com/riceball/archive/2007/09/02/jsInject.html" target="_blank" rel="noopener">你相信么，只需一个函数5行JS代码即可在Javascript中实现完整的AOP功能</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2012/03/18/AOP-in-JavaScript/" data-id="cjf865ueq00008wp1dhgnzuzf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-JavaScript-Template-Engine" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2012/02/06/JavaScript-Template-Engine/" class="article-date">
+  <time datetime="2012-02-05T16:00:00.000Z" itemprop="datePublished">2012-02-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2012/02/06/JavaScript-Template-Engine/">JavaScript Template Engine</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="设计目的"><a href="#设计目的" class="headerlink" title="设计目的"></a>设计目的</h2><p>减少现有代码中的字符串拼接操作，增强代码的可维护性。</p>
+<h2 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * @description An Easy Template in JavaScript, it is designed to reduce the string concatention work,</span></span><br><span class="line"><span class="comment"> * to make the gigantic code more readable and maintainable.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Template</span>(<span class="params">tmpl,source</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//add all template tasks to this array</span></span><br><span class="line">    <span class="keyword">this</span>.task = [];</span><br><span class="line">    <span class="keyword">if</span>(tmpl)</span><br><span class="line">        <span class="keyword">this</span>.task.push([tmpl,source]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * @description core function,hanlde two cases: typeof dataSource is either object or array</span></span><br><span class="line"><span class="comment"> *  when the type of dataSource is array,you'd better confirm that the fields in every object is the same.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">Template.format = <span class="function"><span class="keyword">function</span>(<span class="params">template,dataSource</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//default variable flags</span></span><br><span class="line">    <span class="keyword">var</span> start = <span class="string">'&#123;'</span>, end = <span class="string">'&#125;'</span>;</span><br><span class="line">    <span class="keyword">if</span>(dataSource &amp;&amp; dataSource.slice &amp;&amp; dataSource.length)&#123;</span><br><span class="line">        <span class="keyword">var</span> retStr = [], formatted, len = dataSource.length, regMap = &#123;&#125;;</span><br><span class="line">        <span class="comment">//restore the RegExp,avoid to construct them repeatedly.</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> regKey <span class="keyword">in</span> dataSource[<span class="number">0</span>])&#123;</span><br><span class="line">            regMap[regKey] = <span class="keyword">new</span> <span class="built_in">RegExp</span>(start + regKey + end,<span class="string">'g'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> index <span class="keyword">in</span> dataSource)&#123;</span><br><span class="line">            formatted = template;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> dataSource[index])&#123;</span><br><span class="line">                formatted = formatted.replace(regMap[key],<span class="built_in">String</span>(dataSource[index][key]));</span><br><span class="line">            &#125;</span><br><span class="line">            retStr.push(formatted);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> retStr.join(<span class="string">''</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> dataSource)&#123;</span><br><span class="line">            template = template.replace(<span class="keyword">new</span> <span class="built_in">RegExp</span>(start + key + end,<span class="string">'g'</span>),<span class="built_in">String</span>(dataSource[index][key]));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> template;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">Template.prototype.add = <span class="function"><span class="keyword">function</span>(<span class="params">tmpl,source</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//add one template task</span></span><br><span class="line">    <span class="keyword">this</span>.task.push([tmpl,source]);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * @description handle all tasks,and return the final string.</span></span><br><span class="line"><span class="comment"> *  when this method is invoked,you can reuse the instance.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">Template.prototype.end = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> retStr = [];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> index <span class="keyword">in</span> <span class="keyword">this</span>.task)&#123;</span><br><span class="line">        retStr.push(Template.format(<span class="keyword">this</span>.task[index][<span class="number">0</span>],<span class="keyword">this</span>.task[index][<span class="number">1</span>]));    </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.task.length = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> retStr.join(<span class="string">''</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>##使用方法</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"jTemp.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">"MenuItems"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"nav"</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&#123;href&#125;"</span>&gt;</span>&#123;text&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span>                </span><br><span class="line">        <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> ul = <span class="built_in">document</span>.getElementById(<span class="string">'MenuItems'</span>);</span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> dataSource = [</span></span><br><span class="line"><span class="javascript">                &#123;<span class="attr">text</span>:<span class="string">'首页'</span>,<span class="attr">href</span>:<span class="string">'http://www.oschina.net/'</span>&#125;,</span></span><br><span class="line"><span class="javascript">                &#123;<span class="attr">text</span>:<span class="string">'开源软件'</span>,<span class="attr">href</span>:<span class="string">'http://www.oschina.net/'</span>&#125;,</span></span><br><span class="line"><span class="javascript">                &#123;<span class="attr">text</span>:<span class="string">'讨论区'</span>,<span class="attr">href</span>:<span class="string">'http://www.oschina.net/'</span>&#125;,</span></span><br><span class="line"><span class="javascript">                &#123;<span class="attr">text</span>:<span class="string">'代码分享'</span>,<span class="attr">href</span>:<span class="string">'http://www.oschina.net/'</span>&#125;,</span></span><br><span class="line"><span class="javascript">                &#123;<span class="attr">text</span>:<span class="string">'资讯'</span>,<span class="attr">href</span>:<span class="string">'http://www.oschina.net/'</span>&#125;,</span></span><br><span class="line"><span class="javascript">                &#123;<span class="attr">text</span>:<span class="string">'博客'</span>,<span class="attr">href</span>:<span class="string">'http://www.oschina.net/'</span>&#125;,</span></span><br><span class="line"><span class="javascript">                &#123;<span class="attr">text</span>:<span class="string">'Android'</span>,<span class="attr">href</span>:<span class="string">'http://www.oschina.net/'</span>&#125;</span></span><br><span class="line"><span class="undefined">            ];</span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> tmpl = <span class="keyword">new</span> Template(ul.innerHTML,dataSource);</span></span><br><span class="line"><span class="undefined">            ul.innerHTML = tmpl.end();</span></span><br><span class="line"><span class="undefined">        </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="额外说明"><a href="#额外说明" class="headerlink" title="额外说明"></a>额外说明</h2><p>上面的例子更加偏向于一个穷人版的<strong>模板引擎</strong>（变量替换），如果这是你需要更加强大的例子，不妨看看 <code>jQuery</code> 的作者John Resig在几年前的 <a href="http://ejohn.org/blog/javascript-micro-templating/" target="_blank" rel="noopener">作品</a>。</p>
+<p>不过模板引擎的发展在JavaScript圈子里面可谓日新月异，比较出名的有：</p>
+<blockquote>
+<ul>
+<li>mustache</li>
+<li>handlerbars</li>
+<li>ejs</li>
+<li>artTemplate (国产)</li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2012/02/06/JavaScript-Template-Engine/" data-id="cjf865uf400058wp1bbzhbw31" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-JSONP-Memory-Leak" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2011/10/22/JSONP-Memory-Leak/" class="article-date">
+  <time datetime="2011-10-21T16:00:00.000Z" itemprop="datePublished">2011-10-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2011/10/22/JSONP-Memory-Leak/">JSONP Memory Leak</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="什么是JSONP？"><a href="#什么是JSONP？" class="headerlink" title="什么是JSONP？"></a>什么是JSONP？</h2><p><code>JSONP</code> （JSON with Padding）是资料格式 JSON 的一种“使用模式”，可以让网页从别的网域要资料。另一个解决这个问题的新方法是跨来源资源共享。</p>
+<p>由于 <code>同源策略</code> ，一般来说位于 server1.example.com 的网页无法与不是 server1.example.com 的服务器沟通，而 HTML 的  <code>script</code>  元素是一个例外。利用 script元素的这个开放策略，网页可以得到从其他来源动态产生的 JSON 资料，而这种使用模式就是所谓的 JSONP。用 JSONP 抓到的资料并不是 JSON，而是任意的 JavaScript，用 JavaScript 直译器执行而不是用 JSON 解析器解析。</p>
+<p>以上内容摘抄自：<a href="http://zh.wikipedia.org/wiki/JSONP" target="_blank" rel="noopener">JSONP@维基百科</a></p>
+<p>简而言之，JSONP就是WEB前端开发中最常用的一种 <code>跨域请求</code> 数据的方式。</p>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>JSONP是一种常用的跨域请求脚本的方式。如果页面不涉及轮询，那也不是什么大问题。但是当页面中存在 <code>轮询</code> 跨域请求时，问题就被无数倍的放大了。所以需要额外小心由此带来的 <code>内存泄漏</code>！</p>
+<p>当然毫无疑问，IE系列始终是最让人纠结的。</p>
+<h2 id="跨域加载脚本"><a href="#跨域加载脚本" class="headerlink" title="跨域加载脚本"></a>跨域加载脚本</h2><p>通常我们使用下面的方式来加载一段脚本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</span><br><span class="line">script.src = <span class="string">'http://www.abc.com/somepage?callback=check'</span>;</span><br><span class="line">script.id = <span class="string">'JSONP'</span>;</span><br><span class="line"><span class="keyword">var</span> head = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'head'</span>)[<span class="number">0</span>];</span><br><span class="line">head.appendChild(script);</span><br></pre></td></tr></table></figure>
+<p>对于一般的WEB应用程序这并不存在什么问题，但是一旦你的应用程序中使用到了轮询，这样只增加节点而不删除，将导致内存不断增长，增长的比例和加载脚本执行的内容也有很大的关系。读者可以尝试向页面不断载入jquery源代码，设定轮询间隔为2s，可以看到内存的增速达到几十M每秒。</p>
+<p>所以十分有必要在脚本执行完成以后删除这些script节点。</p>
+<h2 id="删除加载的script节点"><a href="#删除加载的script节点" class="headerlink" title="删除加载的script节点"></a>删除加载的script节点</h2> <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</span><br><span class="line">script.src = <span class="string">'http://www.abc.com/somepage?callback=check'</span>;</span><br><span class="line">script.id = <span class="string">'JSONP'</span>;</span><br><span class="line">script.type = <span class="string">'text/javascript'</span>;</span><br><span class="line">script.charset = <span class="string">'utf-8'</span>;</span><br><span class="line"><span class="keyword">var</span> head = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'head'</span>)[<span class="number">0</span>];</span><br><span class="line">head.appendChild(script);</span><br><span class="line">head.removeChild(script);</span><br></pre></td></tr></table></figure>
+<p>这样的方式可以吗？显然不行！</p>
+<p>因为加载的脚本还没来的及执行就被删除了，所以我们需要 <code>让加载的脚本先执行一会儿</code> 。</p>
+<h3 id="曲线救国"><a href="#曲线救国" class="headerlink" title="曲线救国"></a>曲线救国</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	head.removeChild(script);</span><br><span class="line">&#125;,<span class="number">200</span>);</span><br></pre></td></tr></table></figure>
+<p>不得不说，这样的解决方式很不优雅，要是脚本200ms内还没有执行完毕，肯定会出问题。所以需要保证脚本执行完之后自动删除。</p>
+<h2 id="加载script后自动删除节点"><a href="#加载script后自动删除节点" class="headerlink" title="加载script后自动删除节点"></a>加载script后自动删除节点</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</span><br><span class="line">head.appendChild(script);</span><br><span class="line"><span class="keyword">if</span>(script.readyState)&#123;</span><br><span class="line">	script.onreadysctatechange =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="comment">//注意使用this避免内存泄漏</span></span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">this</span>.readyState == <span class="string">'completed'</span> || <span class="keyword">this</span>.readyState == <span class="string">''</span>loaded)</span><br><span class="line">			<span class="keyword">this</span>.parentNode.removeChild(<span class="keyword">this</span>);</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	script.onload =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="comment">//注意使用this避免内存泄漏</span></span><br><span class="line">		<span class="keyword">this</span>.onload = <span class="literal">null</span>;</span><br><span class="line">		<span class="keyword">this</span>.parentNode.removeChild(<span class="keyword">this</span>);</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br><span class="line">script.src = url;</span><br></pre></td></tr></table></figure>
+<p>幸好IE支持 <code>onreadysctatechange</code> 事件，而标准浏览器支持 <code>onload</code> 事件来判断脚本的执行状态。</p>
+<h2 id="IE浏览器下的问题"><a href="#IE浏览器下的问题" class="headerlink" title="IE浏览器下的问题"></a>IE浏览器下的问题</h2><p>那么是不是现在我们的问题就解决了呢？</p>
+<p>测试后发现这样的解决方案不能完全避免内存的不断增长，标准浏览器包括Chrome随着轮询的都会有内存增长的现象，<br>不过增长程度微乎其微（轮询间隔2m，增长速度也只有4k-8k）。但是IE会有十几到几十K的内存增长。</p>
+<p>你会看到我们在script加载完成之后已经将script元素删除了，为什么内存还会不断增长呢？</p>
+<p>很简单，这就是 <code>内存泄漏</code> 现象。</p>
+<h2 id="重用script节点"><a href="#重用script节点" class="headerlink" title="重用script节点"></a>重用script节点</h2><p>标准浏览器对script标签的处理就是每个script标签的地址（src）只能设置一次，<br>后续的设置能够改变地址，但是对应地址的脚本内容不会执行，不管script标签是页面预留的还是动态插入。</p>
+<p>IE下面则很神奇，使用js动态插入的script标签不遵守这一规则。<br>于是我们只需要动态的插入一个id已知的script标签，然后不断地改变它的src，以此方式加载的脚本都会执行。<br>而且这个script节点也不必删除，下次请求继续重用即可。</p>
+<p>这样IE下面的内存泄漏问题就解决了！</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _ = <span class="function"><span class="keyword">function</span>(<span class="params">id</span>)</span>&#123;<span class="keyword">return</span> <span class="built_in">document</span>.getElementById(id);&#125;;</span><br><span class="line">_.ajax = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//存储超时或异常的JSONP请求</span></span><br><span class="line">    _.ajax.TIMEOUT_REQUEST = [];</span><br><span class="line">	<span class="comment">//超时设定</span></span><br><span class="line">	_.ajax.TIMEOUT = <span class="number">5000</span>;</span><br><span class="line">	<span class="keyword">if</span>(_.isIE)&#123;</span><br><span class="line">		<span class="comment">//JSONP重用标签的id</span></span><br><span class="line">		_.ajax.SCRIPT_ID = <span class="string">'ie_script_for_jsonp'</span>;</span><br><span class="line">		<span class="comment">//重用标签是否被JSONP请求占用</span></span><br><span class="line">		_.ajax.SCRIPT_USED = <span class="literal">false</span>;</span><br><span class="line">		<span class="comment">//被占用时JSONP请求等待的时间</span></span><br><span class="line">		_.ajax.WAIT_TIME = <span class="number">100</span>;</span><br><span class="line">		<span class="comment">//上次JSONP请求的时间</span></span><br><span class="line">		_.ajax.LAST_USED_TIME = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>), head = <span class="built_in">document</span>.head || <span class="built_in">document</span>.getElementsByTagName(<span class="string">'head'</span>)[<span class="number">0</span>];</span><br><span class="line">		script.setAttribute(<span class="string">'id'</span>,_.ajax.SCRIPT_ID);</span><br><span class="line">		script.onreadystatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.readyState == <span class="string">"loaded"</span> || <span class="keyword">this</span>.readyState == <span class="string">"complete"</span>)&#123;</span><br><span class="line">				_.ajax.SCRIPT_USED = <span class="literal">false</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">		head.appendChild(script);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)();</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @description 轮询JSONP请求调用，IE浏览器采用重用Script节点方式。</span></span><br><span class="line"><span class="comment"> * @param url 手动加上callback参数，自动追加了时间戳</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line">_.ajax.jsonp = <span class="function"><span class="keyword">function</span>(<span class="params">url</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(!navigator.onLine)&#123;</span><br><span class="line">		_.ajax.TIMEOUT_REQUEST.push(url);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">var</span> script, now = <span class="keyword">new</span> <span class="built_in">Date</span>().getTime(),</span><br><span class="line">		requestUrl = url + (url.indexOf(<span class="string">'?'</span>)&gt;<span class="number">-1</span>?<span class="string">'&amp;timestamp='</span>:<span class="string">'?timestamp='</span>) + now,</span><br><span class="line">		head = <span class="built_in">document</span>.head || <span class="built_in">document</span>.getElementsByTagName(<span class="string">'head'</span>)[<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">if</span>(_.isIE &amp;&amp; _.isIE &lt; <span class="number">9</span>)&#123;</span><br><span class="line">		script = <span class="built_in">document</span>.getElementById(_.ajax.SCRIPT_ID);</span><br><span class="line">		<span class="comment">//节点被占用</span></span><br><span class="line">		<span class="keyword">if</span>(_.ajax.SCRIPT_USED)&#123;</span><br><span class="line">			<span class="keyword">if</span>(_.ajax.LAST_USED_TIME === <span class="number">0</span>)</span><br><span class="line">				_.ajax.LAST_USED_TIME = now;</span><br><span class="line">			<span class="comment">//已经超时</span></span><br><span class="line">			<span class="keyword">if</span>((now - _.ajax.LAST_USED_TIME) &gt; _.ajax.TIMEOUT)&#123;</span><br><span class="line">				_.ajax.LAST_USED_TIME = now;</span><br><span class="line">				<span class="keyword">if</span>(_.ajax.TIMEOUT_REQUEST.length&gt;=<span class="number">1000</span>)</span><br><span class="line">					_.ajax.TIMEOUT_REQUEST.length = <span class="number">0</span>;</span><br><span class="line">				_.ajax.TIMEOUT_REQUEST.push(script.src.split(<span class="string">'&amp;timestamp='</span>)[<span class="number">0</span>]);</span><br><span class="line">				script.src = requestUrl;</span><br><span class="line">			<span class="comment">//没有超时则等待</span></span><br><span class="line">			&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">				setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;_.ajax.jsonp(url);&#125;,_.ajax.WAIT_TIME);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			_.ajax.SCRIPT_USED = <span class="literal">true</span>;</span><br><span class="line">			_.ajax.LAST_USED_TIME = now;</span><br><span class="line">			script.src = requestUrl;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</span><br><span class="line">		head.appendChild(script);</span><br><span class="line">		script.onload =	<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.onload = <span class="literal">null</span>;</span><br><span class="line">			<span class="keyword">this</span>.parentNode.removeChild(<span class="keyword">this</span>);</span><br><span class="line">		&#125;;</span><br><span class="line">        script.onerror = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            _.ajax.TIMEOUT_REQUEST.push(<span class="keyword">this</span>.src);</span><br><span class="line">        &#125;;</span><br><span class="line">		script.src = requestUrl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h2><p>对上述代码测试，使用 <code>sieve</code> 结合任务管理器，发现此方法引起的内存泄漏和chrome下面的差不多都在4K左右，测试环境是IE 8。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		_.ajax.jsonp(<span class="string">'data.js'</span>);</span><br><span class="line">	&#125;,<span class="number">1000</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>data.js 的内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">i++;</span><br></pre></td></tr></table></figure>
+<h2 id="后续说明"><a href="#后续说明" class="headerlink" title="后续说明"></a>后续说明</h2><p>其实之所以存在内存泄漏，是因为IE的 <code>removeChild</code> 方法存在内存泄漏的问题。对于这一点 <code>jQuery</code> 的 <code>empty</code> 方法已经考虑到。关于removeChild导致内存泄漏的问题，很早就被发现了，具体请看<a href="http://groups.google.com/group/jquery-dev/browse_thread/thread/4a99f6e9b2e33057/45ce657a48afd43a?pli=1" target="_blank" rel="noopener">这里</a>。</p>
+<p>一般的框架都有各自的删除节点的方式来避免内存泄漏问题，下面是 <code>EXT</code> 的处理方式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">_.dom = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @description 采用ext的处理方式，也可以对删除的元素使用outerHTML=''，但是此方法不通用，某些元素的outerHTML属性只读</span></span><br><span class="line"><span class="comment"> * @param n 要删除的HTML节点</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">_.dom.remove = <span class="function"><span class="keyword">function</span>(<span class="params">n</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> d;</span><br><span class="line">	<span class="keyword">if</span>(_.isIE)&#123;</span><br><span class="line">        <span class="keyword">if</span>(n &amp;&amp; n.tagName != <span class="string">'BODY'</span>)&#123;</span><br><span class="line">            d = d || <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</span><br><span class="line">            d.appendChild(n);</span><br><span class="line">            d.innerHTML = <span class="string">''</span>;</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	    <span class="keyword">if</span>(n &amp;&amp; n.parentNode &amp;&amp; n.tagName != <span class="string">'BODY'</span>)&#123;</span><br><span class="line">	        n.parentNode.removeChild(n);</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>为什么jQuery的 <code>getJSON</code> 在进行跨域请求时仍然存在比较严重的内存泄漏？或许是script节点不同于普通的html元素吧，无法按照上述方式删除吧。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2011/10/22/JSONP-Memory-Leak/" data-id="cjf865uf000048wp1scw0xr9h" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-JavaScript乱弹之（五）：使用脚本创建动态内容" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/01/29/JavaScript乱弹之（五）：使用脚本创建动态内容/" class="article-date">
+  <time datetime="2010-01-28T16:00:00.000Z" itemprop="datePublished">2010-01-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2010/01/29/JavaScript乱弹之（五）：使用脚本创建动态内容/">JavaScript乱弹之（五）：使用脚本创建动态内容</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="document-write"><a href="#document-write" class="headerlink" title="document.write()"></a>document.write()</h2><p>所有支持脚本的浏览器都可以在正文中嵌入document.write()语句。利用它你可以动态的创建内容，不过使用它你需要十分小心。最常见的错误就是在页面加载完毕以后调用，以修改或向页面添加内容。这样的结果只会是用你组装的脚本内容替换掉你的当前页。</p>
+<h2 id="创建节点"><a href="#创建节点" class="headerlink" title="创建节点"></a>创建节点</h2><p>创建动态内容标准的方法是使用W3C的document对象的元素创建方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elem=<span class="built_in">document</span>.createElement(<span class="string">"p"</span>);</span><br><span class="line"><span class="comment">//参数名可以是大写也可以是小写，但是元素elem.tagName的返回值永远是大写。</span></span><br><span class="line">createAttribute( attributeName )</span><br><span class="line">createComment( commentString )</span><br><span class="line">createDocumentFragment()</span><br><span class="line">createTextNode( textString )</span><br></pre></td></tr></table></figure>
+<p>以上方法全部返回一个节点对象（node object），在没有进行插入操作时，以上方法并不影响DOM的结构。</p>
+<h2 id="插入和附加节点"><a href="#插入和附加节点" class="headerlink" title="插入和附加节点"></a>插入和附加节点</h2><p><strong>insertBefore( newChildNode, referenceNode )</strong></p>
+<p>在现有的子节点前插入一个节点<br>使用方法：parentnode.insertBefore(newNode,childnode)，当childnode为null时作用与appendChild相同。</p>
+<p><strong>appendChild( newChildNode )</strong></p>
+<p>将节点添加到指定的节点的最后一个子节点的后面<br>使用方法：parentnode.appendChild(newNode);</p>
+<h2 id="移除、替换和复制节点"><a href="#移除、替换和复制节点" class="headerlink" title="移除、替换和复制节点"></a>移除、替换和复制节点</h2><p><strong>removeChild( childNode )</strong></p>
+<p><strong>replaceChild( newNode, nodeToReplace )</strong></p>
+<p><strong>cloneNode( true/false)</strong></p>
+<p>True表示深克隆，所有子节点也被克隆；false表示浅克隆，不会复制子节点。<br>设置节点的属性</p>
+<p>有两种常用的方式：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elem=<span class="built_in">document</span>.createElement(<span class="string">"div"</span>);</span><br><span class="line">elem.setAttribute(<span class="string">"id"</span>,<span class="string">"testDIV"</span>);</span><br><span class="line">elem[<span class="string">"id"</span>]=<span class="string">"testDIV"</span>;</span><br></pre></td></tr></table></figure>
+<p>浏览器能够同等识别以上两种方法，W3C推荐第一种，但是由于第一种在IE经常无法改变属性的值，所以最好还是用第二种。</p>
+<p><strong>innerHTML</strong></p>
+<p>IE4引入了两个基于文本的元素对象属性：<strong>innerText</strong>和<strong>innerHTML</strong>，由于innerHTML的大量使用而且实用性很强，以至于原本那些许多以“标准”自居的浏览器在严格遵守<br>W3C DOM戒律方面有所放宽，并实现了innerHTML。FireFox并不支持innerText。<br>请你记住innerHTML的开创者是IE！</p>
+<p>节点的常用属性</p>
+<blockquote>
+<ul>
+<li>nodeName</li>
+<li>nodeValue</li>
+<li>nodeType</li>
+<li>parentNode</li>
+<li>childNodes</li>
+<li>Attributes</li>
+<li>firstChild</li>
+<li>lastChild</li>
+<li>ownerDocument</li>
+<li>previousSibling</li>
+<li>nextSibling</li>
+<li>tagName</li>
+</ul>
+</blockquote>
+<h1 id="nodeType对应值与类型"><a href="#nodeType对应值与类型" class="headerlink" title="nodeType对应值与类型"></a>nodeType对应值与类型</h1><blockquote>
+<ul>
+<li>1 Element</li>
+<li>2 Attribute</li>
+<li>3 Text</li>
+<li>8 Comment</li>
+<li>9 Document</li>
+<li>10 DocumentType</li>
+</ul>
+</blockquote>
+<p>自定义的insertAfter方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertAfter</span>(<span class="params">newEl, targetEl</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">var</span> parentEl = targetEl.parentNode;</span><br><span class="line">                        <span class="keyword">if</span>(parentEl.lastChild == targetEl)</span><br><span class="line">            &#123;</span><br><span class="line">                parentEl.appendChild(newEl);</span><br><span class="line">            &#125;<span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                parentEl.insertBefore(newEl,targetEl.nextSibling);</span><br><span class="line">            &#125;            </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>思路：首先找到目标节点的父节点，如果目标节点是父节点的最后一个子节点，则使用appendChild方法；如果不是最后一个节点则使用JavaScript内置的insertBefore方法插入到目标节点的下一个兄弟节点之前。</p>
+<p>使用方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> txtName = <span class="built_in">document</span>.getElementById(<span class="string">"txtName"</span>);</span><br><span class="line"><span class="keyword">var</span> htmlSpan = <span class="built_in">document</span>.createElement(<span class="string">"span"</span>);</span><br><span class="line">htmlSpan.innerHTML = <span class="string">"This is a test"</span>;</span><br><span class="line">insertAfter(htmlSpan,txtName);</span><br></pre></td></tr></table></figure>
+<p>将htmlSpan 作为txtName 的兄弟节点插入到txtName 节点之后</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/01/29/JavaScript乱弹之（五）：使用脚本创建动态内容/" data-id="cjf865ugi001w8wp1rtxpbd4f" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/01/28/JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的/" class="article-date">
+  <time datetime="2010-01-27T16:00:00.000Z" itemprop="datePublished">2010-01-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2010/01/28/JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的/">JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在aspx页面中，可以使用<strong>Request.Form[“controlname”]</strong>来得到控件value属性。</p>
+<p>那么这些控件必须是哪些类型的控件呢？</p>
+<p>所有HTML元素里面的input元素，但是还需要另外一个条件就是这个input元素必须要有name属性，id属性可有可无。</p>
+<p>可能你问如果多个元素的name属性相同怎么办？</p>
+<p>如果name相同则这些元素的value以逗号分隔，形如“value1,value2”。如果你使用的是服务器控件那么在生成的aspx页面中会自动给所有服务器控件加上name属性，这个name和id的值是相同的。不过当存在母板页时可能会要加上形如“ctl00_ContentPlaceHolder_”的标记，这些只要看看aspx源码就知道了。</p>
+<p>另外在Request.Form这是一个NameValueCollection，你可以使用如下代码看看本页面中的表单请求：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">  For(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Request.Form.Count;i++)&#123;</span><br><span class="line">textbox1.Text+=Request.Form[i]+<span class="string">","</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>你会发现多了最后textbox1呈现的结果比你vs编辑器里的input元素总是多2个，而且这两个都是很长的“乱码”。其实这些就是ViewState，你可以去MSDN查看相关介绍。<br>另外所有的服务器控件最后都是转化为HTML控件的，这个转化因控件不同复杂性也不同，比如TreeView转化为HTML控件之后就是DIV嵌套TABLE形成的，这里不详述，自己拖一个看看就知道关系了。</p>
+<p>另外你有可能需要通过脚本来操作隐藏的控件，这个时候你需要注意这个控件是服务器控件还是HTML控件以及你如何隐藏这些控件。</p>
+<p>服务器控件可以简单的设置Visible=”false”来隐藏控件，但是一旦这样隐藏，在页面源码中你就找不到该控件的HTML代码了。也就是说，你通过脚本是无法找到该控件的，只有在后台编码中可以使用该控件。</p>
+<p>但是如果你是通过css来控制的，通过脚本就可以找到。虽然如此你仍然需要掌握css两种不同的隐藏元素的方法：display:none和visibility:hidden,区别在于后者在页面中仍然占据物理空间，前者则通过其他文本流或控件元素自动填补。你拖两个这样的控件，去尝试一下在页面上右键复制这两个控件。</p>
+<p>html控件的只能通过css来设置其显隐，虽然在vs编辑器里有一个visible属性但是那只有当该控件加上runat=”server”才有效。一旦如此它就是HTML服务器控件了。</p>
+<p>暂时到这吧，以后继续更新。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/01/28/JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的/" data-id="cjf865ufb000d8wp1bafkvyb8" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-JavaScript乱弹之（三）：管理浏览器窗口" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/01/27/JavaScript乱弹之（三）：管理浏览器窗口/" class="article-date">
+  <time datetime="2010-01-26T16:00:00.000Z" itemprop="datePublished">2010-01-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2010/01/27/JavaScript乱弹之（三）：管理浏览器窗口/">JavaScript乱弹之（三）：管理浏览器窗口</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>曾几何时，弹出式窗口大行其道，随着浏览器的竞争态势愈演愈烈，虽然给开发者带来极大的不便，<br>但是浏览器的规范化已经成为了共识。</p>
+<p>如今弹出式窗口的局面已经有效地得到了控制，如果你要在页面中通过脚本打开一个新窗口，<br>那么许多<strong>“潜规则”</strong>你必须要有所了解。</p>
+<p>与窗口相关的绝大部分行为都涉及到window对象，window对象涉及大量的属性和方法，<br>但是在不同的浏览器之间确实千差万别。</p>
+<p>部分原因是由于window对象是脚本任务中最大的全局上下文。<br>IE利用这个上下文为window对象嵌入了许多与浏览器和操作系统相关的属性和方法，<br>而Mozilla却认为window对象的属性会威胁用户的隐私，因此只能通过被服务器打上电子标签的脚本来访问，<br>这些脚本的来源必须经过用户的明确允许（带有签名的脚本）。</p>
+<h2 id="八条”潜规则”"><a href="#八条”潜规则”" class="headerlink" title="八条”潜规则”"></a>八条”潜规则”</h2><h3 id="潜规则一：不要修改主窗口的界面元素（chrome）"><a href="#潜规则一：不要修改主窗口的界面元素（chrome）" class="headerlink" title="潜规则一：不要修改主窗口的界面元素（chrome）"></a>潜规则一：不要修改主窗口的界面元素（chrome）</h3><p>比如状态栏、菜单栏、滚动条、工具栏、标题栏等。唯一的定制窗口界面的方法是打开一个全新的窗口。</p>
+<h3 id="潜规则二：不要在子窗口中通过脚本关闭主窗口"><a href="#潜规则二：不要在子窗口中通过脚本关闭主窗口" class="headerlink" title="潜规则二：不要在子窗口中通过脚本关闭主窗口"></a>潜规则二：不要在子窗口中通过脚本关闭主窗口</h3><p>尽管可以使用opener.close()方法来实现。</p>
+<h3 id="潜规则三：不要试图替用户关闭主窗口之外的其他窗口"><a href="#潜规则三：不要试图替用户关闭主窗口之外的其他窗口" class="headerlink" title="潜规则三：不要试图替用户关闭主窗口之外的其他窗口"></a>潜规则三：不要试图替用户关闭主窗口之外的其他窗口</h3><p>因为通过脚本你无法得知用户打开了多少个窗口。</p>
+<h3 id="潜规则四：不要试图访问位于其他域的窗口的文档属性"><a href="#潜规则四：不要试图访问位于其他域的窗口的文档属性" class="headerlink" title="潜规则四：不要试图访问位于其他域的窗口的文档属性"></a>潜规则四：不要试图访问位于其他域的窗口的文档属性</h3><p>因为这会引发潜在的恶意时间，浏览器都实现了同源安全策略–除非两窗口来自于同一域中的同一服务器，且协议相同，否则不能通过脚本访问另一窗口的关键细节。</p>
+<h3 id="潜规则五：不要试图阻止或者激活浏览器的窗口按钮"><a href="#潜规则五：不要试图阻止或者激活浏览器的窗口按钮" class="headerlink" title="潜规则五：不要试图阻止或者激活浏览器的窗口按钮"></a>潜规则五：不要试图阻止或者激活浏览器的窗口按钮</h3><p>许多开发人员希望拦截后退和前进按钮来控制浏览器的导航，但是这些用户动作不会出现在window对象中。</p>
+<h3 id="潜规则六：不要试图改变地址栏的内容"><a href="#潜规则六：不要试图改变地址栏的内容" class="headerlink" title="潜规则六：不要试图改变地址栏的内容"></a>潜规则六：不要试图改变地址栏的内容</h3><p>脚本唯一能做的是通过location.href赋值使其渲染新页面。</p>
+<h3 id="潜规则七：不要试图添加或删除收藏夹的项目"><a href="#潜规则七：不要试图添加或删除收藏夹的项目" class="headerlink" title="潜规则七：不要试图添加或删除收藏夹的项目"></a>潜规则七：不要试图添加或删除收藏夹的项目</h3><p>在IE中window.external.AddFavorite(“URL”,”Title”)方法可以添加到收藏夹，即使是这个功能，添加之前也会询问用户是否允许。收藏夹是用户私有的，不应该暴露给脚本。</p>
+<h3 id="潜规则八：不要试图修改浏览器偏好设置"><a href="#潜规则八：不要试图修改浏览器偏好设置" class="headerlink" title="潜规则八：不要试图修改浏览器偏好设置"></a>潜规则八：不要试图修改浏览器偏好设置</h3><p>Mozilla允许带有签名的脚本应用程序的偏好设置，该功能是网络管理功能。</p>
+<h2 id="设置窗口的尺寸"><a href="#设置窗口的尺寸" class="headerlink" title="设置窗口的尺寸"></a>设置窗口的尺寸</h2><p>1.window.resizeTo(800,600);设置窗口为指定尺寸</p>
+<p>2.window.resizeBy(50,-10);按一定像素增大或缩小窗口</p>
+<p>调整窗口大小使其符合指定内容大小，并不简单。Mozilla，Opera和Safari提供了一对读写属性可以对窗口的内容区域进行特殊控制–innerHeight和innerwidth，而IE只提供了只读操作document.body.parentNode.clientHeight(clientWidth)。</p>
+<p>注意：设置窗口的外围尺寸来管理内容区域的思想是糟糕的，用户可能选择工具栏进行设置或者浏览器的操作询问都会影响到你精心设计的布局。</p>
+<h2 id="移动窗口"><a href="#移动窗口" class="headerlink" title="移动窗口"></a>移动窗口</h2><p>3.window.moveTo(10,20);移动窗口到指定坐标</p>
+<p>4.window.moveBy(0,10);按一定像素改变窗口的位置</p>
+<p>移动窗口时，窗口尺寸不变</p>
+<p>##最大化主窗口</p>
+<p>实例：function maximizeWindow()</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.moveTo(<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line"><span class="built_in">window</span>.resizeTo(screen.availWidth,screen.availHeight);</span><br></pre></td></tr></table></figure>
+<p>注意：XP真正最大化窗口并没有定位在（0，0）点。其实窗口的左上角位于（-4，-4）。没有真正最大化窗口的方法，也没有最小化窗口的实现方法。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/01/27/JavaScript乱弹之（三）：管理浏览器窗口/" data-id="cjf865uf9000a8wp19sjve7lz" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-JavaScript乱弹之（二）： String" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/01/26/JavaScript乱弹之（二）： String/" class="article-date">
+  <time datetime="2010-01-25T16:00:00.000Z" itemprop="datePublished">2010-01-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2010/01/26/JavaScript乱弹之（二）： String/">JavaScript乱弹之（二）： String</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="单引号与双引号"><a href="#单引号与双引号" class="headerlink" title="单引号与双引号"></a>单引号与双引号</h2><p>创建字符串的常用方法有以下两种。</p>
+<blockquote>
+<ul>
+<li>方法一：var str1=”i love javascript”;</li>
+<li>方法二：var str2=’i love javascript’;</li>
+</ul>
+</blockquote>
+<p>单引号和双引号在JavaScript中的作用是等价的。但是一旦两者混用后就会引发一些麻烦，因此你需要妥善处理。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mystring=<span class="string">"i love winslet's sister and nancy's sister"</span>;</span><br></pre></td></tr></table></figure>
+<p>这种情况你就必须使用转义字符，因为你需要输出单引号而单引号出现了不止一次。当单引号只出现一次时可以不使用转义字符。而当你仅希望将单引号之间的对象当作字符串处理时就不要使用转义字符。</p>
+<h2 id="字符串对象与字符串值"><a href="#字符串对象与字符串值" class="headerlink" title="字符串对象与字符串值"></a>字符串对象与字符串值</h2><p>至此，我们需要区分字符串对象和字符串的值。通常来说我们都是只得字符串值。一个字符串对象是这样的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> strobject=<span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"i love javascript"</span>);</span><br></pre></td></tr></table></figure>
+<p>测试一下你会发现strobject的数据类型是Object而不是String,但是他却继承了String所有的属性和方法。</p>
+<h2 id="连接字符串"><a href="#连接字符串" class="headerlink" title="连接字符串"></a>连接字符串</h2><p>连接较长的字符串时，你需要特别注意代码中的换行。JavaScript解释器的一个内置特性–在代码的逻辑终点加入分号，所以不能简单的使用回车换行，而应该在该行的最末尾加入“+”。</p>
+<h3 id="错误的做法："><a href="#错误的做法：" class="headerlink" title="错误的做法："></a>错误的做法：</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> strA=<span class="string">"what i love is csharp ,javascript ,java,php</span></span><br><span class="line"><span class="string">And vb.net"</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="正确的做法："><a href="#正确的做法：" class="headerlink" title="正确的做法："></a>正确的做法：</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> strA=<span class="string">"what i love is csharp ,javascript ,java,php"</span>+</span><br><span class="line"><span class="string">"And vb.net"</span>;</span><br></pre></td></tr></table></figure>
+<p>在合适的地方合理的使用+和;可以减少很多JavaScript代码发生的意外错误。</p>
+<h2 id="提高字符串处理的性能"><a href="#提高字符串处理的性能" class="headerlink" title="提高字符串处理的性能"></a>提高字符串处理的性能</h2><p>以前我一致认为字符串这么简单的对象，不管是C#还是JavaScript处理几万个字符的简单累加应该是不需要什么时间的。但是后来发现我错了，当数量超过2万以上时根据机器的性能需要3-15秒的时间。令人诧异吧！</p>
+<p>C#中可以使用StringBuilder来提高字符串处理的性能，在JavaScript中我们有什么呢？Array！下面的例子一目了然。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Txt=<span class="keyword">new</span> <span class="built_in">Array</span>();</span><br><span class="line"> Txt.push(<span class="string">"&lt;tr&gt;"</span>);</span><br><span class="line"> Txt.push(<span class="string">"&lt;td&gt;"</span>);</span><br><span class="line"> Txt.push(<span class="string">"&lt;/td&gt;"</span>);</span><br><span class="line"> Txt.push(<span class="string">"&lt;/tr&gt;"</span>);</span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">"tbody"</span>).innerHTML=Txt.join(<span class="string">""</span>);</span><br><span class="line">Txt=<span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+<p>这个join方法就是在字符串之间加入一个字符，本例是一个空字符，注意不是空白字符” “。Join方法和绝大多数的字符串处理的方法（如indexOf、toUpperCase。即使是replece也不例外）一样并不会改变原字符串（数组）的内容。最后一句让浏览器回收降低内存消耗。</p>
+<h2 id="检验字符串的相等"><a href="#检验字符串的相等" class="headerlink" title="检验字符串的相等"></a>检验字符串的相等</h2><p>JavaScript的两种等号操作符：==和===。==完全向后兼容，当两边类型不同时会执行类型转换。例如下面</p>
+<p>两个对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj=<span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">"123"</span>);</span><br><span class="line"><span class="keyword">var</span> str=<span class="string">"123"</span>;</span><br></pre></td></tr></table></figure>
+<p>很明显obj==str将返回true，而===则是严格等号操作不会执行类型转换。类似的可以参见上一节的undefined和null的比较。</p>
+<h2 id="Unicode值和字符的互相转换"><a href="#Unicode值和字符的互相转换" class="headerlink" title="Unicode值和字符的互相转换"></a>Unicode值和字符的互相转换</h2><p>对于字符串值和字符串对象，两者是不同的。前者使用charCodeAt(index)后者使用String.fromCharCode(index);</p>
+<p>另外不要简单的认为Unicode包含了全世界许多语言的文字和字符，就随意的断定知道字符的Unicode值就可以在警告框、文本框、或渲染页面中显示其他语言的特性字符，除非是浏览器和操作系统包含了这些语言。所以你经常在一些大型中文论坛发现很多留学生用英文回帖，其实不是他们不会中文，只是别人的系统和浏览器没有安装中文字体。</p>
+<h2 id="URL字符串的编码和解码"><a href="#URL字符串的编码和解码" class="headerlink" title="URL字符串的编码和解码"></a>URL字符串的编码和解码</h2><p>常用的方法有escape和unescape、encodeURI和decodeURL、encodeURIComponent和decodeURIComponent，前者对应编码后者对应解码。</p>
+<p>编码时普通的字母和数字一般都不会被转换，中文字符以及其他的特殊符号都能被转换。</p>
+<p>注意：IE浏览器@不能通过escape方法转换。</p>
+<p>另外Mozilla的浏览器独有的atob（）和btoa（）方法将普通字符串在Base64字符串中相互转换。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/01/26/JavaScript乱弹之（二）： String/" data-id="cjf865ufc000f8wp1s4egqt6u" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-JavaScript乱弹之（一）：JQuery+CSS入门" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/01/25/JavaScript乱弹之（一）：JQuery+CSS入门/" class="article-date">
+  <time datetime="2010-01-24T16:00:00.000Z" itemprop="datePublished">2010-01-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2010/01/25/JavaScript乱弹之（一）：JQuery+CSS入门/">JavaScript乱弹之（一）：JQuery+CSS入门</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一直没有系统的学习JavaScript，因为总感觉花太多时间来学习JS似乎有点浪费。<br>现实也似乎是如此，太多人执迷于服务器端语言而忽视了最基本的HTML、JavaScript语言。<br>其中这个<strong>“太多人”</strong>里面自然也包括我在内。</p>
+<p>不过本文并不打算去按照一篇HTML语言基础或者JavaScript语言基础教程来介绍这些东西。<br>即使你和我一样是一个新手，阅读他们也不会有什么困难。<br>因为我的宗旨就是在应用中掌握他们，正所谓<strong>“书读百遍其义自见”</strong>就是这个道理。</p>
+<p>注明：本系列文章是本人学习笔记和知识摘要，错误之处肯定很多，还请指出。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ Page Language=&quot;C#&quot; AutoEventWireup=&quot;true&quot;  CodeFile=&quot;Default.aspx.cs&quot; Inherits=&quot;_Default&quot; %&gt;</span><br><span class="line"></span><br><span class="line">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;</span><br><span class="line">&lt;head runat=&quot;server&quot;&gt;</span><br><span class="line">    &lt;title&gt;JS乱弹系列（一）&lt;/title&gt;</span><br><span class="line">    &lt;%--这里只例举了2种常用的CSS选择器--%&gt;</span><br><span class="line">    &lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">        body</span><br><span class="line">        &#123;</span><br><span class="line">            background-color:Black;</span><br><span class="line">            &#125;</span><br><span class="line">    #div1</span><br><span class="line">    &#123;</span><br><span class="line">        width:300px;</span><br><span class="line">        height:50px;</span><br><span class="line">        background-color:White;</span><br><span class="line">        border-color:Red;</span><br><span class="line">        margin-top:1%;</span><br><span class="line">        margin-bottom:2%;</span><br><span class="line">    &#125;</span><br><span class="line">        #div2</span><br><span class="line">    &#123;</span><br><span class="line">        width:417px;</span><br><span class="line">        height:133px;</span><br><span class="line">        background-color:White;</span><br><span class="line">        margin-bottom:2%;</span><br><span class="line">    &#125;</span><br><span class="line">        #div3</span><br><span class="line">    &#123;</span><br><span class="line">        width:500px;</span><br><span class="line">        height:50px;</span><br><span class="line">        background-color:White;</span><br><span class="line">        margin-bottom:2%;</span><br><span class="line">    &#125;</span><br><span class="line">        #div4</span><br><span class="line">    &#123;</span><br><span class="line">        width:600px;</span><br><span class="line">        height:50px;</span><br><span class="line">        background-color:White;</span><br><span class="line">        margin-bottom:2%;</span><br><span class="line">    &#125;</span><br><span class="line">        #div5</span><br><span class="line">    &#123;</span><br><span class="line">        width:700px;</span><br><span class="line">        height:100px;</span><br><span class="line">        background-color:White;</span><br><span class="line">        text-align:center;</span><br><span class="line">    &#125;</span><br><span class="line">    &lt;/style&gt;</span><br><span class="line">    &lt;script src=&quot;JS/jquery-1.3.2-vsdoc2.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</span><br><span class="line">    &lt;%--加入此引用后，按Crtl+Shift+J更新智能感知#--%&gt;</span><br><span class="line">    &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;</span><br><span class="line">        $(document).ready(function() &#123; $(&quot;#btn1&quot;).bind(&quot;click&quot;, function() &#123; alert(&quot;绑定成功!&quot;); &#125;) &#125;)</span><br><span class="line">        $(document).ready(function() &#123;</span><br><span class="line">            $(&quot;#btn&quot;).bind(&quot;click&quot;, function() &#123;</span><br><span class="line">                var name = $(&quot;#txtname&quot;).val();</span><br><span class="line">                var pwd = $(&quot;#txtpwd&quot;).val();</span><br><span class="line">                if (name=== &quot;&quot; || pwd === &quot;&quot;)</span><br><span class="line">                &#123; alert(&quot;用户名和密码不能为空！&quot;); return false; &#125;</span><br><span class="line">                else &#123;</span><br><span class="line">                    alert(name + &quot;/&quot; + pwd);</span><br><span class="line">                    return true;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">        //假值，按照crockford的建议最好使用===代替==</span><br><span class="line">        $(document).ready(function() &#123;</span><br><span class="line">            var a = (undefined == &quot;&quot;);</span><br><span class="line">            var b = (undefined == null);</span><br><span class="line">            var c = (undefined == NaN);</span><br><span class="line">            var d = (undefined === &quot;&quot;);</span><br><span class="line">            var e = (undefined === null);</span><br><span class="line">            var f = (undefined === NaN);</span><br><span class="line">            $(&quot;#div2&quot;).text(String(a) + &quot;\n&quot; + String(b) + &quot;\n&quot; + String(c) + &quot;\n&quot; + String(d) + &quot;\n&quot; + String(e) + &quot;\n&quot; + String(f));</span><br><span class="line">        &#125;)</span><br><span class="line">//        是不是很像C#的typeof</span><br><span class="line">        $(document).ready(function() &#123;</span><br><span class="line">            var a =typeof(undefined) ;</span><br><span class="line">            var b =typeof(null) ;</span><br><span class="line">            var c =typeof(&quot;&quot;) ;</span><br><span class="line">            var d = typeof (NaN);</span><br><span class="line">            $(&quot;#div3&quot;).text(String(a) + &quot;/&quot; + String(b) + &quot;/&quot; + String(c) + &quot;/&quot; + String(d));</span><br><span class="line">        &#125;)</span><br><span class="line">        //存在表单输入时自动聚焦</span><br><span class="line">        $(document).ready(function() &#123; document.form1.txtname.focus(); &#125;)</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;form id=&quot;form1&quot; runat=&quot;server&quot;&gt;</span><br><span class="line">    &lt;div id=&quot;divmain&quot;&gt;</span><br><span class="line">&lt;div id=&quot;div1&quot;&gt;</span><br><span class="line">这是div1</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;div2&quot;&gt;</span><br><span class="line">这是div2</span><br><span class="line">&lt;br/&gt;</span><br><span class="line">JavaScript的假值，你知道这些结果是true还是false吗？</span><br><span class="line">1.undefined == &quot;&quot;</span><br><span class="line">2.undefined == null</span><br><span class="line">3.undefined == NaN</span><br><span class="line">4.undefined === &quot;&quot;</span><br><span class="line">5.undefined === null</span><br><span class="line">6.undefined === NaN</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;div3&quot;&gt;</span><br><span class="line">这是div3</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;div4&quot;&gt;</span><br><span class="line">    &lt;input id=&quot;btn1&quot; type=&quot;button&quot; value=&quot;使用JQuery为按钮绑定事件&quot;  title=&quot;在ready函数中绑定button的Click函数&quot;/&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;div5&quot;&gt;</span><br><span class="line">这是模拟一个登陆验证</span><br><span class="line">&lt;br /&gt;</span><br><span class="line">  &lt;span style=&quot;background-color:White&quot;&gt; 账号：&lt;/span&gt;&lt;asp:TextBox ID=&quot;txtname&quot; runat=&quot;server&quot;&gt;&lt;/asp:TextBox&gt;</span><br><span class="line">    &lt;br /&gt;</span><br><span class="line">   &lt;span style=&quot;background-color:White&quot;&gt; 密码：&lt;/span&gt;&lt;asp:TextBox ID=&quot;txtpwd&quot; runat=&quot;server&quot;&gt;&lt;/asp:TextBox&gt;</span><br><span class="line">    &lt;br /&gt;</span><br><span class="line">    &lt;asp:Button ID=&quot;btn&quot; runat=&quot;server&quot; Text=&quot;登陆验证&quot;/&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/01/25/JavaScript乱弹之（一）：JQuery+CSS入门/" data-id="cjf865uf700088wp1c6ufq0fy" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/1970/01/01/hello-world/" class="article-date">
+  <time datetime="1969-12-31T16:00:00.000Z" itemprop="datePublished">1970-01-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/1970/01/01/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/1970/01/01/hello-world/" data-id="cjf865ufn000u8wp1oph2fjx7" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

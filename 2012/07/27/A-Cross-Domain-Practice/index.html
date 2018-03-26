@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>一次跨域实践 | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="项目需求:对一个照片列表页面的每张图片在前端进行下载耗时统计，并定期上报。 基本思路使用XMLHttpRequest下载图片，实现下载耗时统计。上报功能则一次上报localStorage存储的多张图片的统计信息，这里不做讨论 问题难点使用XMLHttpRequest需要跨域访问图片服务器 其它说明 项目只服务于移动终端，本文的一切测试原则上只涉及Webkit系列的浏览器  为了方便快捷地看到效果，">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次跨域实践">
+<meta property="og:url" content="http://yoursite.com/2012/07/27/A-Cross-Domain-Practice/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="项目需求:对一个照片列表页面的每张图片在前端进行下载耗时统计，并定期上报。 基本思路使用XMLHttpRequest下载图片，实现下载耗时统计。上报功能则一次上报localStorage存储的多张图片的统计信息，这里不做讨论 问题难点使用XMLHttpRequest需要跨域访问图片服务器 其它说明 项目只服务于移动终端，本文的一切测试原则上只涉及Webkit系列的浏览器  为了方便快捷地看到效果，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.672Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一次跨域实践">
+<meta name="twitter:description" content="项目需求:对一个照片列表页面的每张图片在前端进行下载耗时统计，并定期上报。 基本思路使用XMLHttpRequest下载图片，实现下载耗时统计。上报功能则一次上报localStorage存储的多张图片的统计信息，这里不做讨论 问题难点使用XMLHttpRequest需要跨域访问图片服务器 其它说明 项目只服务于移动终端，本文的一切测试原则上只涉及Webkit系列的浏览器  为了方便快捷地看到效果，">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-A-Cross-Domain-Practice" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2012/07/27/A-Cross-Domain-Practice/" class="article-date">
+  <time datetime="2012-07-26T16:00:00.000Z" itemprop="datePublished">2012-07-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      一次跨域实践
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>项目需求:对一个照片列表页面的每张图片在前端进行下载耗时统计，并定期上报。</p>
+<h2 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h2><p>使用<code>XMLHttpRequest</code>下载图片，实现下载耗时统计。上报功能则一次上报<code>localStorage</code>存储的多张图片的统计信息，这里不做讨论</p>
+<h2 id="问题难点"><a href="#问题难点" class="headerlink" title="问题难点"></a>问题难点</h2><p>使用<code>XMLHttpRequest</code>需要跨域访问图片服务器</p>
+<h2 id="其它说明"><a href="#其它说明" class="headerlink" title="其它说明"></a>其它说明</h2><ul>
+<li><p>项目只服务于移动终端，本文的一切测试原则上只涉及<code>Webkit</code>系列的浏览器</p>
+</li>
+<li><p>为了方便快捷地看到效果，后台使用<code>Ruby</code>语言的轻量级框架<code>Sinatra</code></p>
+</li>
+<li><p>使用<code>127.0.0.1</code>访问<code>localhost</code>模拟跨域图片请求</p>
+</li>
+</ul>
+<h2 id="项目文件"><a href="#项目文件" class="headerlink" title="项目文件"></a>项目文件</h2><ul>
+<li><p>前端测试主页面 <code>test.html</code></p>
+</li>
+<li><p>后台请求处理文件 <code>myapp.rb</code></p>
+</li>
+<li><p>一张测试图片 <code>london.jpg</code>，大小47714B</p>
+</li>
+</ul>
+<h2 id="代码预览"><a href="#代码预览" class="headerlink" title="代码预览"></a>代码预览</h2><h3 id="test-html"><a href="#test-html" class="headerlink" title="test.html"></a>test.html</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"zh-CN"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>跨域获取图片的文件大小<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"send"</span>&gt;</span>Send Ajax Request<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">        +<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest(),</span></span><br><span class="line"><span class="javascript">                host = location.href.indexOf(<span class="string">'localhost'</span>)&gt;<span class="number">-1</span>?<span class="string">'127.0.0.1'</span>:<span class="string">'localhost'</span>,</span></span><br><span class="line"><span class="javascript">                url = <span class="string">'http://'</span> + host + <span class="string">':4567/img'</span></span></span><br><span class="line"><span class="javascript">            xhr.onload  = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(e)</span></span><br><span class="line"><span class="undefined">            &#125;</span></span><br><span class="line"><span class="javascript">            xhr.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">a</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(a)</span></span><br><span class="line"><span class="undefined">            &#125;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> send = <span class="built_in">document</span>.getElementById(<span class="string">'send'</span>)</span></span><br><span class="line"><span class="javascript">            send.addEventListener(<span class="string">'click'</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="undefined">                xhr.abort()</span></span><br><span class="line"><span class="javascript">                xhr.open(<span class="string">'GET'</span>, url, <span class="literal">true</span>)</span></span><br><span class="line"><span class="javascript">                xhr.send(<span class="literal">null</span>)</span></span><br><span class="line"><span class="javascript">            &#125;,<span class="literal">false</span>)</span></span><br><span class="line"><span class="undefined">        &#125;()</span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="myapp-rb"><a href="#myapp-rb" class="headerlink" title="myapp.rb"></a>myapp.rb</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">'rubygems'</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'sinatra'</span></span><br><span class="line"></span><br><span class="line">get <span class="string">'/'</span> <span class="keyword">do</span></span><br><span class="line">    send_file <span class="string">'test.html'</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#跨域请求</span></span><br><span class="line">get <span class="string">'/img'</span> <span class="keyword">do</span></span><br><span class="line">    send_file <span class="string">'london.jpg'</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h2 id="开始工作"><a href="#开始工作" class="headerlink" title="开始工作"></a>开始工作</h2><p>启动web server以后就开始我们的测试工作了。打开<code>chrome</code>及其<code>控制台</code>，输入 <a href="http://localhost:4567/，点击页面中的按钮，不出意外你会在chrome控制台看到下面的错误提示。" target="_blank" rel="noopener">http://localhost:4567/，点击页面中的按钮，不出意外你会在chrome控制台看到下面的错误提示。</a></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">XMLHttpRequest cannot load http://127.0.0.1:4567/img. Origin http://localhost:4567 is not allowed by Access-Control-Allow-Origin.</span><br></pre></td></tr></table></figure>
+<p>因为我们对跨域访问没有进行任何设置，所以自然无法通过浏览器内在的<code>同源安全机制</code>。</p>
+<h2 id="实现跨域访问"><a href="#实现跨域访问" class="headerlink" title="实现跨域访问"></a>实现跨域访问</h2><p>google如何实现跨域访问，很快找到了一种方法。在网站根目录放置<code>crossdomain.xml</code>的配置文件，就可以完美地实现跨域访问。难怪qq.com和taobao.com都不约而同的配置了这个文件，该文件的格式一般如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">cross-domain-policy</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">allow-access-from</span> <span class="attr">domain</span>=<span class="string">"*.site.com"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">allow-access-from</span> <span class="attr">domain</span>=<span class="string">"*.site.net"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">allow-access-from</span> <span class="attr">domain</span>=<span class="string">"*.sitecdn.com"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">cross-domain-policy</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>经过一番测试，发现这样还是无法实现跨域访问。后来终于知道crossdomain.xml文件是flash跨域专用，而且据说已经被Adobe公司申请为专利。看来这条路是走不通了。</p>
+<p>于是继续google，终于在<a href="http://www.w3.org/TR/cors/" target="_blank" rel="noopener">这里</a>看到了一切关于我们想要的。，可惜<code>w3c</code>的文档总是那么地冗长而乏味，令人望而生畏。比如在介绍这个<code>Access-Control-Allow-Origin</code>的响应头如何设置时，看着这里的介绍是” origin-list-or-null | “<em>“，我以为可以一次性设置多个origin，比如<br>a.com,b.com,c.com。一番折腾之后发现这样设置和没有设置是一样的效果，如果不设置为星号就只能设置一个站点。那我们就暂时设置为”</em>“吧，安全问题稍后再考虑！修改我们的后台代码，加入一个全局的<code>过滤器</code>设置响应头，下面是修改后的myapp.rb文件：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># myapp.rb</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'rubygems'</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'sinatra'</span></span><br><span class="line"></span><br><span class="line">get <span class="string">'/'</span> <span class="keyword">do</span></span><br><span class="line">    send_file <span class="string">'test.html'</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#跨域请求</span></span><br><span class="line">get <span class="string">'/img'</span> <span class="keyword">do</span></span><br><span class="line">    send_file <span class="string">'london.jpg'</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">after <span class="keyword">do</span></span><br><span class="line">    headers\</span><br><span class="line">    <span class="string">'Access-Control-Allow-Origin'</span> =&gt; <span class="string">'*'</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>现在我们重启web server和浏览器，继续输入<a href="http://localhost:4567/，点击页面中的按钮发起跨域请求，查看crhome控制台，没有发现错误，请求顺利完成。那就让我们看看`Network`中的跨域访问请求到底多了些什么：" target="_blank" rel="noopener">http://localhost:4567/，点击页面中的按钮发起跨域请求，查看crhome控制台，没有发现错误，请求顺利完成。那就让我们看看`Network`中的跨域访问请求到底多了些什么：</a></p>
+<ul>
+<li><p>Access-Control-Allow-Origin:*</p>
+</li>
+<li><p>Connection:Keep-Alive</p>
+</li>
+<li><p>Content-Length:47714</p>
+</li>
+<li><p>Content-Type:image/jpeg</p>
+</li>
+<li><p>Date:Fri, 27 Jul 2012 07:11:42 GMT</p>
+</li>
+<li><p>Last-Modified:Fri, 27 Jul 2012 02:52:45 GMT</p>
+</li>
+<li><p>Server:WEBrick/1.3.1 (Ruby/1.8.7/2011-12-28)</p>
+</li>
+<li><p>X-Frame-Options:sameorigin</p>
+</li>
+<li><p>X-Xss-Protection:1; mode=block</p>
+</li>
+</ul>
+<p>果然我们设置的响应头<code>Access-Control-Allow-Origin</code>生效了，太神奇了！通过服务器和浏览器的协作，我们轻松地实现了跨域访问。现在看来W3C搞的这些跨域访问控制的标准还是比较靠谱的啊，如果说有什么缺点，那就是设置多个站点的时候麻烦了点（比如qq.com需要配置跨域访问控制的话），其它的缺点一时我还真说不出来。</p>
+<h2 id="读取图片的文件大小"><a href="#读取图片的文件大小" class="headerlink" title="读取图片的文件大小"></a>读取图片的文件大小</h2><p>目前为止，我们算是成功地实现了跨域请求，但是离我们的目标还差一点。我们还需要知道这个图片的文件大小，从之前服务器输出的响应头来看，应该就是<code>Content-Length</code>这个响应头了。那就修改下我们的页面代码，获取这个响应头吧：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"zh-CN"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>跨域获取图片的文件大小<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"send"</span>&gt;</span>Send Ajax Request<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">            +<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest(),</span></span><br><span class="line"><span class="javascript">                    host = location.href.indexOf(<span class="string">'localhost'</span>)&gt;<span class="number">-1</span>?<span class="string">'127.0.0.1'</span>:<span class="string">'localhost'</span>,</span></span><br><span class="line"><span class="javascript">                    url = <span class="string">'http://'</span> + host + <span class="string">':4567/img'</span></span></span><br><span class="line"><span class="javascript">                xhr.onload  = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                    <span class="built_in">console</span>.log(<span class="keyword">this</span>.getResponseHeader(<span class="string">'Content-Length'</span>))</span></span><br><span class="line"><span class="javascript">                    <span class="built_in">console</span>.log(<span class="keyword">this</span>.responseText.length)</span></span><br><span class="line"><span class="undefined">                &#125;</span></span><br><span class="line"><span class="javascript">                xhr.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">a</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                    <span class="built_in">console</span>.log(a)</span></span><br><span class="line"><span class="undefined">                &#125;</span></span><br><span class="line"><span class="javascript">                <span class="keyword">var</span> send = <span class="built_in">document</span>.getElementById(<span class="string">'send'</span>)</span></span><br><span class="line"><span class="javascript">                send.addEventListener(<span class="string">'click'</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="undefined">                    xhr.abort()</span></span><br><span class="line"><span class="javascript">                    xhr.open(<span class="string">'GET'</span>, url, <span class="literal">true</span>)</span></span><br><span class="line"><span class="javascript">                    xhr.send(<span class="literal">null</span>)</span></span><br><span class="line"><span class="javascript">                &#125;,<span class="literal">false</span>)</span></span><br><span class="line"><span class="undefined">            &#125;()</span></span><br><span class="line"><span class="undefined">        </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>刷新页面，打开控制台，点击按钮，一个红色的错误呈现在我们眼前：</p>
+<p><code>Refused to get unsafe header &quot;Content-Length&quot;</code></p>
+<p>怎么样让浏览器服软允许脚本获取这个响应头呢？还是继续去w3c的文档找找吧。很幸运，这个<code>Access-Control-Expose-Headers</code>似乎和我们的需求很匹配啊，不妨在过滤器中加入输出这个响应头来试一试：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># myapp.rb</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'rubygems'</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'sinatra'</span></span><br><span class="line"></span><br><span class="line">get <span class="string">'/'</span> <span class="keyword">do</span></span><br><span class="line">    send_file <span class="string">'test.html'</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#跨域请求</span></span><br><span class="line">get <span class="string">'/img'</span> <span class="keyword">do</span></span><br><span class="line">    send_file <span class="string">'london.jpg'</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">after <span class="keyword">do</span></span><br><span class="line">    headers\</span><br><span class="line">    <span class="string">'Access-Control-Allow-Origin'</span> =&gt; <span class="string">'*'</span>,</span><br><span class="line">    <span class="string">'Access-Control-Expose-Headers'</span> =&gt; <span class="string">'Content-Length'</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>重启web server，刷新页面，打开chrome控制台，点击按钮。没有任何错误，顺利输出两个数值：47714，45926。看来已经能够顺利的获取到Content-Length响应头，而且数值也很准确，和文件大小一致。但是这个<code>responseText</code>为什么少了接近2KB呢？还请高人解答。</p>
+<p>一切都很顺利，不过虽然只针对webkit系浏览器，至少也得测试下safari吧。打开safari及其控制台，输入url，点击按钮，居然抛出了和之前未设置<code>Access-Control-Expose-Headers</code>时一样的错误：</p>
+<p><code>Refused to get unsafe header &quot;Content-Length&quot;</code></p>
+<p>是不是浏览器缓存的问题呢？重启浏览器再测试，问题依旧。看来这应该就是safari的bug了。既然safari不支持，那就意味着我们前端脚本无法使用<code>getResponseHeader</code>了，那问题该如何解决呢？让我们再看看w3c上关于<code>XMLHttpRequest Level 2</code>的实现还有属性和函数我们可能用得上，继续找啊…终于发现XMLHttpRequest Level 2有一个<a href="http://www.w3.org/TR/XMLHttpRequest2/#handler-xhr-onprogress" target="_blank" rel="noopener">onprogress</a>事件和<a href="http://dvcs.w3.org/hg/progress/raw-file/tip/Overview.html#progressevent" target="_blank" rel="noopener">ProgressEvent</a>对象，于是修改我们的页面代码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"zh-CN"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>跨域获取图片的文件大小<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"send"</span>&gt;</span>Send Ajax Request<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    +<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest(),</span></span><br><span class="line"><span class="javascript">            host = location.href.indexOf(<span class="string">'localhost'</span>)&gt;<span class="number">-1</span>?<span class="string">'127.0.0.1'</span>:<span class="string">'localhost'</span>,</span></span><br><span class="line"><span class="javascript">            url = <span class="string">'http://'</span> + host + <span class="string">':4567/img'</span></span></span><br><span class="line"><span class="javascript">        xhr.onprogress  = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">if</span>(e.lengthComputable)&#123;</span></span><br><span class="line"><span class="javascript">                <span class="keyword">if</span>(e.loaded/e.total == <span class="number">1</span>)&#123;</span></span><br><span class="line"><span class="javascript">                    <span class="comment">//invoke onload</span></span></span><br><span class="line"><span class="javascript">                    <span class="built_in">console</span>.log(e.total)</span></span><br><span class="line"><span class="undefined">                &#125;</span></span><br><span class="line"><span class="undefined">            &#125;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="javascript">        xhr.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">a</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">console</span>.log(a)</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> send = <span class="built_in">document</span>.getElementById(<span class="string">'send'</span>)</span></span><br><span class="line"><span class="javascript">        send.addEventListener(<span class="string">'click'</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="undefined">            xhr.abort()</span></span><br><span class="line"><span class="javascript">            xhr.open(<span class="string">'GET'</span>, url, <span class="literal">true</span>)</span></span><br><span class="line"><span class="javascript">            xhr.send(<span class="literal">null</span>)</span></span><br><span class="line"><span class="javascript">        &#125;,<span class="literal">false</span>)</span></span><br><span class="line"><span class="undefined">    &#125;()</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>细心的同学可能会问为什么不在<code>onload</code>中执行相关操作，其实经我测试发现onload之后<code>e.total</code>和<code>e.loaded</code>已经被设置为0，虽然<code>responseText</code>依然可读，但是这与真实的文件大小有一点的误差。</p>
+<h2 id="最后的完善"><a href="#最后的完善" class="headerlink" title="最后的完善"></a>最后的完善</h2><p>虽然我们的目标已经完成，但是我们的工作还没有结束。因为服务端存在一个严重的<code>安全隐患</code>。我们草率地将<code>Access-Control-Allow-Origin</code>设置为”＊“，不可避免地为一些黑客攻击创造了便利条件。</p>
+<p>其实，既然我们的跨域访问只开放给部分信任的站点，那么我们只需要在后台的过滤器中判断请求来源是否属于白名单之中，如果存在则输出Access-Control-Allow-Origin响应头，内容为该站点域名。至于这个白名单的设计，可以参考<code>Apache</code>（之前一直误以为Apache的做法是业界的标准）。</p>
+<p>另外跨域访问控制一般针对的是Ajax请求，所以我们还可以在过滤器中加入一个是否是Ajax请求的判断(服务端判断请求头中是否包含<code>X-Requested-With</code>:<code>XMLHttpRequest</code>)，避免为普通的请求也加入<code>Access-Control-Allow-Origin</code>这个响应头。</p>
+<p>最后由于各浏览器对<code>Access-Control-Expose-Headers</code>的实现并不完善，所以这个响应头就显得异常鸡肋。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2012/07/27/A-Cross-Domain-Practice/" data-id="cjf865uev00018wp13hf6wp51" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2012/10/30/iOS-UIWebView-Class-Reference/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          iOS UIWebView Class Reference
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/03/28/关于容灾，前端能够做什么/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">关于容灾，前端能够做什么</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>JavaScript乱弹之（五）：使用脚本创建动态内容 | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="document.write()所有支持脚本的浏览器都可以在正文中嵌入document.write()语句。利用它你可以动态的创建内容，不过使用它你需要十分小心。最常见的错误就是在页面加载完毕以后调用，以修改或向页面添加内容。这样的结果只会是用你组装的脚本内容替换掉你的当前页。 创建节点创建动态内容标准的方法是使用W3C的document对象的元素创建方法。 123456var elem=docu">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript乱弹之（五）：使用脚本创建动态内容">
+<meta property="og:url" content="http://yoursite.com/2010/01/29/JavaScript乱弹之（五）：使用脚本创建动态内容/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="document.write()所有支持脚本的浏览器都可以在正文中嵌入document.write()语句。利用它你可以动态的创建内容，不过使用它你需要十分小心。最常见的错误就是在页面加载完毕以后调用，以修改或向页面添加内容。这样的结果只会是用你组装的脚本内容替换掉你的当前页。 创建节点创建动态内容标准的方法是使用W3C的document对象的元素创建方法。 123456var elem=docu">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.681Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript乱弹之（五）：使用脚本创建动态内容">
+<meta name="twitter:description" content="document.write()所有支持脚本的浏览器都可以在正文中嵌入document.write()语句。利用它你可以动态的创建内容，不过使用它你需要十分小心。最常见的错误就是在页面加载完毕以后调用，以修改或向页面添加内容。这样的结果只会是用你组装的脚本内容替换掉你的当前页。 创建节点创建动态内容标准的方法是使用W3C的document对象的元素创建方法。 123456var elem=docu">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-JavaScript乱弹之（五）：使用脚本创建动态内容" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/01/29/JavaScript乱弹之（五）：使用脚本创建动态内容/" class="article-date">
+  <time datetime="2010-01-28T16:00:00.000Z" itemprop="datePublished">2010-01-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JavaScript乱弹之（五）：使用脚本创建动态内容
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="document-write"><a href="#document-write" class="headerlink" title="document.write()"></a>document.write()</h2><p>所有支持脚本的浏览器都可以在正文中嵌入document.write()语句。利用它你可以动态的创建内容，不过使用它你需要十分小心。最常见的错误就是在页面加载完毕以后调用，以修改或向页面添加内容。这样的结果只会是用你组装的脚本内容替换掉你的当前页。</p>
+<h2 id="创建节点"><a href="#创建节点" class="headerlink" title="创建节点"></a>创建节点</h2><p>创建动态内容标准的方法是使用W3C的document对象的元素创建方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elem=<span class="built_in">document</span>.createElement(<span class="string">"p"</span>);</span><br><span class="line"><span class="comment">//参数名可以是大写也可以是小写，但是元素elem.tagName的返回值永远是大写。</span></span><br><span class="line">createAttribute( attributeName )</span><br><span class="line">createComment( commentString )</span><br><span class="line">createDocumentFragment()</span><br><span class="line">createTextNode( textString )</span><br></pre></td></tr></table></figure>
+<p>以上方法全部返回一个节点对象（node object），在没有进行插入操作时，以上方法并不影响DOM的结构。</p>
+<h2 id="插入和附加节点"><a href="#插入和附加节点" class="headerlink" title="插入和附加节点"></a>插入和附加节点</h2><p><strong>insertBefore( newChildNode, referenceNode )</strong></p>
+<p>在现有的子节点前插入一个节点<br>使用方法：parentnode.insertBefore(newNode,childnode)，当childnode为null时作用与appendChild相同。</p>
+<p><strong>appendChild( newChildNode )</strong></p>
+<p>将节点添加到指定的节点的最后一个子节点的后面<br>使用方法：parentnode.appendChild(newNode);</p>
+<h2 id="移除、替换和复制节点"><a href="#移除、替换和复制节点" class="headerlink" title="移除、替换和复制节点"></a>移除、替换和复制节点</h2><p><strong>removeChild( childNode )</strong></p>
+<p><strong>replaceChild( newNode, nodeToReplace )</strong></p>
+<p><strong>cloneNode( true/false)</strong></p>
+<p>True表示深克隆，所有子节点也被克隆；false表示浅克隆，不会复制子节点。<br>设置节点的属性</p>
+<p>有两种常用的方式：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elem=<span class="built_in">document</span>.createElement(<span class="string">"div"</span>);</span><br><span class="line">elem.setAttribute(<span class="string">"id"</span>,<span class="string">"testDIV"</span>);</span><br><span class="line">elem[<span class="string">"id"</span>]=<span class="string">"testDIV"</span>;</span><br></pre></td></tr></table></figure>
+<p>浏览器能够同等识别以上两种方法，W3C推荐第一种，但是由于第一种在IE经常无法改变属性的值，所以最好还是用第二种。</p>
+<p><strong>innerHTML</strong></p>
+<p>IE4引入了两个基于文本的元素对象属性：<strong>innerText</strong>和<strong>innerHTML</strong>，由于innerHTML的大量使用而且实用性很强，以至于原本那些许多以“标准”自居的浏览器在严格遵守<br>W3C DOM戒律方面有所放宽，并实现了innerHTML。FireFox并不支持innerText。<br>请你记住innerHTML的开创者是IE！</p>
+<p>节点的常用属性</p>
+<blockquote>
+<ul>
+<li>nodeName</li>
+<li>nodeValue</li>
+<li>nodeType</li>
+<li>parentNode</li>
+<li>childNodes</li>
+<li>Attributes</li>
+<li>firstChild</li>
+<li>lastChild</li>
+<li>ownerDocument</li>
+<li>previousSibling</li>
+<li>nextSibling</li>
+<li>tagName</li>
+</ul>
+</blockquote>
+<h1 id="nodeType对应值与类型"><a href="#nodeType对应值与类型" class="headerlink" title="nodeType对应值与类型"></a>nodeType对应值与类型</h1><blockquote>
+<ul>
+<li>1 Element</li>
+<li>2 Attribute</li>
+<li>3 Text</li>
+<li>8 Comment</li>
+<li>9 Document</li>
+<li>10 DocumentType</li>
+</ul>
+</blockquote>
+<p>自定义的insertAfter方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertAfter</span>(<span class="params">newEl, targetEl</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">var</span> parentEl = targetEl.parentNode;</span><br><span class="line">                        <span class="keyword">if</span>(parentEl.lastChild == targetEl)</span><br><span class="line">            &#123;</span><br><span class="line">                parentEl.appendChild(newEl);</span><br><span class="line">            &#125;<span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                parentEl.insertBefore(newEl,targetEl.nextSibling);</span><br><span class="line">            &#125;            </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>思路：首先找到目标节点的父节点，如果目标节点是父节点的最后一个子节点，则使用appendChild方法；如果不是最后一个节点则使用JavaScript内置的insertBefore方法插入到目标节点的下一个兄弟节点之前。</p>
+<p>使用方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> txtName = <span class="built_in">document</span>.getElementById(<span class="string">"txtName"</span>);</span><br><span class="line"><span class="keyword">var</span> htmlSpan = <span class="built_in">document</span>.createElement(<span class="string">"span"</span>);</span><br><span class="line">htmlSpan.innerHTML = <span class="string">"This is a test"</span>;</span><br><span class="line">insertAfter(htmlSpan,txtName);</span><br></pre></td></tr></table></figure>
+<p>将htmlSpan 作为txtName 的兄弟节点插入到txtName 节点之后</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/01/29/JavaScript乱弹之（五）：使用脚本创建动态内容/" data-id="cjf865ugi001w8wp1rtxpbd4f" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2011/10/22/JSONP-Memory-Leak/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          JSONP Memory Leak
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2010/01/28/JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">JavaScript乱弹之（四）： 关于Form(ASPX)，你必须知道的</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>JavaScript Parser资源总结 | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="理解抽象语法树(AST)Abstract syntax tree - 维基百科 抽象语法树在 JavaScript 中的应用 - 美团点评技术团队 JavaScript的抽象语法树与语法解析 通过开发 Babel 插件理解抽象语法树 JavaScript Parser Esprima Acorn Babylon  Parser建议从Esprima开始学习，相比较于其它Parser文档和示例更加丰富">
+<meta name="keywords" content="JavaScript,解析器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript Parser资源总结">
+<meta property="og:url" content="http://yoursite.com/2016/07/17/parser/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="理解抽象语法树(AST)Abstract syntax tree - 维基百科 抽象语法树在 JavaScript 中的应用 - 美团点评技术团队 JavaScript的抽象语法树与语法解析 通过开发 Babel 插件理解抽象语法树 JavaScript Parser Esprima Acorn Babylon  Parser建议从Esprima开始学习，相比较于其它Parser文档和示例更加丰富">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.695Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript Parser资源总结">
+<meta name="twitter:description" content="理解抽象语法树(AST)Abstract syntax tree - 维基百科 抽象语法树在 JavaScript 中的应用 - 美团点评技术团队 JavaScript的抽象语法树与语法解析 通过开发 Babel 插件理解抽象语法树 JavaScript Parser Esprima Acorn Babylon  Parser建议从Esprima开始学习，相比较于其它Parser文档和示例更加丰富">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-parser" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/17/parser/" class="article-date">
+  <time datetime="2016-07-16T16:00:00.000Z" itemprop="datePublished">2016-07-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JavaScript Parser资源总结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="理解抽象语法树-AST"><a href="#理解抽象语法树-AST" class="headerlink" title="理解抽象语法树(AST)"></a>理解抽象语法树(AST)</h2><p><a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree" target="_blank" rel="noopener">Abstract syntax tree - 维基百科</a></p>
+<p><a href="http://tech.meituan.com/abstract-syntax-tree.html" target="_blank" rel="noopener">抽象语法树在 JavaScript 中的应用 - 美团点评技术团队</a></p>
+<p><a href="http://wwsun.github.io/posts/javascript-ast-tutorial.html" target="_blank" rel="noopener">JavaScript的抽象语法树与语法解析</a></p>
+<p><a href="http://www.zcfy.cc/article/347" target="_blank" rel="noopener">通过开发 Babel 插件理解抽象语法树</a></p>
+<h2 id="JavaScript-Parser"><a href="#JavaScript-Parser" class="headerlink" title="JavaScript Parser"></a>JavaScript Parser</h2><ul>
+<li><a href="http://esprima.org/" target="_blank" rel="noopener">Esprima</a></li>
+<li><a href="https://github.com/ternjs/acorn" target="_blank" rel="noopener">Acorn</a></li>
+<li><a href="https://github.com/babel/babylon" target="_blank" rel="noopener">Babylon</a></li>
+</ul>
+<p>Parser建议从Esprima开始学习，相比较于其它Parser文档和示例更加丰富和形象。</p>
+<p>Acorn的性能和效率比Esprima更胜一筹，但是文档比较匮乏。</p>
+<p>Babylon是Babel的JavaScript Parser，早期也是fork的Acorn，目前关注度不及其它Parser。</p>
+<p>推荐一种比较好的实践方式：从npm中的找出几个<a href="https://www.npmjs.com/browse/depended/acorn" target="_blank" rel="noopener">依赖于这些Parser</a>的项目直接学习源代码。比如<a href="https://www.npmjs.com/package/amd2cmd" target="_blank" rel="noopener">amd2cmd</a>这个项目就是使用acorn将amd代码转换为cmd代码。</p>
+<h2 id="周边工具"><a href="#周边工具" class="headerlink" title="周边工具"></a>周边工具</h2><p><a href="https://astexplorer.net/" target="_blank" rel="noopener">AST explorer</a></p>
+<p>更直观的理解各个Parser生成的AST。</p>
+<p><a href="https://github.com/estools" target="_blank" rel="noopener">ECMAScript Tooling</a></p>
+<p>各种用于AST以及辅助的相关工具，比如<a href="https://github.com/estools/estraverse" target="_blank" rel="noopener">estraverse</a>用于遍历AST，<a href="https://github.com/estools/escodegen" target="_blank" rel="noopener">escodegen</a>用于从AST生成源代码。</p>
+<p><a href="https://github.com/thejameskyle/babel-handbook/blob/master/translations/zh-Hans/plugin-handbook.md" target="_blank" rel="noopener">Babel 插件手册</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/17/parser/" data-id="cjf865ufq000z8wp14onrsi63" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/09/space/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          空格
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/06/29/slimerjs/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">使用SlimerJS将网页输出为PDF</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

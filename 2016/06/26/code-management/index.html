@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>代码管理 | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文基本总结了我在DataEye前端项目代码管理方面的一些尝试。分享PPT在 slides.com 可能需要翻墙。  Virtuality &amp;amp; Reality 借助于当下流行的VR，代码管理也从两个方面来讲解：虚（文件内容相关的管理）/实（文件的物理存储相关的管理）  Version Control Git与SVN：Git是分布式版本管理，SVN是中心化。  无需中心服务器，本地自用">
+<meta name="keywords" content="代码管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码管理">
+<meta property="og:url" content="http://yoursite.com/2016/06/26/code-management/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="本文基本总结了我在DataEye前端项目代码管理方面的一些尝试。分享PPT在 slides.com 可能需要翻墙。  Virtuality &amp;amp; Reality 借助于当下流行的VR，代码管理也从两个方面来讲解：虚（文件内容相关的管理）/实（文件的物理存储相关的管理）  Version Control Git与SVN：Git是分布式版本管理，SVN是中心化。  无需中心服务器，本地自用">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.689Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="代码管理">
+<meta name="twitter:description" content="本文基本总结了我在DataEye前端项目代码管理方面的一些尝试。分享PPT在 slides.com 可能需要翻墙。  Virtuality &amp;amp; Reality 借助于当下流行的VR，代码管理也从两个方面来讲解：虚（文件内容相关的管理）/实（文件的物理存储相关的管理）  Version Control Git与SVN：Git是分布式版本管理，SVN是中心化。  无需中心服务器，本地自用">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-code-management" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/26/code-management/" class="article-date">
+  <time datetime="2016-06-25T16:00:00.000Z" itemprop="datePublished">2016-06-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      代码管理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>本文基本总结了我在DataEye前端项目代码管理方面的一些尝试。分享PPT在 <a href="http://slides.com/reduxis/deck-1/fullscreen" target="_blank" rel="noopener">slides.com</a> 可能需要翻墙。</p>
+</blockquote>
+<h2 id="Virtuality-amp-Reality"><a href="#Virtuality-amp-Reality" class="headerlink" title="Virtuality &amp; Reality"></a>Virtuality &amp; Reality</h2><blockquote>
+<p>借助于当下流行的VR，代码管理也从两个方面来讲解：虚（文件内容相关的管理）/实（文件的物理存储相关的管理）</p>
+</blockquote>
+<h2 id="Version-Control"><a href="#Version-Control" class="headerlink" title="Version Control"></a>Version Control</h2><blockquote>
+<p>Git与SVN：Git是分布式版本管理，SVN是中心化。</p>
+</blockquote>
+<p>无需中心服务器，本地自用</p>
+<blockquote>
+<p>git init</p>
+</blockquote>
+<h2 id="Multiple-Projects"><a href="#Multiple-Projects" class="headerlink" title="Multiple Projects"></a>Multiple Projects</h2><blockquote>
+<p>实际工作中开发人员每天都要与多个项目打交道，如何在多项目中开发中提高工作效率值得思考与学习</p>
+<p>20,0000,0000</p>
+</blockquote>
+<h2 id="All-in-one"><a href="#All-in-one" class="headerlink" title="All in one"></a>All in one</h2><blockquote>
+<p>和Windows的基础代码很像，Google的20亿行代码是用来驱动整个Google服务的，他们是一个整体！</p>
+</blockquote>
+<p><a href="http://blog.jobbole.com/91648/" target="_blank" rel="noopener">谷歌代码库已超过 20 亿行代码，他们是如何管理的？</a></p>
+<h2 id="All-in-two-indeed"><a href="#All-in-two-indeed" class="headerlink" title="All in two indeed"></a>All in two indeed</h2><blockquote>
+<p>将业务代码(static)和可复用的代码(DataEye/dejs)分离</p>
+</blockquote>
+<h2 id="Static"><a href="#Static" class="headerlink" title="Static"></a>Static</h2><blockquote>
+<p>所有的前端业务代码</p>
+</blockquote>
+<h2 id="DataEye-dejs"><a href="#DataEye-dejs" class="headerlink" title="DataEye/dejs"></a>DataEye/dejs</h2><blockquote>
+<p>所有复用的组件代码，基于npm进行包管理</p>
+</blockquote>
+<h2 id="npm"><a href="#npm" class="headerlink" title="npm"></a>npm</h2><blockquote>
+<p>node package manager  → package manager for javascript</p>
+<p>30,1298</p>
+</blockquote>
+<h2 id="Branches"><a href="#Branches" class="headerlink" title="Branches"></a>Branches</h2><blockquote>
+<p>分支管理已经成为日常工作的一部分（迭代新特性开发/临时BUG修复等）</p>
+</blockquote>
+<h2 id="Under-Control"><a href="#Under-Control" class="headerlink" title="Under Control"></a>Under Control</h2><blockquote>
+<p>分支管理不是复制粘贴，需要微观宏观同时把控。</p>
+<p>提交/文件/修改历史都需要记录在案</p>
+</blockquote>
+<h2 id="SVN"><a href="#SVN" class="headerlink" title="SVN"></a>SVN</h2><blockquote>
+<p>你打算签出十个分支的所有代码吗？</p>
+</blockquote>
+<h2 id="Workflow"><a href="#Workflow" class="headerlink" title="Workflow"></a>Workflow</h2><blockquote>
+<p>工作流管理将版本库分为稳定分支和临时分支</p>
+</blockquote>
+<h2 id="Stable-Branches"><a href="#Stable-Branches" class="headerlink" title="Stable Branches"></a>Stable Branches</h2><blockquote>
+<p>master用于管理已发布的线上代码，development用于日常开发</p>
+</blockquote>
+<h2 id="Temporary-Branches"><a href="#Temporary-Branches" class="headerlink" title="Temporary Branches"></a>Temporary Branches</h2><blockquote>
+<p>feature / bug / release</p>
+</blockquote>
+<p>临时分支需要在适当的时机合并到所有稳定分支。</p>
+<h2 id="Code-Review"><a href="#Code-Review" class="headerlink" title="Code Review"></a>Code Review</h2><blockquote>
+<p>发现BUG，提高代码质量，促进知识共享，提升团队技术水平</p>
+</blockquote>
+<h2 id="Continuous-Integration"><a href="#Continuous-Integration" class="headerlink" title="Continuous Integration"></a>Continuous Integration</h2><blockquote>
+<p>提高软件质量，降低项目风险</p>
+</blockquote>
+<h2 id="Unit-Test"><a href="#Unit-Test" class="headerlink" title="Unit Test"></a>Unit Test</h2><blockquote>
+<p>隔离程序最小单元对其进行正确性测试，避免意外惊喜</p>
+</blockquote>
+<p>单元测试能够反哺程序自身的架构和设计。</p>
+<h2 id="Coverage"><a href="#Coverage" class="headerlink" title="Coverage"></a>Coverage</h2><blockquote>
+<p>没有明显错误的代码 vs 明显没有错误的代码</p>
+</blockquote>
+<p>难以想象一行完全没有运行过的代码发布到生产环境会造成什么后果。</p>
+<h2 id="Advice-on-Commits"><a href="#Advice-on-Commits" class="headerlink" title="Advice on Commits"></a>Advice on Commits</h2><blockquote>
+<p>尽快提交/尽早提交/经常提交</p>
+</blockquote>
+<h2 id="Advice-on-Coding"><a href="#Advice-on-Coding" class="headerlink" title="Advice on Coding"></a>Advice on Coding</h2><blockquote>
+<p>Be social and better</p>
+<ul>
+<li>GitHub</li>
+<li>npm</li>
+<li>Upsource</li>
+<li>codecov</li>
+<li>Semaphoreci</li>
+</ul>
+</blockquote>
+<hr>
+<p>本文使用软件 <a href="https://github.com/simongfxu/violet" target="_blank" rel="noopener">violet</a>一键发布到知乎/简书/Medium/GitHub等多个平台。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/06/26/code-management/" data-id="cjf865ufh000m8wp14pwasm3t" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/代码管理/">代码管理</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/06/29/slimerjs/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          使用SlimerJS将网页输出为PDF
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/06/18/violet/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">violet - 值得一试的写作同步小助手</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

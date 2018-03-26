@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Ajax编码问题 | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前些天看到一个关于Ajax编码的问题，当时被提问者的描述绕的都想不清楚，今天闲来没事就整理下。原文地址在这里。 问题描述我的前端页面为GBK，所以待发送的数据肯定也为GBK，而由ajax的特性其在发送前其会被自动转换为utf-8所以后台接收到的数据为utf-8的然后我的后台页面编码为UTF-8，同时设置了response header中的编码参数也为UTF-8，那么前端收到的数据应该也是UTF-8">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ajax编码问题">
+<meta property="og:url" content="http://yoursite.com/2012/11/11/Ajax-Encoding/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="前些天看到一个关于Ajax编码的问题，当时被提问者的描述绕的都想不清楚，今天闲来没事就整理下。原文地址在这里。 问题描述我的前端页面为GBK，所以待发送的数据肯定也为GBK，而由ajax的特性其在发送前其会被自动转换为utf-8所以后台接收到的数据为utf-8的然后我的后台页面编码为UTF-8，同时设置了response header中的编码参数也为UTF-8，那么前端收到的数据应该也是UTF-8">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.674Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ajax编码问题">
+<meta name="twitter:description" content="前些天看到一个关于Ajax编码的问题，当时被提问者的描述绕的都想不清楚，今天闲来没事就整理下。原文地址在这里。 问题描述我的前端页面为GBK，所以待发送的数据肯定也为GBK，而由ajax的特性其在发送前其会被自动转换为utf-8所以后台接收到的数据为utf-8的然后我的后台页面编码为UTF-8，同时设置了response header中的编码参数也为UTF-8，那么前端收到的数据应该也是UTF-8">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Ajax-Encoding" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2012/11/11/Ajax-Encoding/" class="article-date">
+  <time datetime="2012-11-10T16:00:00.000Z" itemprop="datePublished">2012-11-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ajax编码问题
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前些天看到一个关于Ajax编码的问题，当时被提问者的描述绕的都想不清楚，今天闲来没事就整理下。原文地址在<a href="http://segmentfault.com/q/1010000000130593" target="_blank" rel="noopener">这里</a>。</p>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>我的前端页面为GBK，所以待发送的数据肯定也为GBK，而由ajax的特性其在发送前其会被自动转换为utf-8<br>所以后台接收到的数据为utf-8的<br>然后我的后台页面编码为UTF-8，同时设置了response header中的编码参数也为UTF-8，那么前端收到的数据应该也是UTF-8<br>但前端页面为GBK，理论上来说这样会产生乱码，可是并没有，这是为什么呢？</p>
+<p>提问者的描述有点混乱，而且各种绕，一不小心就会踩到提问者设的坑。</p>
+<h2 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h2><p>彻底解决这个问题你首先需要了解以下几个知识点：</p>
+<blockquote>
+<ul>
+<li>页面表单提交到后台的数据编码与页面编码一致</li>
+<li>通过javascript提交到后台的数据都会被转换为utf-8格式</li>
+</ul>
+</blockquote>
+<p>所以原则上这样理解，这个问题就差不多了：</p>
+<pre><code>输入编码为UTF-8，后台以UTF-8方式输出，保证输入和输出一致那么自然就没有乱码问题。
+</code></pre><p>要让别人相信自己，首先得自己相信自己，我们先不妨来几个测试。另外问题描述既然提到了后台的文本编码，我们也需要重点测试一下。</p>
+<h2 id="测试工作"><a href="#测试工作" class="headerlink" title="测试工作"></a>测试工作</h2><p>准备以下页面：</p>
+<ul>
+<li>主页面index.php</li>
+<li>ajax后台页面utf8.php</li>
+<li>ajax后台页面gbk.php</li>
+</ul>
+<h3 id="主页面-index-php，文本编码gbk"><a href="#主页面-index-php，文本编码gbk" class="headerlink" title="主页面 index.php，文本编码gbk"></a>主页面 index.php，文本编码gbk</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"gbk"</span>/&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://s.segmentfault.com/js/jquery.js?12.11.5.1"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">onclick</span>=<span class="string">"ajax_send('utf8')"</span>&gt;</span>JS提交(utf-8)<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">onclick</span>=<span class="string">"ajax_send('gbk')"</span>&gt;</span>JS提交(gbk)<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">			<span class="keyword">var</span> ajax_send = <span class="function"><span class="keyword">function</span>(<span class="params">encoding</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">				<span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest(), params = <span class="built_in">encodeURI</span>(<span class="string">'t=编码'</span>)</span></span><br><span class="line"><span class="javascript">				xhr.onreadystatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">					<span class="keyword">if</span>(<span class="keyword">this</span>.readyState == <span class="number">4</span> &amp;&amp; <span class="keyword">this</span>.status ==<span class="number">200</span>)</span></span><br><span class="line"><span class="javascript">						alert(<span class="keyword">this</span>.responseText)</span></span><br><span class="line"><span class="undefined">				&#125;</span></span><br><span class="line"><span class="javascript">				xhr.open(<span class="string">'POST'</span>,encoding + <span class="string">'.php'</span>,<span class="literal">true</span>)</span></span><br><span class="line"><span class="javascript">				xhr.setRequestHeader(<span class="string">"Content-type"</span>, <span class="string">"application/x-www-form-urlencoded"</span>);</span></span><br><span class="line"><span class="undefined">				xhr.send(params)</span></span><br><span class="line"><span class="undefined">			&#125;</span></span><br><span class="line"><span class="undefined">		</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="utf8-php，文本编码utf-8"><a href="#utf8-php，文本编码utf-8" class="headerlink" title="utf8.php，文本编码utf-8"></a>utf8.php，文本编码utf-8</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">header(<span class="string">'content-type:text/html;charset=utf-8'</span>);</span><br><span class="line"><span class="keyword">echo</span> $_POST[<span class="string">'t'</span>];</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="gbk-php，与utf8-php内容相同，区别就是文本编码为gbk"><a href="#gbk-php，与utf8-php内容相同，区别就是文本编码为gbk" class="headerlink" title="gbk.php，与utf8.php内容相同，区别就是文本编码为gbk"></a>gbk.php，与utf8.php内容相同，区别就是文本编码为gbk</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">header(<span class="string">'content-type:text/html;charset=utf-8'</span>);</span><br><span class="line"><span class="keyword">echo</span> $_POST[<span class="string">'t'</span>];</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>启动Web Server，打开页面，分别点击按钮，都正确的弹出了“编码”二字，没有发现乱码现象。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>对于页面通过JS提交的数据：</p>
+<blockquote>
+<ul>
+<li>后台接口，只要保证输入输出的编码一致，提交的数据就会有乱码产生</li>
+<li>后台文件的文本编码以及前端页面的编码不会导致提交的数据返回时乱码，只要输入输出编码一致</li>
+</ul>
+</blockquote>
+<p>对于以上两个结论，读者还可以这样测试。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">header(<span class="string">'content-type:text/html;charset=gbk'</span>);</span><br><span class="line"><span class="keyword">echo</span> iconv(<span class="string">"utf-8"</span>,<span class="string">"gbk"</span>,$_POST[<span class="string">'t'</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>先将输入转码为gbk，然后输出同时设置为页面编码，这样也不会有乱码产生，但是服务端多了一道转码处理，效率不及直接输出utf-8。</p>
+<p>对于后台附加的一些输出，比如在gbk.php中最后加一行</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="string">"中文"</span>;</span><br></pre></td></tr></table></figure>
+<p>这种情况会不会导致乱码呢？读者可以自己测试一下。</p>
+<h2 id="深入"><a href="#深入" class="headerlink" title="深入"></a>深入</h2><p>稍微搞过前端的人都知道，使用script标签引入脚本的时候，有一个属性是charset用于指定脚本文件的编码。当页面编码与引入脚本的文本编码不一致的时候需要显式指定，否则就会容易造成乱码。</p>
+<p>现在我们仔细对比这两种场景的处理方式，不就是一模一样吗？只要保证输入输出的编码一致即可。唯一的区别就是一个是静态资源，一个是动态接口。</p>
+<p>你有可能会问，当输入输出指定的编码不一致时是不是就一定是乱码呢，浏览器又该如何解析呢？</p>
+<p>这个时候你就该来<a href="http://ued.taobao.com/blog/2011/08/26/encode-war/" target="_blank" rel="noopener">这里</a>看看了。</p>
+<p>光棍节写博客，看来我是真光棍，真屌丝。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2012/11/11/Ajax-Encoding/" data-id="cjf865uez00038wp1vwenwitx" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2014/06/28/初识JavaScript Promises之一/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          初识JavaScript Promises之一
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2012/10/30/iOS-UIWebView-Class-Reference/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">iOS UIWebView Class Reference</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

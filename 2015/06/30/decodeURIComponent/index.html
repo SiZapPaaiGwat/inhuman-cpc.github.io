@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>捉虫记之decodeURIComponent | 在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="DataEye游戏分析平台有个实时日志功能，用于展示接收来自游戏客户端SDK上报数据以及游戏开发商使用HTTP接口发送的数据。 第一版数据库收到什么样的JSON数据就直接返回给前端展示，终于有一天客户反馈页面脚本报错。 一番调查，原来是数据库中存在特殊字符，于是要求后台全部url encode一次，前端decode就可以了。验证OK，于是测试发布。直到有一天用户反馈部分数据没有decode，还是类">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="捉虫记之decodeURIComponent">
+<meta property="og:url" content="http://yoursite.com/2015/06/30/decodeURIComponent/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:description" content="DataEye游戏分析平台有个实时日志功能，用于展示接收来自游戏客户端SDK上报数据以及游戏开发商使用HTTP接口发送的数据。 第一版数据库收到什么样的JSON数据就直接返回给前端展示，终于有一天客户反馈页面脚本报错。 一番调查，原来是数据库中存在特殊字符，于是要求后台全部url encode一次，前端decode就可以了。验证OK，于是测试发布。直到有一天用户反馈部分数据没有decode，还是类">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-26T11:35:06.690Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="捉虫记之decodeURIComponent">
+<meta name="twitter:description" content="DataEye游戏分析平台有个实时日志功能，用于展示接收来自游戏客户端SDK上报数据以及游戏开发商使用HTTP接口发送的数据。 第一版数据库收到什么样的JSON数据就直接返回给前端展示，终于有一天客户反馈页面脚本报错。 一番调查，原来是数据库中存在特殊字符，于是要求后台全部url encode一次，前端decode就可以了。验证OK，于是测试发布。直到有一天用户反馈部分数据没有decode，还是类">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-decodeURIComponent" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/06/30/decodeURIComponent/" class="article-date">
+  <time datetime="2015-06-29T16:00:00.000Z" itemprop="datePublished">2015-06-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      捉虫记之decodeURIComponent
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>DataEye游戏分析平台有个实时日志功能，用于展示接收来自游戏客户端SDK上报数据以及游戏开发商使用HTTP接口发送的数据。</p>
+<h2 id="第一版"><a href="#第一版" class="headerlink" title="第一版"></a>第一版</h2><p>数据库收到什么样的JSON数据就直接返回给前端展示，终于有一天客户反馈页面脚本报错。</p>
+<p>一番调查，原来是数据库中存在特殊字符，于是要求后台全部url encode一次，前端decode就可以了。验证OK，于是测试发布。直到有一天用户反馈部分数据没有decode，还是类似%25XX的字符。</p>
+<h2 id="第二版"><a href="#第二版" class="headerlink" title="第二版"></a>第二版</h2><p>一番调查，原来是用户使用的是HTTP接口发送数据而不是SDK，所以部分数据自己encode了一次。然后服务器返回给前端页面的就是encode两次的数据。</p>
+<p>不就encode两次的问题嘛，页面decode两次就可以了嘛！于是无脑地吧decodeURIComponent(str)全部替换成了decodeURIComponent(decodeURIComponent(str))，发现问题居然解决了，找了另外的客户数据测试了下，验证也OK，于是发布。直到有一天某个另外的客户反馈页面脚本报错。</p>
+<h2 id="第三版"><a href="#第三版" class="headerlink" title="第三版"></a>第三版</h2><p>一番调查，根据URI Malformed Error这个罪证google得知，原来是源字符串不是合法的URL编码的字符串。虽然提示已经相当的明确了，但由于JSON数据量不少，字段较多，而且有些地方只需要decode一次，有些地方又需要decode两次，定位问题还是花了一些时间。最后发现罪魁祸首居然是用户输入的内容<code>14%</code>。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">safeDecodeURIComponent</span>(<span class="params">str</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!str || <span class="keyword">typeof</span> str !== <span class="string">'string'</span>) <span class="keyword">return</span> <span class="built_in">String</span>(str)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// encodeURIComponent不编码字符有71个：!， '，(，)，*，-，.，_，~，0-9，a-z，A-Z</span></span><br><span class="line">    <span class="keyword">var</span> twiceEncodedReg = <span class="regexp">/^(%\w&#123;4,4&#125;|[!'()*\-._~0-9a-z])+$/gi</span></span><br><span class="line">    <span class="keyword">var</span> encodedReg = <span class="regexp">/^(%\w&#123;2,2&#125;|[!'()*\-._~0-9a-z])+$/gi</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里用try catch是因为即使正则匹配也有可能解码异常，异常或者不匹配时返回源字符串即可</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (twiceEncodedReg.test(str)) <span class="keyword">return</span> <span class="built_in">decodeURIComponent</span>(<span class="built_in">decodeURIComponent</span>(str))</span><br><span class="line">        <span class="keyword">if</span> (encodedReg.test(str)) <span class="keyword">return</span> <span class="built_in">decodeURIComponent</span>(str)</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> str</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h2><blockquote>
+<ul>
+<li><a href="http://xkr.us/articles/javascript/encode-compare/" target="_blank" rel="noopener">Comparing escape(), encodeURI(), and encodeURIComponent()</a></li>
+<li><a href="http://www.cnblogs.com/jhxk/articles/1634359.html" target="_blank" rel="noopener">http://www.cnblogs.com/jhxk/articles/1634359.html</a></li>
+</ul>
+</blockquote>
+<h2 id="最后的总结"><a href="#最后的总结" class="headerlink" title="最后的总结"></a>最后的总结</h2><p>基础知识不扎实导致无法深入剖析问题所在，解决方案自以为然也就不足为怪了。</p>
+<p>—-7-21更新—-</p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>果然还是有后续！昨天突然一个客户又反馈有乱码，一番研究发现用户输入部分编码，部分未编码。上面的方法就不凑效了，于是花了几分钟做了如下改进：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">safeDecodeURIComponent</span>(<span class="params">str</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> lastResult = str, current</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">while</span>((current = <span class="built_in">decodeURIComponent</span>(lastResult)) != lastResult) &#123;</span><br><span class="line">            lastResult = current</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> lastResult</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/06/30/decodeURIComponent/" data-id="cjf865ufm000t8wp1itd3yxux" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/12/10/ci-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          【读书笔记】持续集成（软件质量改进和风险降低之道）之一
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/05/03/白鹭引擎无废话快速上手/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">白鹭引擎无废话快速上手</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>在路上</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="在路上">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="在路上">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在路上">
+  
+    <link rel="alternate" href="/atom.xml" title="在路上" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">在路上</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一位崇尚价值投资的 Web 开发者</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-space" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/09/space/" class="article-date">
+  <time datetime="2016-09-08T16:00:00.000Z" itemprop="datePublished">2016-09-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/09/space/">空格</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Unicode定义的空格符号如下：</p>
+<p>[\u0020\u00A0\u1680\u180E\u2002-\u200D\u202F\u205F\u2060\u3000\uFEFF]</p>
+<p>以下几种空格可以重点留意：</p>
+<ul>
+<li>\u0020为普通半角空格</li>
+<li>\u00A0为不换行的空格，对应HTML的&nbsp;(No-Break Space)</li>
+<li>\u200B为零宽空格（Zero Width Space）</li>
+<li>\uFEFF为零宽不换行空格（Zero Width No-Break Space）</li>
+</ul>
+<p>其中\u2060为Unicode 3.2新增。</p>
+<p>在移除字符串首尾空白时，我们看看TJ的<a href="https://www.npmjs.com/package/trim" target="_blank" rel="noopener">trim</a>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trim</span>(<span class="params">str</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> str.replace(<span class="regexp">/^\s*|\s*$/g</span>, <span class="string">''</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>别看这个库如此简单，但是每天的下载量达到1W+。先不说其它方面的BUG，就正则来说问题就不少。<br><code>\s</code>匹配一个空白字符，等价于：</p>
+<p>[\f\n\r\t\v\u00A0\u0020\u1680\u180E\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\uFEFF]</p>
+<p>可以看出很多第三方库在移除首尾空白时都没有考虑周全。<br>下面我们看看浏览器内置的trim又是怎样的？</p>
+<p>示例代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> s = <span class="string">'\u0020\u00A0\u1680\u180E\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u200B\u200C\u200D\u202F\u205F\u2060\u3000\uFEFF'</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; s.length; i += <span class="number">1</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (s[i].trim().length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'\\u'</span> + s.charCodeAt(i).toString(<span class="number">16</span>))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果如下：</p>
+<ul>
+<li>\u200b</li>
+<li>\u200c</li>
+<li>\u200d</li>
+<li>\u2060</li>
+</ul>
+<p>结论很明朗：浏览器内置的trim也并非100%准确，所以我推荐在严格场景下面使用自定义的trim函数。</p>
+<p><a href="https://repl.it/DZhG/2" target="_blank" rel="noopener">查看在线示例</a></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%A9%BA%E6%A0%BC" target="_blank" rel="noopener">维基百科 - 空格</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/09/09/space/" data-id="cjf865ufv00198wp1ugn4bz8o" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-parser" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/17/parser/" class="article-date">
+  <time datetime="2016-07-16T16:00:00.000Z" itemprop="datePublished">2016-07-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="理解抽象语法树-AST"><a href="#理解抽象语法树-AST" class="headerlink" title="理解抽象语法树(AST)"></a>理解抽象语法树(AST)</h2><p><a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree" target="_blank" rel="noopener">Abstract syntax tree - 维基百科</a></p>
+<p><a href="http://tech.meituan.com/abstract-syntax-tree.html" target="_blank" rel="noopener">抽象语法树在 JavaScript 中的应用 - 美团点评技术团队</a></p>
+<p><a href="http://wwsun.github.io/posts/javascript-ast-tutorial.html" target="_blank" rel="noopener">JavaScript的抽象语法树与语法解析</a></p>
+<p><a href="http://www.zcfy.cc/article/347" target="_blank" rel="noopener">通过开发 Babel 插件理解抽象语法树</a></p>
+<h2 id="JavaScript-Parser"><a href="#JavaScript-Parser" class="headerlink" title="JavaScript Parser"></a>JavaScript Parser</h2><ul>
+<li><a href="http://esprima.org/" target="_blank" rel="noopener">Esprima</a></li>
+<li><a href="https://github.com/ternjs/acorn" target="_blank" rel="noopener">Acorn</a></li>
+<li><a href="https://github.com/babel/babylon" target="_blank" rel="noopener">Babylon</a></li>
+</ul>
+<p>Parser建议从Esprima开始学习，相比较于其它Parser文档和示例更加丰富和形象。</p>
+<p>Acorn的性能和效率比Esprima更胜一筹，但是文档比较匮乏。</p>
+<p>Babylon是Babel的JavaScript Parser，早期也是fork的Acorn，目前关注度不及其它Parser。</p>
+<p>推荐一种比较好的实践方式：从npm中的找出几个<a href="https://www.npmjs.com/browse/depended/acorn" target="_blank" rel="noopener">依赖于这些Parser</a>的项目直接学习源代码。比如<a href="https://www.npmjs.com/package/amd2cmd" target="_blank" rel="noopener">amd2cmd</a>这个项目就是使用acorn将amd代码转换为cmd代码。</p>
+<h2 id="周边工具"><a href="#周边工具" class="headerlink" title="周边工具"></a>周边工具</h2><p><a href="https://astexplorer.net/" target="_blank" rel="noopener">AST explorer</a></p>
+<p>更直观的理解各个Parser生成的AST。</p>
+<p><a href="https://github.com/estools" target="_blank" rel="noopener">ECMAScript Tooling</a></p>
+<p>各种用于AST以及辅助的相关工具，比如<a href="https://github.com/estools/estraverse" target="_blank" rel="noopener">estraverse</a>用于遍历AST，<a href="https://github.com/estools/escodegen" target="_blank" rel="noopener">escodegen</a>用于从AST生成源代码。</p>
+<p><a href="https://github.com/thejameskyle/babel-handbook/blob/master/translations/zh-Hans/plugin-handbook.md" target="_blank" rel="noopener">Babel 插件手册</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/07/17/parser/" data-id="cjf865ufq000z8wp14onrsi63" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-slimerjs" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/29/slimerjs/" class="article-date">
+  <time datetime="2016-06-28T16:00:00.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文主要介绍本人在项目实践中通过<code>SlimerJS</code>将网页输出为PDF文档的过程，生成的PDF文档中的文本是矢量的，可以选择复制。<br>虽然网上也有一些类似的分享，但是并没有将整个过程中的可能遇到的坑以及在Web开发中的一些技术细节讲述的比较清楚。</p>
+<h2 id="软件清单："><a href="#软件清单：" class="headerlink" title="软件清单："></a>软件清单：</h2><ul>
+<li>xvfb</li>
+<li>gtk3</li>
+<li>cups</li>
+<li>firefox</li>
+<li>slimerjs</li>
+</ul>
+<p>本文使用的操作系统版本为CentOS 7.2。</p>
+<h2 id="安装xvfb"><a href="#安装xvfb" class="headerlink" title="安装xvfb"></a>安装xvfb</h2><p>关于xvfb的介绍可以查看<a href="https://en.wikipedia.org/wiki/Xvfb" target="_blank" rel="noopener">wiki</a>，简单点说它就是用于处理程序中与图形化相关的功能，但是它不会在屏幕上展示任何图形输出。<br>安装以后可以使用<strong>xvfb-run</strong>命令来运行<strong>headless slimerjs.</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install xorg-x11-server-Xvfb</span><br></pre></td></tr></table></figure>
+<h2 id="安装Firefox"><a href="#安装Firefox" class="headerlink" title="安装Firefox"></a>安装Firefox</h2><p>SlimerJS依赖于Firefox，目前支持的版本号介于38~ 46，其它版本官方无法保证测试结果。<br>所以不推荐安装大于46或者小于38的版本。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://ftp.mozilla.org/pub/firefox/releases/46.0.1/linux-x86_64-EME-free/zh-CN/firefox-46.0.1.tar.bz2</span><br><span class="line">tar xjvf firefox-46.0.1.tar.bz2</span><br></pre></td></tr></table></figure>
+<p>注意这里我们下载Firefox的版本号为64的<a href="https://wiki.mozilla.org/Media/EME" target="_blank" rel="noopener">EME</a>版本，普通版本在渲染复杂网页时可能会出现莫名的引擎级别错误。</p>
+<h2 id="安装GTK3"><a href="#安装GTK3" class="headerlink" title="安装GTK3"></a>安装GTK3</h2><p>由于Firefox 46<a href="https://www.mozilla.org/en-US/firefox/46.0/system-requirements/" target="_blank" rel="noopener">依赖</a>于GTK3，所以这里我们需要安装GTK3。<br>另外如果你的操作系统版本为CentOS 6.x，那么我推荐你<a href="http://itvision.altervista.org/compiling-and-installing-gtk3-in-centos6.html" target="_blank" rel="noopener">放弃安装GTK3</a>，而是直接升级系统。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install gtk3-devel</span><br></pre></td></tr></table></figure>
+<h2 id="安装CUPS"><a href="#安装CUPS" class="headerlink" title="安装CUPS"></a>安装CUPS</h2><p><a href="https://www.cups.org/" target="_blank" rel="noopener">CUPS</a>是由苹果开发的通用Unix打印系统，如果没有安装CUPS，SlimerJS将网页渲染为PDF的时候将会<a href="https://docs.slimerjs.org/current/faq.html#on-linux-pdf-rendering-hangs-slimerjs" target="_blank" rel="noopener">挂起</a>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install cups</span><br></pre></td></tr></table></figure>
+<h2 id="安装SlimerJS"><a href="#安装SlimerJS" class="headerlink" title="安装SlimerJS"></a>安装SlimerJS</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.slimerjs.org/releases/0.10.0/slimerjs-0.10.0.zip</span><br><span class="line">unzip slimerjs-0.10.0.zip</span><br></pre></td></tr></table></figure>
+<h2 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 这里设置为firefox文件夹下的的firefox可执行文件的路径</span><br><span class="line">export SLIMERJSLAUNCHER=PATH_TO_FIREFOX</span><br></pre></td></tr></table></figure>
+<h2 id="开始执行"><a href="#开始执行" class="headerlink" title="开始执行"></a>开始执行</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd PATH_TO_SLIMERJS</span><br><span class="line">xvfb-run ./slimerjs SCRIPT_PATH HTTP_PAGE_URL OUTPUT_FILENAME</span><br></pre></td></tr></table></figure>
+<p>另外如果执行没有正常运行，可以加上—debug参数</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xvfb-run ./slimerjs --debug test.js http://www.qq.com/ test.pdf</span><br></pre></td></tr></table></figure>
+<h2 id="参考代码"><a href="#参考代码" class="headerlink" title="参考代码"></a>参考代码</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> page = <span class="built_in">require</span>(<span class="string">'webpage'</span>).create()</span><br><span class="line"><span class="keyword">var</span> system = <span class="built_in">require</span>(<span class="string">'system'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (system.args.length !== <span class="number">3</span>) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Arguments error: xvfb-run ./slimerjs SCRIPT_PATH HTTP_PAGE_URL OUTPUT_FILENAME'</span>)</span><br><span class="line">  slimer.exit()</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> url = system.args[<span class="number">1</span>]</span><br><span class="line">  <span class="keyword">var</span> renderPath = system.args[<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Page url is '</span> + url)</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Output path is '</span> + renderPath)</span><br><span class="line"></span><br><span class="line">  page.paperSize = &#123;</span><br><span class="line">    <span class="comment">// magic number in my project</span></span><br><span class="line">    width: <span class="string">'1500px'</span>,</span><br><span class="line">    height: <span class="string">'1038px'</span>,</span><br><span class="line">    shrinkToFit: <span class="literal">true</span>,</span><br><span class="line">    printBGColors: <span class="literal">true</span>,</span><br><span class="line">    printBGImages: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  page.onLoadFinished = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Finish loading page'</span>)</span><br><span class="line">    <span class="comment">// 有些时候分页不理想，需要删除一些节点</span></span><br><span class="line">    page.evaluate(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> nodes = <span class="built_in">document</span>.querySelectorAll(<span class="string">'.bottom-line'</span>)</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i&lt; nodes.length; i += <span class="number">1</span>) &#123;</span><br><span class="line">        nodes[i].parentNode.removeChild(nodes[i])</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Start rendering'</span>)</span><br><span class="line">    page.render(renderPath)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Finish rendering'</span>)</span><br><span class="line">    slimer.exit()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Opening page now ...'</span>)</span><br><span class="line">  page.open(url)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="字体"><a href="#字体" class="headerlink" title="字体"></a>字体</h2><p>由于服务部署在Linux服务器上，网页渲染使用的字体与Windows和macOS区别还是很大的，比如Windows的微软雅黑在Linux是无法使用的。<br>另外在安装字体上也有两种选择，第一是直接安装在服务器上，第二是作为Web Fonts从网页中引入。</p>
+<h2 id="Flex布局"><a href="#Flex布局" class="headerlink" title="Flex布局"></a>Flex布局</h2><p>早先我们尝试使用PhantomJS来完成此工作，虽然网上有说2.x支持Flex布局，但是我们的实践结果是不支持。SlimerJS在Flex布局上支持的很好，无需任何额外工作。</p>
+<h2 id="Canvas绘制"><a href="#Canvas绘制" class="headerlink" title="Canvas绘制"></a>Canvas绘制</h2><p>我们的网页使用了ECharts来进行图表绘制，ECharts底层使用了canvas来绘制图表。<br>PhantomJS输出的PDF在这方面支持很差，Stacked Column中莫名的出现很多空白间隙。SlimerJS的表现要好得多，不过有些淡虚线比实际要粗一些，色彩也深一些。</p>
+<h2 id="文档分页"><a href="#文档分页" class="headerlink" title="文档分页"></a>文档分页</h2><p>如果希望输出的PDF能够支持分页输出（方便分页打印），需要设置paperSize的Height来确定每页pdf的高度。<br>不过这里也是有坑的，每页PDF高度会有几个像素的差距，导致会多出一个空白页。</p>
+<h2 id="CSS适配"><a href="#CSS适配" class="headerlink" title="CSS适配"></a>CSS适配</h2><p>渲染PDF的时候，浏览器进入打印模式，如果你没有专门适配样式，输出效果会很差。很多元素的背景颜色/文本颜色/背景图片不会展示出来。<br>对于PhantomJS，网上有讨论说需要加上如下样式（我本人并未实践过此方案）：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@<span class="keyword">media</span> print &#123;</span><br><span class="line">  <span class="selector-tag">body</span> &#123;</span><br><span class="line">     <span class="comment">/*https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-print-color-adjust*/</span></span><br><span class="line">     <span class="attribute">-webkit-print-color-adjust</span>: exact;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于SlimerJS，虽然paperSize存在相关设置（printBGColors/printBGImages），但是文本颜色似乎无法设置。所以我推荐在编写CSS的时候注意如下细节：</p>
+<ul>
+<li>将所有背景图片转换为Base64字符串直接在css中引入（幸好有webpack）</li>
+<li>所有设置元素文本颜色和背景颜色的样式需要兼容打印模式</li>
+<li>文本颜色相关的设置不支持inherited，这点尤其注意</li>
+</ul>
+<p>样例代码如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.someClassName</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>:red;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#FFF</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@<span class="keyword">media</span> print &#123;</span><br><span class="line">  <span class="selector-class">.someClassName</span> &#123;</span><br><span class="line">    <span class="attribute">background-color</span>:red <span class="meta">!important</span>;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#FFF</span> <span class="meta">!important</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="最后的忠告"><a href="#最后的忠告" class="headerlink" title="最后的忠告"></a>最后的忠告</h2><p><em>不要寄希望于输出的PDF与网页中展示效果100%一致，几乎不可能（尤其是网页内容相对比较复杂的时候），最终效果或多或少都会有些瑕疵。</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/06/29/slimerjs/" data-id="cjf865ufu00178wp14htbrhqg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-code-management" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/26/code-management/" class="article-date">
+  <time datetime="2016-06-25T16:00:00.000Z" itemprop="datePublished">2016-06-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/26/code-management/">代码管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>本文基本总结了我在DataEye前端项目代码管理方面的一些尝试。分享PPT在 <a href="http://slides.com/reduxis/deck-1/fullscreen" target="_blank" rel="noopener">slides.com</a> 可能需要翻墙。</p>
+</blockquote>
+<h2 id="Virtuality-amp-Reality"><a href="#Virtuality-amp-Reality" class="headerlink" title="Virtuality &amp; Reality"></a>Virtuality &amp; Reality</h2><blockquote>
+<p>借助于当下流行的VR，代码管理也从两个方面来讲解：虚（文件内容相关的管理）/实（文件的物理存储相关的管理）</p>
+</blockquote>
+<h2 id="Version-Control"><a href="#Version-Control" class="headerlink" title="Version Control"></a>Version Control</h2><blockquote>
+<p>Git与SVN：Git是分布式版本管理，SVN是中心化。</p>
+</blockquote>
+<p>无需中心服务器，本地自用</p>
+<blockquote>
+<p>git init</p>
+</blockquote>
+<h2 id="Multiple-Projects"><a href="#Multiple-Projects" class="headerlink" title="Multiple Projects"></a>Multiple Projects</h2><blockquote>
+<p>实际工作中开发人员每天都要与多个项目打交道，如何在多项目中开发中提高工作效率值得思考与学习</p>
+<p>20,0000,0000</p>
+</blockquote>
+<h2 id="All-in-one"><a href="#All-in-one" class="headerlink" title="All in one"></a>All in one</h2><blockquote>
+<p>和Windows的基础代码很像，Google的20亿行代码是用来驱动整个Google服务的，他们是一个整体！</p>
+</blockquote>
+<p><a href="http://blog.jobbole.com/91648/" target="_blank" rel="noopener">谷歌代码库已超过 20 亿行代码，他们是如何管理的？</a></p>
+<h2 id="All-in-two-indeed"><a href="#All-in-two-indeed" class="headerlink" title="All in two indeed"></a>All in two indeed</h2><blockquote>
+<p>将业务代码(static)和可复用的代码(DataEye/dejs)分离</p>
+</blockquote>
+<h2 id="Static"><a href="#Static" class="headerlink" title="Static"></a>Static</h2><blockquote>
+<p>所有的前端业务代码</p>
+</blockquote>
+<h2 id="DataEye-dejs"><a href="#DataEye-dejs" class="headerlink" title="DataEye/dejs"></a>DataEye/dejs</h2><blockquote>
+<p>所有复用的组件代码，基于npm进行包管理</p>
+</blockquote>
+<h2 id="npm"><a href="#npm" class="headerlink" title="npm"></a>npm</h2><blockquote>
+<p>node package manager  → package manager for javascript</p>
+<p>30,1298</p>
+</blockquote>
+<h2 id="Branches"><a href="#Branches" class="headerlink" title="Branches"></a>Branches</h2><blockquote>
+<p>分支管理已经成为日常工作的一部分（迭代新特性开发/临时BUG修复等）</p>
+</blockquote>
+<h2 id="Under-Control"><a href="#Under-Control" class="headerlink" title="Under Control"></a>Under Control</h2><blockquote>
+<p>分支管理不是复制粘贴，需要微观宏观同时把控。</p>
+<p>提交/文件/修改历史都需要记录在案</p>
+</blockquote>
+<h2 id="SVN"><a href="#SVN" class="headerlink" title="SVN"></a>SVN</h2><blockquote>
+<p>你打算签出十个分支的所有代码吗？</p>
+</blockquote>
+<h2 id="Workflow"><a href="#Workflow" class="headerlink" title="Workflow"></a>Workflow</h2><blockquote>
+<p>工作流管理将版本库分为稳定分支和临时分支</p>
+</blockquote>
+<h2 id="Stable-Branches"><a href="#Stable-Branches" class="headerlink" title="Stable Branches"></a>Stable Branches</h2><blockquote>
+<p>master用于管理已发布的线上代码，development用于日常开发</p>
+</blockquote>
+<h2 id="Temporary-Branches"><a href="#Temporary-Branches" class="headerlink" title="Temporary Branches"></a>Temporary Branches</h2><blockquote>
+<p>feature / bug / release</p>
+</blockquote>
+<p>临时分支需要在适当的时机合并到所有稳定分支。</p>
+<h2 id="Code-Review"><a href="#Code-Review" class="headerlink" title="Code Review"></a>Code Review</h2><blockquote>
+<p>发现BUG，提高代码质量，促进知识共享，提升团队技术水平</p>
+</blockquote>
+<h2 id="Continuous-Integration"><a href="#Continuous-Integration" class="headerlink" title="Continuous Integration"></a>Continuous Integration</h2><blockquote>
+<p>提高软件质量，降低项目风险</p>
+</blockquote>
+<h2 id="Unit-Test"><a href="#Unit-Test" class="headerlink" title="Unit Test"></a>Unit Test</h2><blockquote>
+<p>隔离程序最小单元对其进行正确性测试，避免意外惊喜</p>
+</blockquote>
+<p>单元测试能够反哺程序自身的架构和设计。</p>
+<h2 id="Coverage"><a href="#Coverage" class="headerlink" title="Coverage"></a>Coverage</h2><blockquote>
+<p>没有明显错误的代码 vs 明显没有错误的代码</p>
+</blockquote>
+<p>难以想象一行完全没有运行过的代码发布到生产环境会造成什么后果。</p>
+<h2 id="Advice-on-Commits"><a href="#Advice-on-Commits" class="headerlink" title="Advice on Commits"></a>Advice on Commits</h2><blockquote>
+<p>尽快提交/尽早提交/经常提交</p>
+</blockquote>
+<h2 id="Advice-on-Coding"><a href="#Advice-on-Coding" class="headerlink" title="Advice on Coding"></a>Advice on Coding</h2><blockquote>
+<p>Be social and better</p>
+<ul>
+<li>GitHub</li>
+<li>npm</li>
+<li>Upsource</li>
+<li>codecov</li>
+<li>Semaphoreci</li>
+</ul>
+</blockquote>
+<hr>
+<p>本文使用软件 <a href="https://github.com/simongfxu/violet" target="_blank" rel="noopener">violet</a>一键发布到知乎/简书/Medium/GitHub等多个平台。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/06/26/code-management/" data-id="cjf865ufh000m8wp14pwasm3t" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/代码管理/">代码管理</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-violet" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/18/violet/" class="article-date">
+  <time datetime="2016-06-17T16:00:00.000Z" itemprop="datePublished">2016-06-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="她是什么"><a href="#她是什么" class="headerlink" title="她是什么"></a>她是什么</h2><p><em>violet 是一款面向写作爱好者的客户端同步工具。</em></p>
+<p>对于喜欢写点东西的人来说，一般都会活跃在多个写作平台（<code>知乎</code>、<code>简书</code>、<code>Medium</code>、<code>GitHub</code>）。<br>往往我们倾向于在多个平台中选择一个作为主创平台。</p>
+<p><strong>为什么只能选择一个平台？</strong></p>
+<p>因为作品在各个写作平台之间同步异常麻烦。</p>
+<blockquote>
+<p>各个平台编辑器支持能力不一致，人的精力有限，你不可能在每个平台上使用不同的编辑器都发布一遍。<br>即时可以复制粘贴，但大多数时候粘贴出的格式都并非如你所愿（尤其是代码）。<br>随之而来的格式调整会花费大量时间，慢慢地你失去了同步多个平台的动力。<br>作品发布以后频繁的小幅更新也慢慢地在摧毁你的创作动力。</p>
+</blockquote>
+<p><strong>而罪魁祸首仅仅是缺少一款得心应手的工具！</strong></p>
+<p>从今天起就不要为这些问题担忧了，<strong>violet</strong> 能帮你解除后顾之忧。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ul>
+<li>统一使用流行的写作语言 <strong>Markdown</strong></li>
+<li>在各大写作平台之间同步作品（<strong>一次编写，处处发布</strong>）<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2></li>
+<li>跨平台，兼容Windows / Mac / Linux</li>
+<li>零网络请求，零客户端数据上报（写作平台接口除外）</li>
+<li>敏感信息加密存储在本地</li>
+<li><a href="https://github.com/simongfxu/violet" target="_blank" rel="noopener">源代码开源</a><h2 id="支持写作平台"><a href="#支持写作平台" class="headerlink" title="支持写作平台"></a>支持写作平台</h2></li>
+<li>知乎</li>
+<li>简书</li>
+<li>Medium</li>
+<li>GitHub</li>
+<li>其它(敬请期待)<h2 id="功能支持"><a href="#功能支持" class="headerlink" title="功能支持"></a>功能支持</h2></li>
+</ul>
+<p>功能支持请前往：<a href="https://jinshuju.net/f/2yctZ5?x_field_1=github" target="_blank" rel="noopener">violet需求调查</a></p>
+<p>产品论坛和意见反馈请前往：<a href="https://violet.kf5.com/hc/" target="_blank" rel="noopener">violet客户支持服务平台</a></p>
+<h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>本文链接：</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/21376171?refer=reduxis" target="_blank" rel="noopener">知乎</a></li>
+<li><a href="http://www.jianshu.com/p/d93ca8b61355" target="_blank" rel="noopener">简书</a></li>
+<li><a href="https://github.com/simongfxu/simongfxu.github.com/issues/101" target="_blank" rel="noopener">GitHub</a></li>
+<li><a href="https://medium.com/@damngoto/violet-%E5%80%BC%E5%BE%97%E4%B8%80%E8%AF%95%E7%9A%84%E5%86%99%E4%BD%9C%E5%90%8C%E6%AD%A5%E5%B0%8F%E5%8A%A9%E6%89%8B-2fbd2799cea4" target="_blank" rel="noopener">Medium</a></li>
+</ul>
+<p>截图：</p>
+<p><img src="https://pic2.zhimg.com/153f8d8cda1d4b7b95e53e3375c26fc3_r.png" alt="Linux"></p>
+<h2 id="名称来源"><a href="#名称来源" class="headerlink" title="名称来源"></a>名称来源</h2><p>我初生的女儿叫 <strong>小紫</strong></p>
+<h2 id="License"><a href="#License" class="headerlink" title="License"></a>License</h2><p>MIT</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/06/18/violet/" data-id="cjf865ufy001e8wp1yib64adu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-better-react-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/12/better-react-2/" class="article-date">
+  <time datetime="2016-03-11T16:00:00.000Z" itemprop="datePublished">2016-03-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/12/better-react-2/">Better React 后续</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前重构项目后根据个人实战经验写了一篇<a href="http://zhuanlan.zhihu.com/reduixs/20554654" target="_blank" rel="noopener">《Better React》</a>，总结在React中传递props应该注意的事项。<br>在后来与网友的讨论中发现行文总结不太严谨，于是乎再度发文，争取纠正其中某些纰漏之处，不至于误导他人。<br>如果你还没有阅读<a href="http://zhuanlan.zhihu.com/reduixs/20554654" target="_blank" rel="noopener">《Better React》</a>，推荐阅读之后再来阅读本文。</p>
+<h2 id="缓存函数作为组件的prop传递不可取吗？"><a href="#缓存函数作为组件的prop传递不可取吗？" class="headerlink" title="缓存函数作为组件的prop传递不可取吗？"></a>缓存函数作为组件的prop传递不可取吗？</h2><p>之前的文章中不推荐缓存函数主要是因为下面这两个原因：</p>
+<ul>
+<li><em>类似的prop越多，外层缓存的函数越多，代码风格极其不自然</em></li>
+<li><em>如果函数依赖于局部变量，缓存的方式异常麻烦甚至于无法解决</em></li>
+</ul>
+<p>这里我们有必要再进行一些科普工作。 React组件可以接受函数作为prop，一般我们传递的时候有三种方式：</p>
+<ol>
+<li>在组件当前作用域定义局部变量</li>
+<li>在最外层的作用域定义全局变量</li>
+<li>作为组件自身的实例方法定义</li>
+</ol>
+<p>第一种方式写法最自然，但是危害最大，因为函数引用在父组件render的时候会一直变化。 第二种方式写法最蛋疼，函数引用不会变化，但是可以解决一些问题。<br>第三种方式则是前两种方法的一个比较完美结合。</p>
+<p>至此，第一个原因提及的问题通过第三种方式可以解决。至于代码风格问题，因人而异。<br>第二个原因提到的问题可能描述的不太详细，以致于会有人疑惑：</p>
+<ul>
+<li>为什么不把依赖的变量作为prop一同传入给子组件，这样反而更符合React的思想</li>
+</ul>
+<p>传还是不传，怎么做才是最佳实践？且往下看。</p>
+<h2 id="应该使用EventEmitter吗？"><a href="#应该使用EventEmitter吗？" class="headerlink" title="应该使用EventEmitter吗？"></a>应该使用EventEmitter吗？</h2><p>依赖是否需要作为props传递给子组件？这个我只能无奈地说要结合实际需求决定。<br>当我们不使用EventEmitter的时候，看看我们怎么处理下面三个比较复杂的场景：</p>
+<p><strong>_场景一</strong>_<br><em>假设多个父组件引用了同一子组件，父组件的依赖又各不相同，这种方式需要将依赖全部加入到子组件的props里，必然引起子组件props爆炸。</em><br><em>props爆炸带来的就是一堆无谓的propType约束定义以及执行时的非空判断，代码臭味非常明显。</em><br><em>倘若子组件未来再增加一些函数类型的props，这种方式简直就是灾难！</em><br>而EventEmitter只需要给子组件绑定所需的事件交给子组件自己在合适的时机触发就可以了。</p>
+<p><strong>_场景二</strong>_<br>少数情况我们要考虑事件解绑，而置空函数类型的props必然导致rerender。<br>当然你也可以通过设置开关变量来解决，但原本简单的逻辑变得更复杂了。<br>如果函数类型的props很多，开关变量的数目也不会少，徒增很多无意义的代码。<br>而EventEmitter只需要简单的解绑事件，也不会引起rerender。</p>
+<p><strong>_场景三</strong>_<br>在场景一的情况下，假设现在需要把子组件的事件处理结果同步到父组件的上级。<br>在我们重构代码的时候，这种方式需要修改所有的父组件的代码才能满足需求。<br>而EventEmitter只需要在最外层的组件给子组件绑定一个事件即可。</p>
+<p>更多的例子我就不一一列举了，相信真实世界的案例会更加多变和复杂。不过我们基本可以看出，场景越复杂EventEmitter的优势越明显。<br>EventEmitter能够将组件之间的依赖层层解耦，从而能够从容的应对需求的不断变化。</p>
+<h2 id="什么情况下不应该使用EventEmitter？"><a href="#什么情况下不应该使用EventEmitter？" class="headerlink" title="什么情况下不应该使用EventEmitter？"></a>什么情况下不应该使用EventEmitter？</h2><p>首先我们必须承认，在开源的React组件中，使用EventEmitter非常少见。<br>为什么呢？我个人认为主要是以下几个原因：</p>
+<ul>
+<li>浏览器不像Node.js，没有原生的EventEmitter实现，需要引入额外的库来支持；</li>
+<li>开源组件一般功能和需求规划较为明确，变化相对较少，使用EventEmitter收益非常有限。</li>
+</ul>
+<p>所以我推荐在功能通用或逻辑相对简单的组件中不必使用EventEmitter，而在功能复杂需求变化频繁的业务组件中优先使用EventEmitter。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/03/12/better-react-2/" data-id="cjf865ufe000h8wp14hrf3b5e" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-redux" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/21/redux/" class="article-date">
+  <time datetime="2016-02-20T16:00:00.000Z" itemprop="datePublished">2016-02-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/21/redux/">Redux三分钟入门</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Redux三分钟入门"><a href="#Redux三分钟入门" class="headerlink" title="Redux三分钟入门"></a>Redux三分钟入门</h1><h2 id="什么是Redux？"><a href="#什么是Redux？" class="headerlink" title="什么是Redux？"></a>什么是Redux？</h2><p>对于前端页面，从数据层面来说，无非就是一系列的状态组合。<br>在传统的前端开发中，尤其是jQuery横行的年代，状态管理相关的理念一直没有什么起色。<br>自Flux横空出世以来，各种解决方案层出不穷，百花齐放，Redux也是在这种环境下诞生的。<br>如何描述Redux呢？<br>简而言之，它就是一个状态容器，里面存储了整个应用的所有状态。</p>
+<blockquote>
+<p>Redux的核心思想就是要提供<strong>_可预测</strong>_的状态管理，这对日益膨胀的大型应用来说尤其重要。</p>
+</blockquote>
+<p>原谅我有一点标题党，因为对于从来没有听说过Redux的人来说，三分钟入门可能真的不够。</p>
+<h2 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h2><p>Redux中有三个基本概念非常重要：store / reducer / action。<br>Store顾名思义就是状态容器，Redux使用<strong>_createStore</strong>_这个API来创建一个全局的状态容器。这里有一点比较重要的就是：</p>
+<blockquote>
+<p>Redux应用只能有一个单一的Store</p>
+</blockquote>
+<p>我们暂时不用深究Redux为何如此设计。<br>Reducer是一个纯函数，它的职责就是用来更新状态容器中的状态，<strong>_这也是Redux中更新状态的唯一途径</strong>_。<br>Action是一个普通JavaScript对象，它是把数据从应用传递到状态容器的载体。<br>将action传递到store中很简单，使用store.dispatch(action)就可以了。</p>
+<blockquote>
+<p>为了区分不同的数据来源，我们一般约定每个action都必须要有一个type字段。</p>
+</blockquote>
+<p>这样我们的reducer函数就能根据这个type字段来决定如何修改状态容器。<br>掌握了上面的一些基本概念以后，我们就可以进入正题了，先上一段代码：</p>
+<h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Redux的两个核心API</span><br><span class="line"> * createStore用于创建状态容器</span><br><span class="line"> * combineReducers用于将多个reducers合并成一个Reducer</span><br><span class="line"> */</span><br><span class="line">let &#123;createStore, combineReducers&#125; = Redux</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 状态容器的初始状态</span><br><span class="line"> * 一般用于同构应用，服务器端返回相关数据</span><br><span class="line"> */</span><br><span class="line">let INITIAL_STATE = &#123;</span><br><span class="line">  counter: &#123;</span><br><span class="line">    count: 0</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * reducer函数，用于变更状态容器中的状态</span><br><span class="line"> * 如果action未知，则原样返回</span><br><span class="line"> * 永远不要修改state，返回一个全新的state</span><br><span class="line"> */</span><br><span class="line">function counter(state = INITIAL_STATE.counter, action) &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case &apos;INCREMENT&apos;:</span><br><span class="line">      return &#123;count: state.count + 1&#125;</span><br><span class="line">    case &apos;DECREMENT&apos;:</span><br><span class="line">      return &#123;count: state.count - 1&#125;</span><br><span class="line">    default:</span><br><span class="line">      return state</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 状态容器三个核心方法：</span><br><span class="line"> * subscribe用于监听事件，每当dispatch的时候会执行</span><br><span class="line"> * dispatch用于分发action，这是改变状态容器中state的唯一途径</span><br><span class="line"> * getState获取当前state</span><br><span class="line"> */</span><br><span class="line">let store = createStore(combineReducers(&#123;counter&#125;), INITIAL_STATE)</span><br><span class="line"></span><br><span class="line">store.subscribe(() =&gt;</span><br><span class="line">  console.log(&apos;获取当前状态容器：&apos;, store.getState())</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">store.dispatch(&#123; type: &apos;INCREMENT&apos; &#125;) // count = 1</span><br><span class="line">store.dispatch(&#123; type: &apos;DECREMENT&apos; &#125;) // count = 0</span><br></pre></td></tr></table></figure>
+<p><a href="http://codepen.io/simongfxu/pen/eJLwMb?editors=0012" target="_blank" rel="noopener">在线查看DEMO</a><br>上面的DEMO代码逻辑大致如下：</p>
+<ol>
+<li>先定义reducer</li>
+<li>调用createStore创建store</li>
+<li>最后dispatch相关的action</li>
+</ol>
+<p>对应到具体业务中的过程可能是这样：</p>
+<ol>
+<li>用户点击某个按钮</li>
+<li>然后状态容器dispatch这个action</li>
+<li>action最后传达到reducer中</li>
+<li>reducer根据action的内容来修改状态</li>
+<li>状态容器状态发生改变后触发视图更新</li>
+</ol>
+<p>理解了上面的DEMO代码之后，Redux基本上就算入门啦！</p>
+<h2 id="后续深入"><a href="#后续深入" class="headerlink" title="后续深入"></a>后续深入</h2><p>学习完上面的DEMO后，推荐你先看下Redux的一些<a href="http://camsong.github.io/redux-in-chinese/docs/introduction/ThreePrinciples.html" target="_blank" rel="noopener">基本理念</a>，了解Redux背后设计的前因后果，然后再针对性地围绕<a href="http://camsong.github.io/redux-in-chinese/index.html" target="_blank" rel="noopener">Redux官网中文版</a>学习（个人不太推荐从头到尾的精读，时间充裕的话请自便）。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/21/redux/" data-id="cjf865ufx001c8wp19zx7tjgc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redux/">Redux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-better-react" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/04/better-react/" class="article-date">
+  <time datetime="2016-02-03T16:00:00.000Z" itemprop="datePublished">2016-02-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/04/better-react/">Better React</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Better-React"><a href="#Better-React" class="headerlink" title="Better React"></a>Better React</h1><p>使用Ractive（一个MVVM框架）编写组件的时候，我就经常想获取用户当前传入的attributes。<br>很无奈，Ractive并不支持此功能。为此我还专门提过一个<a href="https://github.com/ractivejs/ractive/issues/2059" target="_blank" rel="noopener">issue</a>。<br>React开始流行的时候，作为MVVM的爱好者我其实是比较抵触的。<br>后来发现势头不太对，感觉还是有必要了解下。<br>于是就抱着试一试的心理，开始了React的学习历程。<br>依稀记得当我首次接触props和state这对兄弟的时候，我的内心是十分激动的。</p>
+<p>随着React学习的愈发深入，就愈发觉得掌握props和state的使用，对于掌握React整个基础体系是有多么重要。<br>今天本文就结合我自己的开发实践，讲讲使用props的一个基本原则。当然如果有更好的实践方法，烦请多交流。</p>
+<h2 id="一个典型"><a href="#一个典型" class="headerlink" title="一个典型"></a>一个典型</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> Component = React.createClass(&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">let</span> handleClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'click handled'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;SubComponent onClick=&#123;handleClick&#125; /&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>通常来说，子组件依赖父组件的某些变量、状态，或者需要更新父组件的UI这种需求还是很普遍的。<br>上例中父组件将一个handleClick函数作为prop传入给子组件，handleClick由于其作用域的天然优势可以将子组件的依赖问题层层化解，异常的简单方便。<br>这种将函数作为props传入子组件解决依赖问题的处理方式，也是目前React父子组件通信处理中一种非常普遍且流行的方式。</p>
+<p>但是既然以此为例，那它肯定是反面典型了！</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>下面我们以一个稍微复杂点的例子来看看这种处理方式的缺陷， <a href="http://codepen.io/simongfxu/pen/rxZBNz?editors=0010" target="_blank" rel="noopener">查看演示效果</a>。<br>试试点击演示中的Add按钮，然后查看控制台输出。</p>
+<p>你会发现每点一次，底层的DumbCompoent的render都会触发一次。<br>照理说DumbComponent没有任何的props的变更应该不会rerender，为什么呢？<br>因为SmartComponent中传递prop的时候传递的是一个匿名函数，<br>DumbComponent在shouldComponentUpdate判断的时候由于onClick的引用不同而返回true。</p>
+<p>如何修复呢？<br>很自然的你可能会想到将onClick这个函数缓存起来，这样引用就不会一直变了。<br>仔细思考一番其实这个方式并不可取，主要是因为：</p>
+<blockquote>
+<ul>
+<li>类似的prop越多，外层缓存的函数越多，代码风格极其不自然</li>
+<li>如果prop依赖于局部变量，缓存的方式异常麻烦甚至于无法解决</li>
+</ul>
+</blockquote>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>避免将函数作为props传递，使用EventEmitter来对父子组件的依赖解耦。</p>
+<p>如果不了解EventEmitter，可以看看这篇<a href="http://www.html-js.com/article/1649" target="_blank" rel="noopener">文章</a>。<br>浏览器端的实现我推荐<a href="https://github.com/primus/eventemitter3" target="_blank" rel="noopener">EventEmitter3</a>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>为了避免不必要的麻烦，请不要将函数传入props中，取而代之使用EventEmitter。<br>遵循此原则，props始终传递基本类型或者只包含基本类型的对象。<br>在今后的React学习之路上，当你了解<a href="https://github.com/camsong/blog/issues/3" target="_blank" rel="noopener">ImmutableJS</a>时，这个原则将会让你深深受益。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/04/better-react/" data-id="cjf865ufg000j8wp1nc8kx1mv" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-ci-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/17/ci-2/" class="article-date">
+  <time datetime="2015-12-16T16:00:00.000Z" itemprop="datePublished">2015-12-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/17/ci-2/">【读书笔记】持续集成（软件质量改进和风险降低之道）之二</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="持续集成（软件质量改进和风险降低之道）"><a href="#持续集成（软件质量改进和风险降低之道）" class="headerlink" title="持续集成（软件质量改进和风险降低之道）"></a>持续集成（软件质量改进和风险降低之道）</h1><h2 id="第三章-利用CI减少风险"><a href="#第三章-利用CI减少风险" class="headerlink" title="第三章 利用CI减少风险"></a>第三章 利用CI减少风险</h2><p><em>品质意味着在没人看的时候也把事情做对。 by 亨利 福特</em></p>
+<ul>
+<li>我们的任务进度怎么样了？请查看最后一次构建</li>
+<li>测试覆盖率达到多少？请查看最后一次构建</li>
+<li>谁最后签入了代码？请查看最后一次构建</li>
+</ul>
+<p>利用CI，对每次变更建立一张“品质安全网”，更快地交付软件产品。当你在每次变更时按下“集成按钮”时，你就为尽早发现风险、经常发现风险奠定了基础。</p>
+<p><strong>3.1 风险：没有可部署的软件</strong></p>
+<p>场景：“在我的机器上是可行的”<br>解决方案：消除IDE与构建过程的耦合，使用自动化构建脚本</p>
+<p>场景：与数据库同步（害怕修改或重构数据库和源代码、很难用不同的测试数据填充数据库、很难维护开发和测试环境）<br>解决方案：将数据库相关融入到开发过程中，对数据库进行审查和测试</p>
+<p><strong>3.2 风险：很晚才发现缺陷</strong></p>
+<p>场景：对错误的修复导致了其它无关的错误浮现出来。我们对变更没有信心，因为我们不知道变更对其它部分的影响。<br>解决方案：为变更的代码编写单元测试。</p>
+<p><strong>3.3 风险：缺少项目可见性</strong></p>
+<p>场景：没有工具显示整个项目的总体设计情况，没有类和关系的模型。<br>解决方案：使用自动化文档生成工具。</p>
+<p><strong>3.4 风险：低品质的软件</strong></p>
+<p>场景：坚持编码标准<br>场景：维持架构标准<br>场景：重复的代码<br>解决方案：使用相关的开发工具:Checkstyle / PMD / jDepend / Simian</p>
+<h2 id="第四章-针对每次变更构建软件"><a href="#第四章-针对每次变更构建软件" class="headerlink" title="第四章 针对每次变更构建软件"></a>第四章 针对每次变更构建软件</h2><p><em>整个该死的宇宙必须被分解为一小块一小块，然后重新构造。 by 亨利 米勒</em></p>
+<p>有时候开发者就像鞋匠，为他的所有客户提供了鞋子，却忘记为他自己的孩子做鞋。</p>
+<p><strong>4.1 自动化构建</strong></p>
+<p> 要记住，构建应该是按一下按钮的事。</p>
+<p><strong>4.2 执行单命令构建</strong></p>
+<p>构建脚本的逻辑过程：</p>
+<ol>
+<li>清理</li>
+<li>编译</li>
+<li>集成数据库</li>
+<li>测试</li>
+<li>审查</li>
+<li>部署</li>
+</ol>
+<p><strong>4.3 将构建脚本从IDE分离</strong></p>
+<p>无</p>
+<p><strong>4.4 集中放置软件资产</strong></p>
+<p>使用版本库来存放所有文件。</p>
+<p><strong>4.5 创建一致的目录结构</strong></p>
+<p>基于软件开发过程中的活动创建一致的、有逻辑的目录结构。<br>构建过程中只需取出包含这个任务所需的源码和相关脚本，而不是所有的东西。</p>
+<p><strong>4.6 让构建快速失败</strong></p>
+<p>越有可能失败的的任务，应该越早在构建脚本中执行。</p>
+<p><strong>4.7 针对所有环境构建</strong></p>
+<p>改进构建脚本的可配置项，将构建脚本参数化。</p>
+<p><strong>4.8 构建的类型和触发机制</strong></p>
+<p>三个层次：个人、团队、客户。分别对应私有构建、集成构建、发布构建。<br>触发机制：手工、定期执行、轮询变更、事件驱动。</p>
+<p><strong>4.9 使用专门的集成构建计算机</strong></p>
+<p>无</p>
+<p><strong>4.10 使用CI服务器</strong></p>
+<p>典型的CI服务器包含如下功能：</p>
+<ul>
+<li>以特定的时间间隔轮询版本库变更</li>
+<li>定期执行某种操作</li>
+<li>标识出安静期，在这段时间内部进行集成构建</li>
+<li>支持不同的构建脚本</li>
+<li>向相关人员发送电子邮件</li>
+<li>显示构建历史</li>
+<li>信息面板查看集成构建的信息</li>
+<li>为不同的项目支持多个版本控制系统</li>
+</ul>
+<p><strong>4.11 执行手工集成构建</strong></p>
+<p>使用手工集成构建不能保证坚持持续集成的实践。不利于提高品质的、更小、更频繁的集成。</p>
+<p><strong>4.12 执行快速构建</strong></p>
+<p>保持构建不超过10分钟；收集、分析构建测量数据；改进测试性能。</p>
+<p><strong>4.13 分阶段构建</strong></p>
+<p>减少构建时间的一种方式。先执行轻量级构建并对软件进行单元测试，然后执行重量级构建。</p>
+<p><strong>4.14 这对您如何生效</strong></p>
+<p><em>我的项目有七十亿行代码，怎么可能用这种方式？</em></p>
+<p>大项目主要考虑让构建保持迅速，定期执行而不是持续执行。将代码分解为独立的子项目。</p>
+<p><em>我们的软件太复杂了。我们 必须手工做一些事 或 “我们一切进行的的很好”</em></p>
+<p>这正是创建CI系统的理由，因为你可能在执行重复过程上花了很多时间。如果软件复杂，有很多依赖，那么持续集成就更有必要，需要创建一个系统将所有的部件组装在一起，执行测试和审查，确保所有部分运行正常。<br>当然，这并不是说创建一个可重复的构建过程会很容易。将过程分解，而不是一次加入所有CI包含的东西。</p>
+<p>还有一点：CI是针对主线执行，分支必须在适当的时候合并到主线。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/12/17/ci-2/" data-id="cjf865ufk000q8wp16o0puo2w" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-ci-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/10/ci-1/" class="article-date">
+  <time datetime="2015-12-09T16:00:00.000Z" itemprop="datePublished">2015-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/10/ci-1/">【读书笔记】持续集成（软件质量改进和风险降低之道）之一</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="持续集成（软件质量改进和风险降低之道）"><a href="#持续集成（软件质量改进和风险降低之道）" class="headerlink" title="持续集成（软件质量改进和风险降低之道）"></a>持续集成（软件质量改进和风险降低之道）</h1><h2 id="第一章-启程"><a href="#第一章-启程" class="headerlink" title="第一章 启程"></a>第一章 启程</h2><p><em>每天吃一个苹果和实际去做是两码事。 by Kathy Sierra</em></p>
+<p><strong>1.1 针对每次变更构建软件</strong></p>
+<p><em>一次构建不止是一次编译。它可能包含编译、测试、代码审查和部署以及其它一些事情。一次构建是将源代码放在一起，并验证软件可以作为一个一致的单元运行的过程。</em></p>
+<p>CI场景中的步骤通常是这样的：</p>
+<ol>
+<li>开发者提交代码到版本控制库，CI服务器轮询检查代码变更；</li>
+<li>CI服务器取出最新的源代码执行构建脚本，对软件进行集成；</li>
+<li>CI服务器向指定的成员发出电子邮件，提供构建结果的反馈信息；</li>
+<li>CI服务器继续轮询检查代码变更。</li>
+</ol>
+<p>通过一次构建，开发团队可以回答以下问题：</p>
+<ul>
+<li>软件组成部分是否能协同工作？</li>
+<li>代码复杂度如何？</li>
+<li>是否坚持了制定的编码标准？</li>
+<li>自动测试覆盖了多少代码？</li>
+<li>是否成功的通过了所有测试？</li>
+<li>应用程序是否满足性能要求？</li>
+<li>最近的开发是否存在问题</li>
+</ul>
+<p>你之所以希望“持续”地构建，就是为了得到快速的反馈。这样能在开发生命周期找到并修正问题。</p>
+<p><strong>1.2 CI的特征</strong></p>
+<p>CI需要具备的特征</p>
+<ul>
+<li>与版本控制库连接</li>
+<li>构建脚本</li>
+<li>某种类型的反馈机制（通常是邮件）</li>
+<li>集成源代码变更的过程（CI服务器）</li>
+</ul>
+<p>CI的子过程：</p>
+<ul>
+<li>源代码编译</li>
+<li>数据库集成</li>
+<li>测试 <em>（没有自动化的、持续的测试的CI不能算是CI）</em></li>
+<li>审查 <em>（自动化代码审查通过强制遵守规则来增加软件品质）</em></li>
+<li>部署 <em>（任何时候都可以拿出能工作、可部署的软件）</em></li>
+<li>文档与反馈</li>
+</ul>
+<p>一个好的CI系统的关键特征就是“速度”。CI系统的本质是及时向开发者和项目风险承担着提供反馈信息。</p>
+<h2 id="第二章-引入持续集成"><a href="#第二章-引入持续集成" class="headerlink" title="第二章 引入持续集成"></a>第二章 引入持续集成</h2><p><em>假定是所有麻烦之母</em></p>
+<ul>
+<li>假定一个方法会得到正确的调用参数</li>
+<li>假定开发者会坚持编码标准</li>
+<li>假定配置文件不会被覆盖或者修改</li>
+</ul>
+<p>持续集成在每次版本控制系统发生变化时就执行构建，这有助于减少项目中的假定。<br>CI是一些基本实践。它不是软件开发中最炫目的工作，不会有用户说“哇，我真的喜欢你们上一个版本的集成方式”。它是软件开发的幕后工作，只有使用过CI的人才能体会到一致的、可重复的构建过程所带来的好处。</p>
+<p>检查软件的品质就是检查最新的集成构建，就这么简单！</p>
+<p><strong>2.1 CI生活中的一天</strong></p>
+<p>无</p>
+<p><strong>2.2 CI的价值是什么</strong></p>
+<ul>
+<li>减少风险</li>
+<li>减少重复过程</li>
+<li>在任何时间地点生成可部署的软件</li>
+<li>增强项目的可见性</li>
+<li>对开发团队的软件建立起更强大的产品信心</li>
+</ul>
+<p>减少风险</p>
+<ul>
+<li>缺陷的检测和修复变得更快</li>
+<li>软件的健康程度可以测量</li>
+<li>减少假定</li>
+</ul>
+<p>增强项目的可见性</p>
+<ul>
+<li>对当前构建状态和品质指标提供及时的信息</li>
+<li>观察到一些项目相关的趋势</li>
+</ul>
+<p>建立更强大的产品信心</p>
+<ul>
+<li>如果没有频繁的集成，团队成员会感到压抑，因为他不知道代码的修改所造成的影响。比如罚款！</li>
+</ul>
+<p><strong>2.3 什么阻碍了团队使用CI</strong></p>
+<ul>
+<li>增加了维护CI系统的开销（项目太复杂、额外工作太多）</li>
+<li>变化太大（增量实现，从日构建开始）</li>
+<li>失败的构建太多</li>
+<li>额外的硬件/软件成本</li>
+</ul>
+<p><strong>2.4 如何进行持续集成</strong></p>
+<ul>
+<li>确定：确定需要自动化的过程（编译、审查、测试、部署、数据库集成）</li>
+<li>构建：创建构建脚本</li>
+<li>分享：利用版本控制库让其它人用起来</li>
+<li>持续：在变更之后执行自动化的过程</li>
+</ul>
+<p><strong>2.5 项目应该再何时以何种方式实现CI</strong></p>
+<ul>
+<li>越早越好，越晚越拒绝改变。</li>
+<li>CI最终希望是在每次代码库变更时就执行构建，但是也可以从每日构建开始。</li>
+<li>早起可以不加入某些功能，比如自动化的回归测试</li>
+</ul>
+<p><strong>2.6 集成的演进</strong></p>
+<p>它不是突然冒出来的软件开发方法，是集成软件演进的成功。</p>
+<p><strong>2.7 如何与其它开发实践配合</strong></p>
+<ul>
+<li>单元测试</li>
+<li>编码标准</li>
+<li>重构</li>
+<li>小发行版本</li>
+<li>共同拥有代码，避免知识孤岛</li>
+</ul>
+<p><strong>2.8 CI需要多少时间架设</strong></p>
+<p><strong>2.9 CI与您</strong></p>
+<p>七项最佳实践：</p>
+<ul>
+<li>经常提交代码（每天至少一次）</li>
+<li>不要提交无法构建的代码（不能编译、无法通过测试、代码审查失败）</li>
+<li>立即修复无法构建的代码（优先级最高）</li>
+<li>编写自动化的单元测试</li>
+<li>必须通过所有测试和审查（不是90%或者99%，而是100%）</li>
+<li>执行私有构建（先在本地构建成功）</li>
+<li>避免签出无法构建的代码（等待新的变更或者帮助修复无法集成的构建）</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/12/10/ci-1/" data-id="cjf865ufj000o8wp1t8ahog33" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript-解析器/">JavaScript,解析器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redux/">Redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SlimerJS/">SlimerJS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/代码管理/">代码管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/JavaScript-解析器/" style="font-size: 10px;">JavaScript,解析器</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Redux/" style="font-size: 10px;">Redux</a> <a href="/tags/SlimerJS/" style="font-size: 10px;">SlimerJS</a> <a href="/tags/代码管理/" style="font-size: 10px;">代码管理</a> <a href="/tags/持续集成/" style="font-size: 13.33px;">持续集成</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">七月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">一月 1970</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/09/space/">空格</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/parser/">JavaScript Parser资源总结</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/29/slimerjs/">使用SlimerJS将网页输出为PDF</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/26/code-management/">代码管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/06/18/violet/">violet - 值得一试的写作同步小助手</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Simon Xu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
