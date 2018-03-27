@@ -6,15 +6,17 @@ fetch('md/' + path + '.md').then(function (res) {
 	return res.text();
 }).then(parseContent).then(createSlides).then(startPresentation);
 
+let maxNum = 0
+
 function parseContent(text) {
-	console.log(text)
-	return text.split(/\n{2,}/).map(function (slideText) {
+	let slides = text.split(/\n{2,}/)
+	maxNum = slides.length
+	return slides.map(function (slideText) {
 		return slideText.split(/\n/);
 	});
 }
 
 function createSlides(slides) {
-	console.log(slides)
 	slides.map(function (slide) {
 		var slideDiv = document.createElement('div');
 		slideDiv.className = 'slide';
@@ -48,7 +50,7 @@ function startPresentation() {
 	};
 	window.onkeydown = function (kbEvent) {
 		var key = kbEvent.key || kbEvent.keyIdentifier;
-		// console.log(key)
+		key = key.replace('Arrow', '')
 		switch (key) {
 			case 'Left':
 				prevSlide();break;
@@ -81,6 +83,8 @@ function current() {
 }
 
 function nextSlide() {
+	if (slideIndex === maxNum - 1) return
+
 	var curr = current();
 	var c = curr.querySelector('.comma');
 	if (c) {
@@ -99,9 +103,9 @@ function nextSlide() {
 }
 
 function prevSlide() {
+	if (slideIndex === 0) return
 	var curr = current();
 	var prev = curr.previousElementSibling;
-	//console.log(prev)
 	if (prev) {
 		--slideIndex;
 		curr.classList.toggle('current');
