@@ -22,6 +22,6 @@
     "regenerator-runtime": "^0.11.1"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage"
   }
 }
