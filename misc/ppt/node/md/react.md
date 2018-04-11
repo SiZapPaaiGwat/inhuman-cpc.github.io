@@ -1,4 +1,7 @@
-# React 基础
+# React Native跨平台APP开发
+
+- React Native 简介
+- React 入门
 
 ---
 
@@ -224,4 +227,11 @@ Component Updating lifecycle 后续更新
 
 ## Resources
 
-[React 文档](https://doc.react-china.org/)
+- [React 文档](https://doc.react-china.org/)
+
+## 课后习题
+
+使用 React 完成一个简单的时间展示控件，能够实时展示当前时间的时分秒。
+比如当前时间是 “2018-04-11 19:20:05” 则展示 “19:20:05”
+
+> 推荐使用 [codesandbox](https://codesandbox.io) 这个在线编辑器
